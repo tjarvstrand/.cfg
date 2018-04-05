@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+set -e
+
+OP=${1}
+AMOUNT=${2}
+VOLUME=$(amixer get Master | grep -o "[0-9]*%" | tr -d "%")
+case ${OP} in
+    "inc")
+        VOLUME=$(( ${VOLUME} + ${AMOUNT} ))
+        ;;
+    "dec")
+        VOLUME=$(( ${VOLUME} - ${AMOUNT} ))
+        ;;
+    "set")
+        VOLUME=${AMOUNT}
+        ;;
+    "get")
+        echo ${VOLUME}
+        exit 0
+        ;;
+esac
+
+if (( ${VOLUME} < 0 ))
+then
+    VOLUME=0
+elif (( ${VOLUME} > 100 ))
+then
+    VOLUME=100
+fi
+amixer set Speaker on
+amixer set Headphone on
+amixer set Master ${VOLUME}% > /dev/null
+amixer set Headphone ${VOLUME}% > /dev/null
+notify-send "A" \
+            -a volume \
+            -i audio-volume-high-panel \
+            -h int:value:${VOLUME} \
+            -h string:x-canonical-private-synchronous:volume

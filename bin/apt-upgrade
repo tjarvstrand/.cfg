@@ -1,0 +1,14 @@
+#!/bin/bash
+
+sudo apt-get -y -V --with-new-pkgs upgrade
+
+if [ -f /var/run/reboot-required ]; then
+    echo
+    echo "****************************"
+    echo
+    echo "Reboot needed"
+    echo
+    echo "****************************"
+fi
+
+read

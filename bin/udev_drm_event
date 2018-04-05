@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+export DISPLAY=$(w -h -s | grep ":[0-9]\W" | head -1 | awk '{print $2}')
+X_USER=$(w -h -s | grep ":[0-9]\W" | head -1 | awk '{print $1}')
+export XAUTHORITY=$(eval echo ~$X_USER)/.Xauthority
+
+THIS_DIR=$(dirname "$(readlink -f $0)")
+
+"${THIS_DIR}/detect_screens" >> /home/tjarvstrand/.local/share/udev.log

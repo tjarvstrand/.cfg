@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+THIS=$(dirname "$(readlink -f $0)")
+
+echo $(which -a $1 | grep -v "^${THIS}" | head -n 1)

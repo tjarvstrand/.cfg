@@ -1,0 +1,229 @@
+#!/usr/bin/env python
+
+import json
+import logging
+import os
+import re
+import subprocess
+import sys
+import time
+
+internal_display = 'eDP-1'
+
+config_file = os.environ['HOME'] + '/.scr.json'
+
+configurations = ['mirror', 'internal', 'external']
+
+logging.basicConfig(format='%(asctime)s %(message)s', level = logging.INFO)
+
+print sys.argv
+
+if len(sys.argv) > 3:
+    logging.basicConfig(filename = sys.argv[3])
+
+if len(sys.argv) < 2:
+    logging.error("Need a configuration name!")
+    sys.exit(1)
+
+def call(cmd):
+    logging.info("Calling: %s" % cmd)
+    subprocess.check_call(cmd, shell = True)
+
+def mode_sort(modes):
+    modes.sort(key = lambda x: int(x.split('x')[0]), reverse = True)
+    return modes
+
+def intersection(modes1, modes2):
+    return list(set(modes1).intersection(set(modes2)))
+
+def modes(output, xrandr_output):
+    iterator = iter(xrandr_output)
+    modes = []
+    for line in iterator:
+        if re.match('^' + output, line):
+            break
+    for line in iterator:
+        match = re.match('^\s*([0-9]*x[0-9]*)', line)
+        if match:
+            modes.append(match.group(1))
+        else:
+            break
+    return modes
+
+def use_internal(internal, external = None):
+    if external:
+        try:
+            call("xrandr --output %s --off" % external)
+        except Exception as e:
+            logging.error("Failed to turn off %s: %s" % (external, e))
+
+    call("xrandr --output %s --primary --auto" % internal)
+
+def use_external(internal, external):
+    call("xrandr --output %s --off --output %s --primary --auto" %
+            (internal, external))
+
+def use_right_of(internal, external):
+    call("xrandr --output %s --auto --output %s --auto --right-of %s" %
+             (internal, external, internal))
+
+def use_left_of(internal, external):
+    call("xrandr --output %s --auto --output %s --auto --left-of %s" %
+             (internal, external, internal))
+
+def use_mirror(internal_name, internal_modes, external_name, external_modes):
+    best_mode = mode_sort(intersection(internal_modes, external_modes))[0]
+    call("xrandr --output %s --mode %s --output %s --mode %s" %
+          (external_name, best_mode, internal_name, best_mode))
+
+def get_connected_outputs():
+    outputs = {}
+    xrandr_output = iter(subprocess.check_output(["xrandr", "-q", "--verbose"]).split("\n"))
+    output_name = None
+    field_name = None
+    for line in xrandr_output:
+        match = re.match("^(.*) connected (primary)?", line)
+        if match:
+            output_name = line.split()[0]
+            outputs[output_name] = {'modes': [],
+                                    'primary': match.groups()[1] == 'primary'}
+        elif output_name:
+            match = re.match('^\s*([a-fA-Z0-9][a-zA-Z0-9 ]*):(.*)', line)
+            if match:
+                field_name = match.group(1).lower()
+                value = match.group(2).strip()
+                if value:
+                    outputs[output_name][field_name] = [value]
+                else:
+                    outputs[output_name][field_name] = []
+            else:
+                value = line.strip()
+                match = re.match('^\s*([0-9]*x[0-9]*)', line)
+                if match:
+                    outputs[output_name]['modes'].append(match.group(1))
+                    outputs[output_name][field_name].append(value)
+                elif line != '' :
+                    outputs[output_name][field_name].append(value)
+    return outputs
+
+def get_primary_output():
+    primary = [output for (output, props) in get_connected_outputs().iteritems() if props['primary']]
+    if primary == []:
+        return None
+    else:
+        return primary[0]
+
+def apply_mode(mode, internal_name, outputs):
+    logging.info("setting mode %s" % mode)
+    external_name = get_external(internal_name, outputs)
+    if mode == 'internal':
+        use_internal(internal_name, external_name)
+    elif mode == 'external':
+        use_external(internal_name, external_name)
+    elif mode == 'left-of':
+        use_left_of(internal_name, external_name)
+    elif mode == 'right-of':
+        use_right_of(internal_name, external_name)
+    elif mode == 'mirror':
+        use_mirror(internal_name, outputs[internal_name]['modes'],
+                   external_name, outputs[external_name]['modes'])
+
+def get_mode(edid):
+    try:
+        with open(config_file) as f:
+            modes = json.load(f)
+            return modes[edid]
+    except Exception, ex:
+        return None
+
+def store_mode(edid, mode):
+    config = {}
+    try:
+        with open(config_file) as f:
+            config = json.load(f)
+    except:
+        pass
+    config[edid] = mode
+    with open(config_file, 'w') as f:
+        json.dump(config, f)
+
+def get_external(internal_name, outputs):
+    all_external = [e for e in outputs.keys() if e != internal_name]
+    if all_external:
+        return all_external[0]
+    else:
+        return None
+
+def do_stuff(opts):
+    mode = opts['mode']
+    outputs = get_connected_outputs()
+    internal = internal_display
+    external = get_external(internal, outputs)
+
+    if len(outputs) == 1 or (len(sys.argv) > 2 and int(sys.argv[2]) == 1):
+        logging.info("Only one output detected, ignoring input parameters")
+        apply_mode('internal', internal, outputs)
+        return
+
+    if mode == 'auto':
+        if len(sys.argv) > 2:
+            interval = 0.5
+            slept = 0
+            while len(outputs) != min(2, int(sys.argv[2])):
+                    logging.info("xrandr not up to date, sleeping %ss" %
+                                 [interval])
+                    time.sleep(interval)
+                    slept += interval
+                    if slept > 60:
+                        raise Exception("Timeout!")
+                    outputs = get_connected_outputs()
+        logging.debug("outputs %s" % outputs)
+        mode = get_mode(''.join(outputs[external]['edid']))
+        if mode is None:
+            cmd = "zenity --list --radiolist " + \
+                "--column _ --column Layout " + \
+                "TRUE mirror " + \
+                "FALSE internal " + \
+                "FALSE external " + \
+                "FALSE right-of " + \
+                "FALSE left-of "
+            try:
+                mode = subprocess.check_output(cmd.split()).strip()
+            except subprocess.CalledProcessError:
+                pass
+    elif mode == 'toggle':
+        if get_primary_output() == internal_display:
+            mode = 'external'
+        else:
+            mode = 'internal'
+
+    if mode:
+        if opts['save']:
+            store_mode(''.join(outputs[external]['edid']), mode)
+        apply_mode(mode, internal, outputs)
+
+def parse_args(args):
+    return {'mode': args[1],
+            'save': not args[4:4+1] == []
+           }
+
+def main():
+    pid = str(os.getpid())
+    pidfile = "/tmp/scr.pid"
+
+    if os.path.isfile(pidfile):
+        logging.info("scr is already running, exiting")
+        sys.exit()
+    file(pidfile, 'w').write(pid)
+    try:
+        opts = parse_args(sys.argv)
+        do_stuff(opts)
+    except Exception as e:
+        logging.exception(e)
+        logging.error("Failed to set mode %s. Turning on internal display" % opts['mode'])
+        use_internal(internal_display, None)
+    finally:
+        os.unlink(pidfile)
+    sys.exit()
+
+main()

@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+
+unset SSH_ASKPASS
+unset GIT_ASKPASS
+
+export LPASS_SSH_KEY_ID=${LPASS_SSH_KEY_ID:-tjarvstrand}
+
+ARG=${1}
+
+LPASS=lpass
+
+function log {
+    if [[ "${ARG}" != "-q" ]]
+    then
+        echo ${@}
+    fi
+}
+
+function start_ssh_agent {
+    log "Initialising new SSH agent..."
+    /usr/bin/ssh-agent | grep -v '^echo' > "${SSH_ENV}"
+    log succeeded
+    chmod 600 "${SSH_ENV}"
+    . "${SSH_ENV}" > /dev/null
+}
+
+function ensure_ssh_agent_started {
+    if [ -f "${SSH_ENV}" ]; then
+        . "${SSH_ENV}" > /dev/null
+        ps -eo pid | grep -q ${SSH_AGENT_PID} && return
+        rm -f "${SSH_ENV}"
+    fi
+    start_ssh_agent;
+}
+
+function ensure_ssh_key_added {
+    if ssh-add -l | cut -d ' ' -f 3 | grep -q -E "${LPASS_SSH_KEY_ID}\$"
+    then
+        log id_rsa already added to agent
+    else
+        SSH_ASKPASS=lpass-ssh-askpass
+        FIFO=$(mktemp -u --suffix=.${LPASS_SSH_KEY_ID})
+        mkfifo -m 600 ${FIFO}
+        trap "rm -rf ${FIFO}" EXIT
+        ${LPASS} show --field='Private Key' ssh/${LPASS_SSH_KEY_ID} > ${FIFO} &
+        log $(ssh-add ${FIFO} < /dev/null)
+    fi
+}
+
+ensure_ssh_agent_started
+ensure_ssh_key_added
+$(non_bin_exec ssh) "$@"

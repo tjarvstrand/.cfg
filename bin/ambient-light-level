@@ -1,0 +1,38 @@
+#!/usr/bin/env python
+
+#-------------------------------------------------------------------------------
+# Name:        Luxometer
+# Purpose:     Measures light for use in sleep research
+#
+# Author:      Miles Gordenker
+#
+# Created:     13/07/2012
+# Copyright:   (c) Miles Gordenker 2012
+# Licence:     For Rob's eyes only
+#-------------------------------------------------------------------------------
+import cv
+import cv2
+
+RED = 2
+BLUE = 1
+GREEN = 0
+
+def estimateLux():
+    capture = cv.CreateCameraCapture(-1)
+    width = int(cv.GetCaptureProperty(capture, cv.CV_CAP_PROP_FRAME_WIDTH))
+    height = int(cv.GetCaptureProperty(capture, cv.CV_CAP_PROP_FRAME_HEIGHT))
+    img = cv.QueryFrame(capture)
+    cv2.waitKey(10)
+
+    img = cv.QueryFrame(capture) # so we currently have BGR image
+    img = cv.GetMat(img, allowND=0) # iplImage -> CvMat
+
+    # get a CvScalar (tuple) with the sum of each of the 3 channels
+    results = cv.Sum(img)
+    return (results[RED] * .229 + results[BLUE] * .587 + results[GREEN] * .114)/(height * width)
+
+def main():
+    print estimateLux()
+
+if __name__ == '__main__':
+    main()

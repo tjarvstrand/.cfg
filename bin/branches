@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+
+
+branches=""
+BASE_DIR=${1:-"."}
+for dir in ${BASE_DIR}/*; do
+    if [[ -d "${dir}/.git" ]]; then
+        pushd "${dir}" > /dev/null
+        branch=$(git branch | sed -n -e 's/^\* \(.*\)/\1/p')
+        if [[ "${branch}" != "" &&
+              "${branch}" != "master" &&
+              ! "${branch}" =~ "(no branch)" &&
+              ! "${branch}" =~ ^\((HEAD )?detached ]]
+        then
+            branches="${branches}\n${dir} ${branch}"
+        fi
+        popd > /dev/null
+    fi
+done
+echo -e ${branches} | column -t -s ' '

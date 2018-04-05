@@ -1,0 +1,111 @@
+#!/bin/bash
+
+set -x
+
+export XAUTHORITY=/home/tjarvstrand/.Xauthority
+export DISPLAY=:0
+export HOME=$(eval echo ~tjarvstrand)
+INTERNAL='eDP-1'
+CONFIG_FILE="${HOME}/.screens"
+if [ ! -f "${CONFIG_FILE}" ]
+then
+    touch ${CONFIG_FILE}
+fi
+
+THIS_DIR=$(dirname "$(readlink -f $0)")
+
+
+POSITIONAL=()
+while [[ $# -gt 0 ]]
+do
+    key="${1}"
+    case $key in
+        -s|--set)
+            SET=true
+            shift
+            ;;
+        *)    # unknown option
+            POSITIONAL+=("${1}") # save it in an array for later
+            shift # past argument
+            ;;
+    esac
+done
+set -- "${POSITIONAL[@]}" # restore positional parameters
+
+function output2dir {
+    PATTERN="card.-$(echo $1 | cut -d'-' -f 1)-[A-Z]-$(echo $1 | cut -d'-' -f 2)"
+    ls -1d /sys/class/drm/card*/ | grep ${PATTERN}
+}
+
+function output_modes {
+    cat $(output2dir $1)/modes | sort | uniq
+}
+
+function internal {
+    EXTERNAL=$("${THIS_DIR}/connected-screens" | grep -v ${INTERNAL})
+    if [ "${EXTERNAL}" != "" ]
+    then
+       EXTERNAL="--output ${EXTERNAL} --off"
+    fi
+    xrandr --output ${INTERNAL} --primary --auto ${EXTERNAL}
+}
+
+function external {
+    EXTERNAL=$("${THIS_DIR}/connected-screens" | grep -v ${INTERNAL})
+    if [ "${EXTERNAL}" != "" ]
+    then
+        xrandr --output ${EXTERNAL} --primary --auto --output ${INTERNAL} --off
+    fi
+}
+
+function mirror {
+    EXTERNAL=$("${THIS_DIR}/connected-screens" | grep -v ${INTERNAL})
+    if [ "${EXTERNAL}" != "" ]
+    then
+        xrandr --output ${INTERNAL} --primary --on --output ${EXTERNAL} --on --same-as ${INTERNAL}
+    fi
+}
+
+
+
+ACTION=${POSITIONAL[0]}
+if [ "${ACTION}" == "" ]
+then
+    CONNECTED=$("${THIS_DIR}/connected-screens" | wc -l)
+    echo "${CONNECTED} screens connected"
+    if [ "${CONNECTED}" == "1" ]
+    then
+        ACTION=internal
+    else
+        MONITORS=$("${THIS_DIR}/connected-screens" | \
+                       sort | \
+                       xargs echo | \
+                       tr ' ' ',')
+        EDIDS=$(eval "cat /sys/class/drm/card*-{${MONITORS}}/edid" | base64)
+        CONFIG_LINE=$(grep -E "^${EDIDS}" "${CONFIG_FILE}")
+        if [ "$?" == "0" ]
+        then
+            ACTION=$(echo ${CONFIG_LINE} | awk '{print $NF}')
+            echo "Mode configuration for current external screen is: $ACTION"
+        else
+            echo "No mode configuration set for current external screen EDID. Ignoring..."
+            exit 0
+        fi
+    fi
+fi
+
+if ! [[ "${ACTION}" =~ internal|external|mirror ]]
+then
+    echo "mode must be one of [internal | external | mirror]!"
+    exit 1
+fi
+
+
+if [ "${SET}" == "true" ]
+then
+    echo "Writing writing mode ${ACTION} to config for current external monitor $EDIDS"
+    sed -i 's/${EDIDS}.*//' "${CONFIG_FILE}"
+    echo "${EDIDS} ${2}" >> "${CONFIG_FILE}"
+fi
+
+eval ${ACTION}

@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+for s in /sys/class/drm/card*/status
+do
+    if [ $(cat $s) == "connected" ]
+    then
+        echo $(basename $(dirname $s)) | \
+            sed 's/card[0-9]-//' | \
+            sed 's/-[A-Z]-/-/'
+    fi
+done

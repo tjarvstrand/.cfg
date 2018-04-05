@@ -1,0 +1,3 @@
+#!/bin/bash
+
+${DIR}/trap-sigint /usr/local/bin/idea

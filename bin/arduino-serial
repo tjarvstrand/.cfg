@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+PORT=ttyACM10
+BAUD=9600
+
+stty -F /dev/$PORT cs8 9600 ignbrk -brkint -imaxbel -opost -onlcr -isig -icanon -iex
+ten -echo -echoe -echok -echoctl -echoke noflsh -ixon -crtscts
+
+screen /dev/$PORT $BAUD

@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# lpass wrapper
+
+ARG=${1}
+
+LPASS=$(non_bin_exec lpass)
+
+if ! $LPASS status > /dev/null ] && \
+        [ "$1" != "logout" ] &&
+        [ "$1" != "status" ]
+then
+    echo 'Logged out of LastPass. Restarting session' 1>&2
+    $LPASS login --trust "${LASTPASS_USERNAME}" 1>&2
+fi
+
+exec $LPASS "$@"

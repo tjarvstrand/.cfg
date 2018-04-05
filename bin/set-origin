@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+set -e
+
+REMOTES=$(git remote -v)
+OLD_ORIGIN_REMOTE=$(echo "$REMOTES" | grep origin -m 1 | cut -f 2 | cut -f 1 -d ' ')
+NEW_REMOTE_NAME=$1
+NEW_REMOTE=$(echo "$REMOTES" | grep $NEW_REMOTE_NAME -m 1 | cut -f 2 | cut -f 1 -d ' ')
+
+if [ -z $OLD_ORIGIN_REMOTE ]
+then
+    git remote add origin $NEW_REMOTE
+else
+    if [ -z $NEW_REMOTE ]
+    then
+        echo "Error: No such remote"
+        exit 1
+    fi
+    git remote set-url origin $NEW_REMOTE
+
+    if ! (echo "$REMOTES" | grep $OLD_ORIGIN_REMOTE | cut -f 1 | grep -v origin > /dev/null)
+    then
+        read -p "No other remote for $OLD_ORIGIN_REMOTE, what do you want to add it as (empty for none)?" OLD_ORIGIN_NEW_NAME
+        if [ -n "$OLD_ORIGIN_NEW_NAME" ]
+        then
+            git remote add $OLD_ORIGIN_NEW_NAME $OLD_ORIGIN_REMOTE
+        fi
+    fi
+fi
+
+echo "Origin's remote is now $(git remote -v | grep origin -m 1 | cut -f 2 | cut -f 1 -d ' ')"

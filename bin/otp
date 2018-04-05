@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+ln -sfvT ${HOME}/.erlang.d/$1 ${HOME}/.erlang.d/current

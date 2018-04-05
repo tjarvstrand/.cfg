@@ -1,0 +1,11 @@
+#!/bin/bash
+
+branch=$(git rev-parse --abbrev-ref HEAD)
+if [[ "${branch}" =~ ([a-zA-Z]+-[0-9]+).* ]]
+then
+    prefix=$(echo ${BASH_REMATCH[1]} | awk '{print toupper($0)}')
+    if head -n 1 "${1}" | grep -vi "^${prefix}:"
+    then
+        echo -e "${prefix}: $(cat $1)" > ${1}
+    fi
+fi

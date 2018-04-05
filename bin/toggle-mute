@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+set -e
+amixer set Master toggle > /dev/null
+STATE=$(amixer get Master | grep -o -E "\[(on|off)\]" | tr -d '[]')
+
+if [[ "${STATE}" == "on" ]]
+then
+    amixer set Speaker on
+    amixer set Headphone on
+    VOLUME=$(amixer get Master | grep -o "[0-9]*%" | tr -d "%")
+    notify-send "A" \
+            -a volume \
+            -i audio-volume-medium \
+            -h int:value:${VOLUME} \
+            -h string:x-canonical-private-synchronous:volume
+else
+    notify-send "A" \
+            -a volume \
+            -i audio-volume-muted \
+            -h int:value:0 \
+            -h string:x-canonical-private-synchronous:volume
+fi

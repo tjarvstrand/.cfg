@@ -1,0 +1,62 @@
+#! /usr/bin/env bash
+
+usage()
+{
+    cat << EOF
+Usage: `basename $0` [-u|--unannotated] major|minor|patch
+
+--unannotated, -u Include unannotated tags when looking for current version tag
+
+EOF
+}
+
+if [ $# -lt 1 ]; then
+    usage
+    exit 1
+fi
+
+POSITIONAL=()
+while [[ $# -gt 0 ]]
+do
+    key="${1}"
+    case $key in
+        -u|--unannotated)
+            TAGS=--tags
+            shift
+            ;;
+        *)    # unknown option
+            POSITIONAL+=("${1}") # save it in an array for later
+            shift # past argument
+            ;;
+    esac
+done
+set -- "${POSITIONAL[@]}" # restore positional parameters
+
+git fetch
+TAG=$(git describe origin/master ${TAGS} | grep -o '^[0-9.]*')
+
+MAJOR=$(echo ${TAG} | cut -d '.' -f 1)
+MINOR=$(echo ${TAG} | cut -d '.' -f 2)
+PATCH=$(echo ${TAG} | cut -d '.' -f 3)
+
+case $1 in
+    "major")
+        let "MAJOR=${MAJOR}+1"
+        MINOR=0
+        PATCH=0
+        ;;
+    "minor")
+        let "MINOR=${MINOR}+1"
+        PATCH=0
+        ;;
+    "patch"|"")
+        let "PATCH=${PATCH}+1"
+        echo 1
+        ;;
+    *)
+        echo "Error: invalid version specifier (major|minor|patch)"
+        exit 1
+        ;;
+esac
+
+exec tag-repo "${MAJOR}.${MINOR}.${PATCH}"

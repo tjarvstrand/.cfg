@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+KEY_ID=${1:-$LPASS_ID}
+
+if [ -z ${KEY_ID} ]
+then
+    exec ssh-askpass
+fi
+
+LPASS_PASS=$(lpass show --field=Passphrase ssh/${KEY_ID})
+if [[ -z ${LPASS_PASS} ]]
+then
+    exec ssh-askpass
+else
+    echo ${LPASS_PASS}
+fi
