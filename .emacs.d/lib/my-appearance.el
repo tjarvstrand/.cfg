@@ -2,6 +2,8 @@
 ;; (load-library "my-theme.el")
 ;; (color-theme-my-theme)
 
+(require 'darcula-theme)
+
 ;; Set font
 (defun set-font-size (size)
   (interactive "nSize: ")

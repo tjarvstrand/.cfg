@@ -87,7 +87,7 @@
  '(neo-window-width 75)
  '(package-selected-packages
    (quote
-    (idea-darkula-theme projectile find-file-in-project js2-mode js3-mode web-mode cider haskell-mode graphviz-dot-mode flymd markdown-mode groovy-mode go-mode rust-mode auto-complete auto-highlight-symbol color-theme dash ensime erlang f python-mode s yaml-mode neotree)))
+    (darcula-theme clojure-mode clojure-mode-extra-font-locking idea-darkula-theme projectile find-file-in-project js2-mode js3-mode web-mode cider haskell-mode graphviz-dot-mode flymd markdown-mode groovy-mode go-mode rust-mode auto-complete auto-highlight-symbol color-theme dash ensime erlang f python-mode s yaml-mode neotree)))
  '(safe-local-variable-values
    (quote
     ((py-smart-indentation)
