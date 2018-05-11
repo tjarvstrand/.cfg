@@ -156,6 +156,11 @@
 ;; (ido-everywhere t)
 (ido-mode t)
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Language specifics
+
+(setq-default c-basic-offset 2)
 (load-library "my-sh")
 (load-library "my-clojure")
 (load-library "my-erlang")
@@ -198,11 +203,6 @@
 (setq comint-buffer-maximum-size 15000)
 (add-hook 'comint-output-filter-functions 'comint-truncate-buffer)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Kred
-
-(setq edts-project-overrides
-      '(("/home/tjarvstrand/klarna/kred" . (:otp-path "/home/tjarvstrand/.erlang.d/otp_17.5.6_kred"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
