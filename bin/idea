@@ -1,3 +1,5 @@
 #!/bin/bash
 
+DIR=$(dirname ${BASH_SOURCE})
+
 ${DIR}/trap-sigint /usr/local/bin/idea
