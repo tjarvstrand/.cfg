@@ -305,7 +305,6 @@ function aws-with-adfs {
     >&2 echo "ADFS Session expires in ${EXPIRY} minutes"
 }
 
-export AWS_PROFILE=test
 export AWS_DEFAULT_REGION=eu-west-1
 
 export AD_USERNAME=thojar
