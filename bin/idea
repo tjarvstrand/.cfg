@@ -1,5 +1,7 @@
 #!/bin/bash
 
+DIR=$(dirname $BASH_SOURCE) > /dev/null
+
 function start_idea {
 # this fixes signals processing for idea
 # see https://youtrack.jetbrains.com/issue/IDEA-157989
@@ -46,9 +48,9 @@ main (int argc, char **argv)
     fprintf(stderr, "execvp(...) failed\n");
     return 1;
 }
-' > signal-reset.c
-    gcc -o signal-reset signal-reset.c
-    ./signal-reset /usr/local/bin/idea & disown
+' > ${DIR}/signal-reset.c
+    gcc -o ${DIR}/signal-reset ${DIR}/signal-reset.c
+    ${DIR}/signal-reset /usr/local/bin/idea & disown
 }
 
 start_idea
