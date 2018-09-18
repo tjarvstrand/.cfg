@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+set -e
+
+FILE=$1
+FILE_BASE=$(basename ${FILE})
+
+STORE_PASSWD=$2
+if [ -z "$STORE_PASSWD" ]
+then
+    read -s -p "Store password: " STORE_PASSWD
+    echo
+fi
+
+KEY_PASSWD=$3
+if [ -z "$KEY_PASSWD" ]
+then
+    read -s -p "Key password: " KEY_PASSWD
+    echo
+fi
+
+ALIAS=$(keytool -list \
+                -rfc \
+                -storepass "$STORE_PASSWD" \
+                -keystore ${FILE} 2> /dev/null | \
+            grep -i 'Alias name' |
+            cut -d ':' -f 2 |
+            tr -d ' ')
+
+
+TMP_KEYSTORE="$(mktemp -u -p ${PWD}).p12"
+
+
+keytool -importkeystore \
+        -alias "$ALIAS" \
+        -srckeystore "$FILE" \
+        -srckeypass "$KEY_PASSWD" \
+        -srcstorepass "$STORE_PASSWD" \
+        -destkeystore "$TMP_KEYSTORE" \
+        -deststoretype PKCS12 \
+        -deststorepass "$KEY_PASSWD"
+
+(
+     trap "rm -rf ${TMP_KEYSTORE}" EXIT;
+     openssl pkcs12 -in "$TMP_KEYSTORE" -passin "pass:$KEY_PASSWD" -nokeys -out "$FILE_BASE.crt";
+     openssl pkcs12 -in "$TMP_KEYSTORE" -passin "pass:$KEY_PASSWD" -nodes -nocerts -out "$FILE_BASE.key"
+)

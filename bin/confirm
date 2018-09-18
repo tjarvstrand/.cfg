@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+while true; do
+    read -p "${1} [Y/n]: " answer
+    if [[ -z "$answer" ]]
+    then
+        answer=Y
+    fi
+    case $answer in
+        [Yy]* ) exit 0;;
+        [Nn]* ) exit 1;;
+        * ) echo "Please answer yes or no.";;
+    esac
+done
