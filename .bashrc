@@ -9,7 +9,7 @@ deactivate 2>/dev/null
 export LC_TYPE=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 
-export EDITOR="emacs --no-splash -nw --debug-init"
+export EDITOR="emacs --no-site-file --no-splash -nw --debug-init -q --eval '(setq basic-setup t)' -l ~/.emacs"
 
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return

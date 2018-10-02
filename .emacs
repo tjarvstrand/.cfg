@@ -6,7 +6,7 @@
     (when (file-directory-p dir)
       (add-to-list 'load-path dir))))
 
-
+(defvar basic-setup nil)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ELPA
@@ -162,13 +162,14 @@
 
 (setq-default c-basic-offset 2)
 (load-library "my-sh")
-(load-library "my-clojure")
-(load-library "my-erlang")
-(load-library "my-haskell")
-(load-library "my-python")
-(load-library "my-ruby")
-(load-library "my-scala")
-(load-library "my-javascript")
+(unless basic-setup
+  (load-library "my-clojure")
+  (load-library "my-erlang")
+  (load-library "my-haskell")
+  (load-library "my-python")
+  (load-library "my-ruby")
+  (load-library "my-scala")
+  (load-library "my-javascript"))
 
 (require 'yaml-mode)
 (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))

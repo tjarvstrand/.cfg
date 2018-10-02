@@ -4,6 +4,8 @@
 
 (require 'darcula-theme)
 
+(load-library "my-misc")
+
 ;; Set font
 (defun set-font-size (size)
   (interactive "nSize: ")
