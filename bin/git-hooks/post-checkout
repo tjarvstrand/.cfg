@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+export GIT_PREVIOUS_BRANCH=${GIT_CURRENT_BRANCH}
+export GIT_CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
