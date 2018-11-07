@@ -2,6 +2,12 @@
 
 set -e
 
+SCRIPT=$(basename ${BASH_SOURCE})
+
+function usage {
+    echo "${SCRIPT} inc|dec|set|get [AMOUNT]"
+}
+
 OP=${1}
 AMOUNT=${2}
 VOLUME=$(amixer get Master | grep -o "[0-9]*%" | tr -d "%")
@@ -19,17 +25,25 @@ case ${OP} in
         echo ${VOLUME}
         exit 0
         ;;
+    *)
+        usage
+        exit 0
+
 esac
 
 if (( ${VOLUME} < 0 ))
 then
+    echo "Volume would be negative, setting to 0 instead"
     VOLUME=0
 elif (( ${VOLUME} > 100 ))
 then
+    echo "Volume would be above max, setting to 100 instead"
     VOLUME=100
 fi
-amixer set Speaker on
-amixer set Headphone on
+
+
+amixer set Speaker on > /dev/null
+amixer set Headphone on > /dev/null
 amixer set Master ${VOLUME}% > /dev/null
 amixer set Headphone ${VOLUME}% > /dev/null
 notify-send "A" \
