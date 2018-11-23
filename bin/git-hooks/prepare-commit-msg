@@ -1,23 +1,23 @@
 #!/bin/bash
 
-echo $@
-
 branch=$(git rev-parse --abbrev-ref HEAD)
 if [[ "${branch}" =~ ^([a-zA-Z]+-[0-9]+).* ]]
 then
     prefix=$(echo ${BASH_REMATCH[1]} | awk '{print toupper($0)}')
-elif [ -f "${PWD}/.git-commit-prefix" ]
+elif [ -f "${PWD}/.git-commit-prefix" ] && grep -E "^${branch}=" "${PWD}/.git-commit-prefix"
 then
-    prefix=$(cat "${PWD}/.git-commit-prefix")
+    prefix=$(grep -E "^${branch}=" "${PWD}/.git-commit-prefix" | cut -d = -f2)
 else
     # Allows us to read user input below, assigns stdin to keyboard
     exec < /dev/tty
-    read -p "Specify a commit message prefix (empty for none): " prefix
-    echo $prefix > "${PWD}/.git-commit-prefix"
+    read -p "Specify a commit message prefix for ${branch} (empty for none): " prefix
+    echo $branch=$prefix > "${PWD}/.git-commit-prefix"
 fi
 
-if [ $(echo $prefix | tr -d '[:space:]') ] && head -n 1 "${1}" | grep -vi "^${prefix}:"
+prefix=$(echo $prefix | tr -d '[:space:]')
+
+
+if [ prefix ] && (head -n 1 "${1}" | grep -vi "^${prefix}:")
 then
-    echo 3
     echo -e "${prefix}: $(cat $1)" > ${1}
 fi
