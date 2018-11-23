@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+FOLDER_NAME=$1
+
+USERNAME=$(logname)
+USER=$(id -u ${USERNAME})
+GROUP=$(id -g ${USERNAME})
+DIR=$(eval echo "~${USERNAME}")/${FOLDER_NAME}
+
+
+CMD="mount -t vboxsf -o uid=${USER},gid=${GROUP} ${FOLDER_NAME} ${DIR}"
+echo "Running '${CMD}'"
+$CMD
