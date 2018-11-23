@@ -1,8 +1,8 @@
 import XMonad
 import qualified XMonad.StackSet as W
 
+import System.Taffybar.Support.PagerHints
 import XMonad.Layout.Gaps
-import XMonad.Config.Xfce
 import XMonad.Util.EZConfig
 import XMonad.ManageHook
 import XMonad.Hooks.EwmhDesktops
@@ -31,11 +31,9 @@ myLayout = smartBorders tiled |||
 
 myManageHook :: [ManageHook]
 myManageHook =
-  [ resource =? "Do" --> doIgnore
-  -- , isFullscreen --> doFullFloat
-  -- , isDialog --> doFloat
+  [ isFullscreen --> doFullFloat
+  , isDialog --> doFloat
   , className =? "vlc" --> doFullFloat
-  , className =? "Xfce4-panel" --> doIgnore
   , className =? "Xfce4-notifyd" --> doIgnore
   , manageDocks]
 
@@ -44,18 +42,39 @@ myLogHook =
  [ ewmhDesktopsLogHook >> setWMName "LG3D"  -- java workaround
  ]
 
-main = xmonad $ xfceConfig
+main = xmonad $ docks $ ewmh def
   { modMask = mod4Mask
   , terminal = "urxvt"
   , borderWidth = 2
-  , manageHook = manageHook xfceConfig <+> composeAll myManageHook
+  , manageHook = composeAll myManageHook
   , handleEventHook = ewmhDesktopsEventHook <+> fullscreenEventHook
   , logHook = composeAll myLogHook
-  , layoutHook = lessBorders OnlyFloat $ avoidStruts $ myLayout
-  , startupHook = do spawn "/bin/bash ~/.xmonadrc"
+  , layoutHook = smartBorders $ avoidStruts $ myLayout
+  , startupHook = do
+      spawn "/bin/bash ~/.xmonadrc"
+      spawn "feh --bg-fill /home/tjarvstrand/Pictures/Wallpapers/1.jpeg"
+      spawn "taffybar"
+      spawn "dropbox start -i"
+      spawn "nm-applet"
+      spawn "blueman-applet"
+      spawn "xfce-power-manager"
+      -- spawn "light-locker"
   }
   `additionalKeysP`
     [ ("M1-<Tab>",  windows W.focusDown)
     , ("M-w",  kill)
-    , ("C-<Return>", spawn "dmenu_run_history -i -l 5")
+    , ("M-M1-<Space>", sendMessage ToggleStruts)
+    , ("C-<Return>", spawn "dmenu_run_history -b -i")
+
+    , ("<Print>", spawn "xfce4-screenshooter --fullscreen --save /home/tjarvstrand/Pictures/Screenshots")
+
+    , ("XF86AudioMute",        spawn "/home/tjarvstrand/bin/toggle-mute")
+    , ("XF86AudioLowerVolume", spawn "/home/tjarvstrand/bin/volume dec 10")
+    , ("XF86AudioRaiseVolume", spawn "/home/tjarvstrand/bin/volume inc 10")
+    , ("XF86MonBrightnessUp",  spawn "light -A 5")
+    , ("XF86MonBrightnessDown", spawn "light -U 5")
+    , ("C-XF86MonBrightnessUp", spawn "light -A 10")
+    , ("C-XF86MonBrightnessDown", spawn "light -U 10")
+
+    , ("C-M1-l", spawn "light-locker-command -l")
     ]
