@@ -31,14 +31,16 @@ case ${OP} in
 
 esac
 
+MAX_VOLUME=120
+
 if (( ${VOLUME} < 0 ))
 then
     echo "Volume would be negative, setting to 0 instead"
     VOLUME=0
-elif (( ${VOLUME} > 100 ))
+elif (( ${VOLUME} > ${MAX_VOLUME} ))
 then
-    echo "Volume would be above max, setting to 100 instead"
-    VOLUME=100
+    echo "Volume would be above max (${MAX_VOLUME}), setting to ${MAX_VOLUME} instead"
+    VOLUME=${MAX_VOLUME}
 fi
 
 
