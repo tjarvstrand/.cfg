@@ -10,12 +10,11 @@ fi
 
 set -ex
 
-DIR=/tmp/mini.iso.WhgacvL6
-#DIR=$(mktemp --tmpdir -d mini.iso.XXXXXXXX)
+TMP_DIR=$(mktemp --tmpdir -d mini.iso.XXXXXXXX)
 
-MINI_ISO_DIR=${DIR}/mini.iso
-EFI_IMG_DIR=${DIR}/efi.img
-OUTPUT_DIR=${DIR}/mini
+MINI_ISO_DIR=${TMP_DIR}/mini.iso
+EFI_IMG_DIR=${TMP_DIR}/efi.img
+OUTPUT_DIR=${PWD}/mini-uefi.iso
 
 mkdir -p ${MINI_ISO_DIR}
 
@@ -36,10 +35,12 @@ umount ${EFI_IMG_DIR}
 losetup -d ${LOOP_DEVICE}
 rmdir ${EFI_IMG_DIR}
 
+rmdir ${TMP_DIR}
+
 echo
 echo "-------------------------------------------------------------------------"
 echo
-echo "You can now copy ${EFI_IMG_DIR} to fat32-formatted device!"
+echo "You can now copy ${OUTPUT_DIR} to fat32-formatted device!"
 echo
 echo "-------------------------------------------------------------------------"
 
