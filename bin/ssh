@@ -42,11 +42,14 @@ function ensure_ssh_key_added {
         FIFO=$(mktemp -u --suffix=.${LPASS_SSH_KEY_ID})
         mkfifo -m 600 ${FIFO}
         trap "rm -rf ${FIFO}" EXIT
-        ${LPASS} show --field='Private Key' ssh/${LPASS_SSH_KEY_ID} > ${FIFO} &
-        log $(ssh-add ${FIFO} < /dev/null)
+        ${LPASS} show --field='Private Key' ssh/${LPASS_SSH_KEY_ID} 2>/dev/null > ${FIFO} &
+        #log $(ssh-add ${FIFO} < /dev/null)
     fi
 }
 
-ensure_ssh_agent_started
-ensure_ssh_key_added
+if [ -z "$SSH_AGENT_DISABLE"]
+then
+    ensure_ssh_agent_started
+    ensure_ssh_key_added
+fi
 $(non_bin_exec ssh) "$@"
