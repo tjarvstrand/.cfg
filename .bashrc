@@ -361,10 +361,12 @@ function tmux-session {
     tmux attach -t ${TMUX_SESSION} || tmux
 }
 
+if [ -f "${HOME}/.bashrc.local" ]
+then
+    source "${HOME}/.bashrc.local"
+fi
+
 if [ "$NO_TMUX" == "" ] && which tmux > /dev/null && [[ -z "${TMUX}" ]]
 then
     tmux-session
 fi
-
-# added by travis gem
-[ -f /home/tjarvstrand/.travis/travis.sh ] && source /home/tjarvstrand/.travis/travis.sh
