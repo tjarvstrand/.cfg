@@ -1,0 +1,3 @@
+[Install]
+Wants=light-locker.service
+Wants=polybar.service

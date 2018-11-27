@@ -1,0 +1,5 @@
+[Unit]
+Wants=blueman-applet.service
+Wants=dropbox.service
+Wants=nm-applet.service
+Wants=xfce4-power-manager.service

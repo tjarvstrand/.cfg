@@ -1,0 +1,9 @@
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/polybar -r mybar
+Restart=always
+RestartSec=1
+
+[Unit]
+Wants=system-tray.target
+Before=system-tray.target

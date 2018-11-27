@@ -1,0 +1,4 @@
+[Service]
+ExecStart=/usr/bin/light-locker
+Restart=on-failure
+RestartSec=1

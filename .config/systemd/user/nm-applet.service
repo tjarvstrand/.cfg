@@ -1,0 +1,7 @@
+[Service]
+ExecStart=/usr/bin/nm-applet
+Restart=always
+RestartSec=1
+
+[Unit]
+StopWhenUnneeded=true

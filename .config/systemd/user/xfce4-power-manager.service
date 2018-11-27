@@ -1,0 +1,8 @@
+[Service]
+Type=simple
+ExecStart=/usr/bin/xfce4-power-manager --no-daemon
+Restart=always
+RestartSec=1
+
+[Unit]
+StopWhenUnneeded=true
