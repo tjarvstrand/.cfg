@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 branch=$(git rev-parse --abbrev-ref HEAD)
 if [[ "${branch}" =~ ^([a-zA-Z]+-[0-9]+).* ]]
