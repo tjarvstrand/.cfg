@@ -43,7 +43,7 @@ function ensure_ssh_key_added {
         mkfifo -m 600 ${FIFO}
         trap "rm -rf ${FIFO}" EXIT
         ${LPASS} show --field='Private Key' ssh/${LPASS_SSH_KEY_ID} 2>/dev/null > ${FIFO} &
-        #log $(ssh-add ${FIFO} < /dev/null)
+        log $(ssh-add ${FIFO} < /dev/null)
     fi
 }
 

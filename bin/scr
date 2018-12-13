@@ -16,8 +16,6 @@ configurations = ['mirror', 'internal', 'external']
 
 logging.basicConfig(format='%(asctime)s %(message)s', level = logging.INFO)
 
-print sys.argv
-
 if len(sys.argv) > 3:
     logging.basicConfig(filename = sys.argv[3])
 
