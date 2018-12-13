@@ -1,17 +1,22 @@
 import XMonad
 import qualified XMonad.StackSet as W
 
-import System.Taffybar.Support.PagerHints
+import Control.Monad
+import Data.Function
+import Data.List
 import XMonad.Layout.Gaps
+import qualified XMonad.Layout.Fullscreen as LF
 import XMonad.Util.EZConfig
 import XMonad.ManageHook
-import XMonad.Hooks.EwmhDesktops
+import XMonad.Hooks.EwmhDesktops as Ewmh
 import XMonad.Hooks.SetWMName
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
 import XMonad.Layout.NoBorders
-import XMonad.Hooks.EwmhDesktops
 import XMonad.Actions.CycleWindows
+import XMonad.Util.NamedWindows
+
+import qualified XMonad.StackSet as W
 
 myLayout = smartBorders tiled |||
            -- Mirror tiled |||
@@ -31,50 +36,52 @@ myLayout = smartBorders tiled |||
 
 myManageHook :: [ManageHook]
 myManageHook =
-  [ isFullscreen --> doFullFloat
+  [ LF.fullscreenManageHook
   , isDialog --> doFloat
-  , className =? "vlc" --> doFullFloat
-  , className =? "Xfce4-notifyd" --> doIgnore
   , manageDocks]
 
 myLogHook :: [X ()]
 myLogHook =
  [ ewmhDesktopsLogHook >> setWMName "LG3D"  -- java workaround
+ , eventLogHook
  ]
+
+eventLogHook = do
+  winset <- gets windowset
+  let currWs = W.currentTag winset
+  io $ appendFile "/home/tjarvstrand/.xmonad/workspace-log" (currWs ++ "\n")
+
+
 
 main = xmonad $ docks $ ewmh def
   { modMask = mod4Mask
   , terminal = "urxvt"
   , borderWidth = 2
-  , manageHook = composeAll myManageHook
-  , handleEventHook = ewmhDesktopsEventHook <+> fullscreenEventHook
+  , manageHook =  composeAll myManageHook
+  , handleEventHook = ewmhDesktopsEventHook <+> LF.fullscreenEventHook
   , logHook = composeAll myLogHook
   , layoutHook = smartBorders $ avoidStruts $ myLayout
-  , startupHook = do
+  , startupHook = ewmhDesktopsStartup >> do
       spawn "/bin/bash ~/.xmonadrc"
       spawn "feh --bg-fill /home/tjarvstrand/Pictures/Wallpapers/1.jpeg"
-      spawn "taffybar"
-      spawn "dropbox start -i"
-      spawn "nm-applet"
-      spawn "blueman-applet"
-      spawn "xfce-power-manager"
-      -- spawn "light-locker"
   }
   `additionalKeysP`
     [ ("M1-<Tab>",  windows W.focusDown)
     , ("M-w",  kill)
     , ("M-M1-<Space>", sendMessage ToggleStruts)
     , ("C-<Return>", spawn "dmenu_run_history -b -i")
+    , ("C-M1-l", spawn "light-locker-command -l")
 
     , ("<Print>", spawn "xfce4-screenshooter --fullscreen --save /home/tjarvstrand/Pictures/Screenshots")
 
-    , ("XF86AudioMute",        spawn "/home/tjarvstrand/bin/toggle-mute")
-    , ("XF86AudioLowerVolume", spawn "/home/tjarvstrand/bin/volume dec 10")
-    , ("XF86AudioRaiseVolume", spawn "/home/tjarvstrand/bin/volume inc 10")
-    , ("XF86MonBrightnessUp",  spawn "light -A 5")
-    , ("XF86MonBrightnessDown", spawn "light -U 5")
-    , ("C-XF86MonBrightnessUp", spawn "light -A 10")
-    , ("C-XF86MonBrightnessDown", spawn "light -U 10")
+    , ("XF86Suspend", spawn "systemctl suspend")
+    , ("XF86WLAN", spawn "toggle-wifi")
 
-    , ("C-M1-l", spawn "light-locker-command -l")
+    , ("<XF86AudioMute>",        spawn "/home/tjarvstrand/bin/toggle-mute")
+    , ("<XF86AudioLowerVolume>", spawn "/home/tjarvstrand/bin/volume dec 5")
+    , ("<XF86AudioRaiseVolume>", spawn "/home/tjarvstrand/bin/volume inc 5")
+    , ("<XF86MonBrightnessUp>",  spawn "/home/tjarvstrand/bin/backlight inc 5")
+    , ("<XF86MonBrightnessDown>", spawn "/home/tjarvstrand/bin/backlight dec 5")
+    , ("C-<XF86MonBrightnessUp>", spawn "/home/tjarvstrand/bin/backlight inc 10")
+    , ("C-<XF86MonBrightnessDown>", spawn "/home/tjarvstrand/bin/backlight dec 10")
     ]
