@@ -195,6 +195,11 @@ def do_stuff(opts):
         else:
             mode = 'internal'
 
+    if mode == 'int':
+        mode = 'internal'
+    if mode == 'ext':
+        mode = 'external'
+
     if mode:
         if opts['save']:
             store_mode(''.join(outputs[external]['edid']), mode)

@@ -16,8 +16,7 @@ fi
 
 prefix=$(echo $prefix | tr -d '[:space:]')
 
-
-if [ prefix ] && (head -n 1 "${1}" | grep -vi "^${prefix}:")
+if [ -n "${prefix}" ] && (head -n 1 "${1}" | grep -vi "^${prefix}:")
 then
     echo -e "${prefix}: $(cat $1)" > ${1}
 fi

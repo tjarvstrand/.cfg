@@ -15,9 +15,8 @@ then
             -h int:value:${VOLUME} \
             -h string:x-canonical-private-synchronous:volume
 else
-    notify-send "A" \
+    notify-send " " \
             -a volume \
             -i audio-volume-muted \
-            -h int:value:0 \
             -h string:x-canonical-private-synchronous:volume
 fi
