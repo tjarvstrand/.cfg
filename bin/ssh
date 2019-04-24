@@ -27,7 +27,7 @@ function start_ssh_agent {
 function ensure_ssh_agent_started {
     if [ -f "${SSH_ENV}" ]; then
         . "${SSH_ENV}" > /dev/null
-        ps -eo pid | grep -q ${SSH_AGENT_PID} && return
+        (ps -eo pid | grep -q ${SSH_AGENT_PID}) && [ -S "${SSH_AUTH_SOCK}" ] && return
         rm -f "${SSH_ENV}"
     fi
     start_ssh_agent;

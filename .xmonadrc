@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-#xfce4-panel
-#gnome-do
-
 setxkbmap -option ctrl:nocaps
 
 mkfifo /home/tjarvstrand/.xmonad/workspace-log

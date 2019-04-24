@@ -29,11 +29,13 @@
      auto-highlight-symbol
      color-theme
      dash
+     edts
      ensime
      erlang
      f
      python-mode
      s
+     scad-mode
      yaml-mode)))
 (package-install-selected-packages)
 
@@ -66,7 +68,7 @@
  '(custom-enabled-themes (quote (idea-darkula)))
  '(custom-safe-themes
    (quote
-    ("82b67c7e21c3b12be7b569af7c84ec0fb2d62105629a173e2479e1053cff94bd" "b04425cc726711a6c91e8ebc20cf5a3927160681941e06bc7900a5a5bfe1a77f" "c74e83f8aa4c78a121b52146eadb792c9facc5b1f02c917e3dbb454fca931223" "3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" "a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" default)))
+    ("420689cc31d01fe04b8e3adef87b8838ff52faa169e69ca4e863143ae9f3a9f9" "82b67c7e21c3b12be7b569af7c84ec0fb2d62105629a173e2479e1053cff94bd" "b04425cc726711a6c91e8ebc20cf5a3927160681941e06bc7900a5a5bfe1a77f" "c74e83f8aa4c78a121b52146eadb792c9facc5b1f02c917e3dbb454fca931223" "3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" "a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" default)))
  '(debug-on-error nil)
  '(ediff-window-setup-function (quote ediff-setup-windows-plain))
  '(edts-inhibit-package-check t)
@@ -90,7 +92,7 @@
  '(neo-window-width 75)
  '(package-selected-packages
    (quote
-    (typescript-mode darcula-theme clojure-mode clojure-mode-extra-font-locking idea-darkula-theme projectile find-file-in-project js2-mode js3-mode web-mode cider haskell-mode graphviz-dot-mode flymd markdown-mode groovy-mode go-mode rust-mode auto-complete auto-highlight-symbol color-theme dash ensime erlang f python-mode s yaml-mode neotree)))
+    (lsp-ui lsp-haskell lsp-mode typescript-mode darcula-theme clojure-mode clojure-mode-extra-font-locking idea-darkula-theme projectile find-file-in-project js2-mode js3-mode web-mode cider haskell-mode graphviz-dot-mode flymd markdown-mode groovy-mode go-mode rust-mode auto-complete auto-highlight-symbol color-theme dash ensime erlang f python-mode s yaml-mode neotree)))
  '(safe-local-variable-values
    (quote
     ((py-smart-indentation)

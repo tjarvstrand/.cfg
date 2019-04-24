@@ -47,7 +47,8 @@ fi
 amixer set Speaker on > /dev/null
 amixer set Headphone on > /dev/null
 amixer set Master ${VOLUME}% > /dev/null
-amixer set Headphone 100% > /dev/null
+amixer set Headphone ${VOLUME}% > /dev/null
+amixer set PCM ${VOLUME}% > /dev/null
 notify-send "A" \
             -a volume \
             -i audio-volume-high-panel \

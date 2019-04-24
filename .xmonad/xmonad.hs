@@ -77,9 +77,9 @@ main = xmonad $ docks $ ewmh def
     , ("XF86Suspend", spawn "systemctl suspend")
     , ("XF86WLAN", spawn "toggle-wifi")
 
-    , ("<XF86AudioMute>",        spawn "/home/tjarvstrand/bin/toggle-mute")
-    , ("<XF86AudioLowerVolume>", spawn "/home/tjarvstrand/bin/volume dec 5")
-    , ("<XF86AudioRaiseVolume>", spawn "/home/tjarvstrand/bin/volume inc 5")
+    -- , ("<XF86AudioMute>",        spawn "/home/tjarvstrand/bin/toggle-mute")
+    -- , ("<XF86AudioLowerVolume>", spawn "/home/tjarvstrand/bin/volume dec 5")
+    -- , ("<XF86AudioRaiseVolume>", spawn "/home/tjarvstrand/bin/volume inc 5")
     , ("<XF86MonBrightnessUp>",  spawn "/home/tjarvstrand/bin/backlight inc 5")
     , ("<XF86MonBrightnessDown>", spawn "/home/tjarvstrand/bin/backlight dec 5")
     , ("C-<XF86MonBrightnessUp>", spawn "/home/tjarvstrand/bin/backlight inc 10")

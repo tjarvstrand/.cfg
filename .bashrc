@@ -24,6 +24,8 @@ shopt -s histappend
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
 HISTSIZE=10000
 HISTFILESIZE=10000
+HISTIGNORE='ls:bg:fg:history'
+# HISTTIMEFORMAT='%F %T '
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
@@ -34,7 +36,7 @@ mkdir -p ${HISTFILE_DIR}
 HISTFILE=${HISTFILE_DIR}/${BASHPID}
 GLOBAL_HISTFILE=${HISTFILE_DIR}/global
 function update_hist() {
-    cmd="$(history | tail -n 1 | sed 's/^[ 0-9]*//'| sed 's/\\/\\\\/')"
+    cmd="$(history | tail -n 1 | sed 's/^[ 0-9]*//'| sed 's/\\/\\\\/g')"
     awk='$0 != cmd {print $0} END {print cmd}'
 
     touch ${HISTFILE}
@@ -179,7 +181,7 @@ export PATH="${OTP_PATH}/bin:${PATH}"
 export DIALYZER_PLT="${OTP_PATH}/dialyzer.plt"
 
 # Misc paths
-export PATH="${PATH}:~/bin:~/scripts:${HOME}/.erlang.d/current/bin"
+export PATH="${PATH}:${HOME}/.erlang.d/current/bin"
 
 # Go
 export GOROOT="/usr/local/lib/go"
@@ -215,7 +217,10 @@ export PATH=${PATH}:${HOME}/dice/cmd/bin
 ulimit -n 65536
 
 # Python -----------------------------------------------------------------------
-. ${HOME}/.virtualenv/bin/activate
+if [ -f "${HOME}/.virtualenv/bin/activate" ]
+then
+    . ${HOME}/.virtualenv/bin/activate
+fi
 
 # Git --------------------------------------------------------------------------
 GIT_AUTHOR_NAME="Thomas Järvstrand"

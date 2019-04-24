@@ -1,3 +1,4 @@
 [Unit]
 Wants=light-locker.service
 Wants=polybar.service
+Wants=xfce4-volumed.service

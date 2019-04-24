@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+
+SCRIPT=$(basename ${BASH_SOURCE})
+
+function usage {
+    echo "${SCRIPT} inc|dec|set|get [AMOUNT]"
+}
+
+OP=${1}
+AMOUNT=${2}
+LIGHT=$(light -G | xargs printf "%.0f")
+
+case ${OP} in
+    "inc")
+        LIGHT=$(( ${LIGHT} + ${AMOUNT} ))
+        ;;
+    "dec")
+        LIGHT=$(( ${LIGHT} - ${AMOUNT} ))
+        ;;
+    "set")
+        LIGHT=${AMOUNT}
+        ;;
+    "get")
+        echo ${LIGHT}
+        exit 0
+        ;;
+    *)
+        usage
+        exit 0
+
+esac
+
+MAX_LIGHT=100
+MIN_LIGHT=0.1
+
+if (( ${LIGHT} <= 0 ))
+then
+    echo "Light would be less than ${MIN_LIGHT}, setting to ${MIN_LIGHT} instead"
+    LIGHT=${MIN_LIGHT}
+elif (( ${LIGHT} > ${MAX_LIGHT} ))
+then
+    echo "Light would be above max (${MAX_LIGHT}), setting to ${MAX_LIGHT} instead"
+    LIGHT=${MAX_LIGHT}
+fi
+
+echo "Setting light to ${LIGHT}"
+light -S ${LIGHT}
+notify-send "A" \
+            -a light \
+            -i xfpm-brightness-lcd \
+            -h int:value:${LIGHT} \
+            -h string:x-canonical-private-synchronous:light
