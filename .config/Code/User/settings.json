@@ -1,0 +1,10 @@
+{
+    "editor.tabSize": 2,
+    "editor.fontSize": 10,
+    "terminal.integrated.fontSize": 10,
+    "markdown.preview.fontSize": 10,
+    "window.zoomLevel": -1,
+    "explorer.confirmDragAndDrop": false,
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "keyboard.dispatch": "keyCode"
+}
