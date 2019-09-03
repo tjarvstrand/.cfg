@@ -1,0 +1,241 @@
+;==========================================================
+;
+;
+;   ██████╗  ██████╗ ██╗  ██╗   ██╗██████╗  █████╗ ██████╗
+;   ██╔══██╗██╔═══██╗██║  ╚██╗ ██╔╝██╔══██╗██╔══██╗██╔══██╗
+;   ██████╔╝██║   ██║██║   ╚████╔╝ ██████╔╝███████║██████╔╝
+;   ██╔═══╝ ██║   ██║██║    ╚██╔╝  ██╔══██╗██╔══██║██╔══██╗
+;   ██║     ╚██████╔╝███████╗██║   ██████╔╝██║  ██║██║  ██║
+;   ╚═╝      ╚═════╝ ╚══════╝╚═╝   ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
+;
+;
+;   To learn more about how to configure Polybar
+;   go to https://github.com/jaagr/polybar
+;
+;   The README contains alot of information
+;
+;==========================================================
+
+[colors]
+;background = ${xrdb:color0:#222}
+background = #222
+background-alt = #444
+;foreground = ${xrdb:color7:#222}
+foreground = #dfdfdf
+foreground-alt = #555
+primary = #ffb52a
+secondary = #e60053
+alert = #bd2c40
+
+[bar/mybar]
+;monitor = ${env:MONITOR:HDMI-1}
+
+width = 100%
+height = 30
+;offset-x = 1%
+;offset-y = 1%
+; radius = 0
+fixed-center = true
+
+enable-ipc = true
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+line-size = 3
+line-color = #f00
+
+border-size = 0
+border-color = #00000000
+
+padding-left = 0
+padding-right = 2
+
+module-margin-left = 0
+module-margin-right = 0
+font-0 = "Arial:bold:size=13;1"
+font-1 = "Font Awesome 5 Free Solid;3"
+;font-3 = "FontAwesome:style=Solid:pixelsize=12;3"
+;font-3 = "DejaVu Sans"
+;font-0 = FontAwesome:pixelsize=16;1
+;font-1 = FontAwesome:pixelsize=16;1
+;font-1 = fixed:pixelsize=16;
+;font-1 = FontAwesome:size=16;1
+;font-3 = FontAwesome;1
+;font-1 = ubuntu:bold:size=12;1
+;font-1 = unifont:fontformat=truetype:size=16:antialias=false;0
+;font-1 = awesome:pixelsize=16;1
+;font-2 = awesome:pixelsize=16;1
+
+modules-left = workspaces-xmonad xwindow
+modules-center = spacer2 music-play music-pause music-currently-playing
+modules-right = checkupdates screenshot xkeyboard filesystem cpu memory temperature date
+
+tray-position = right
+;tray-padding = 2
+tray-maxsize = 22
+;tray-background = #333
+
+;override-redirect = true
+
+;scroll-up = bspwm-desknext
+;scroll-down = bspwm-deskprev
+
+;scroll-up = i3wm-wsnext
+;scroll-down = i3wm-wsprev
+
+cursor-click = pointer
+cursor-scroll = ns-resize
+
+[module/checkupdates]
+type = custom/script
+exec = echo -n ""
+exec-if = apt list --upgradable | grep 'upgradable from'
+interval = 14400
+click-left = terminator --command="NO_TMUX=true sudo apt-get update && /home/tjarvstrand/bin/apt-upgrade && echo Upgrade done; read"
+label-margin = 2
+
+[module/screenshot]
+type = custom/text
+content = ""
+content-font = 1
+click-left = xfce4-screenshooter
+
+[module/music-play]
+type = custom/script
+exec = echo -n ""
+exec-if = pgrep -x spotify && [ "$(playerctl status)" != "Playing" ]
+click-left = playerctl play
+click-middle = playerctl next
+interval = 1
+format-background = ${colors.background-alt}
+label-margin = 2
+
+[module/music-pause]
+type = custom/script
+exec = echo -n ""
+exec-if = pgrep -x spotify && [ "$(playerctl status)" == "Playing" ]
+click-left = playerctl pause
+interval = 1
+format-background = ${colors.background-alt}
+label-margin = 2
+
+[module/music-currently-playing]
+type = custom/script
+exec = echo "$(playerctl metadata xesam:artist) - $(playerctl metadata xesam:title)  "
+exec-if = pgrep -x spotify
+click-left = playerctl pause
+interval = 1
+format-background = ${colors.background-alt}
+
+[module/workspaces-xmonad]
+type = custom/script
+exec = tail -F /home/tjarvstrand/.xmonad/workspace-log
+exec-if = [ -p /home/tjarvstrand/.xmonad/workspace-log ]
+tail = true
+format-padding = 2
+format-background = ${colors.background-alt}
+
+[module/xwindow]
+type = internal/xwindow
+label = %title:0:60:...%
+format-margin = 2
+
+[module/xkeyboard]
+type = internal/xkeyboard
+blacklist-0 = num lock
+;format-prefix =
+format-prefix-foreground = ${colors.foreground-alt}
+;format-prefix-underline = ${colors.secondary}
+format-margin = 4
+label-layout =  %layout%
+;label-layout-underline = ${colors.secondary}
+
+label-indicator-padding = 2
+label-indicator-margin = 4
+label-indicator-background = ${colors.secondary}
+;label-indicator-underline = ${colors.secondary}
+
+[module/spacer2]
+type=custom/text
+content=" "
+content-padding=4
+
+
+[module/filesystem]
+format-margin = 4
+type = internal/fs
+interval = 25
+
+mount-0 = /
+
+label-mounted = %{F#0a81f5}%mountpoint%%{F-}: %percentage_used%%
+label-unmounted = %mountpoint% not mounted
+label-unmounted-foreground = ${colors.foreground-alt}
+
+[module/cpu]
+type = internal/cpu
+interval = 2
+format-prefix = " "
+format-prefix-foreground = ${colors.foreground-alt}
+;format-underline = #f90000
+label = %percentage:2%%
+format-margin = 2
+
+[module/memory]
+type = internal/memory
+interval = 2
+format-prefix = " "
+format-prefix-foreground = ${colors.foreground-alt}
+;format-underline = #4bffdc
+label = %percentage_used%%
+format-margin = 2
+
+[module/temperature]
+type = internal/temperature
+thermal-zone = 0
+warn-temperature = 60
+format-margin = 2
+format = <ramp> <label>
+;format-underline = #f50a4d
+format-warn = <ramp> <label-warn>
+;format-warn-underline = ${self.format-underline}
+
+label = %temperature-c%
+label-warn = %temperature-c%
+label-warn-foreground = ${colors.secondary}
+
+ramp-0 = 
+ramp-1 = 
+ramp-2 = 
+ramp-foreground = ${colors.foreground-alt}
+
+[module/date]
+format-margin = 2
+type = internal/date
+interval = 5
+
+date =
+date-alt = " %Y-%m-%d"
+
+time = %H:%M
+time-alt = %H:%M
+
+;format-prefix = 
+format-prefix-foreground = ${colors.foreground-alt}
+;format-underline = #0a6cf5
+
+label = %date% %time%
+
+[settings]
+screenchange-reload = true
+;compositing-background = xor
+;compositing-background = screen
+;compositing-foreground = source
+;compositing-border = over
+;pseudo-transparency = false
+
+[global/wm]
+margin-top = 0
+margin-bottom = 0
+; vim:ft=dosini
