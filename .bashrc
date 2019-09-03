@@ -233,14 +233,15 @@ fi
 GIT_AUTHOR_NAME="Thomas Järvstrand"
 GIT_COMMITTER_NAME="Thomas Järvstrand"
 
-export DICE_EMAIL="tjarvstrand@contractor.ea.com"
+export WORK_EMAIL="tjarvstrand@contractor.ea.com"
+WORK_SRC_DIR="$HOME/dice"
 function cd_git {
   GIT_COMMITTER_EMAIL_ORIG=${GIT_COMMITTER_EMAIL}
   GIT_AUTHOR_EMAIL_ORIG=${GIT_AUTHOR_EMAIL}
   if [[ -n "${PWD}" ]]; then
-    if [[ "$(readlink -f ${PWD})" == *"$HOME/dice"* ]]; then
-        GIT_COMMITTER_EMAIL_NEW=${DICE_EMAIL}
-        GIT_AUTHOR_EMAIL_NEW=${DICE_EMAIL}
+    if [[ "$(readlink -f ${PWD})" == *"${WORK_SRC_DIR}"* ]]; then
+        GIT_COMMITTER_EMAIL_NEW=${WORK_EMAIL}
+        GIT_AUTHOR_EMAIL_NEW=${WORK_EMAIL}
     else
         GIT_COMMITTER_EMAIL_NEW=${EMAIL}
         GIT_AUTHOR_EMAIL_NEW=${EMAIL}
