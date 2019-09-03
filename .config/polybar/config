@@ -114,7 +114,7 @@ label-margin = 2
 [module/music-pause]
 type = custom/script
 exec = echo -n ""
-exec-if = pgrep -x spotify && [ "$(playerctl status)" == "Playing" ]
+exec-if = pgrep -x spotify && [ "$(playerctl status)" = "Playing" ]
 click-left = playerctl pause
 interval = 1
 format-background = ${colors.background-alt}
