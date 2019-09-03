@@ -1,10 +1,16 @@
 {
-    "editor.tabSize": 2,
-    "editor.fontSize": 10,
-    "terminal.integrated.fontSize": 10,
-    "markdown.preview.fontSize": 10,
-    "window.zoomLevel": -1,
-    "explorer.confirmDragAndDrop": false,
-    "typescript.updateImportsOnFileMove.enabled": "always",
-    "keyboard.dispatch": "keyCode"
+  "editor.tabSize": 2,
+  "editor.fontSize": 10,
+  "terminal.integrated.fontSize": 10,
+  "markdown.preview.fontSize": 10,
+  "window.zoomLevel": -1,
+  "explorer.confirmDragAndDrop": false,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "keyboard.dispatch": "keyCode",
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "editor.suggestSelection": "first",
+  "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+  "java.configuration.checkProjectSettingsExclusions": false,
+
+  "sdk.dir": "/home/tjarvstrand/Android/Sdk"
 }

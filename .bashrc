@@ -204,14 +204,21 @@ export PATH=${PATH}:${JAVA_HOME}/bin
 # export PATH=${PATH}:${SCALA_HOME}/bin
 
 # Android ----------------------------------------------------------------------
-
 export ANDROID_HOME=$HOME/Android/Sdk
+export PATH=$PATH:$ANDROID_HOME/emulator
 export PATH=$PATH:$ANDROID_HOME/tools
+export PATH=$PATH:$ANDROID_HOME/tools/bin
 export PATH=$PATH:$ANDROID_HOME/platform-tools
 export JAVA_OPTS="-Xmx2G -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -Xss2M -Duser.timezone=GMT"
 
-# Dice -------------------------------------------------------------------------
-export PATH=${PATH}:${HOME}/dice/cmd/bin
+# npm --------------------------------------------------------------------------
+#export PATH=$PATH:/usr/local/lib/node/current/bin
+export PATH=$PATH:${HOME}/.npm/bin
+
+
+
+# Bazel ------------------------------------------------------------------------
+source "${HOME}/.bazel/bin/bazel-complete.bash"
 
 # Riak -------------------------------------------------------------------------
 ulimit -n 65536
