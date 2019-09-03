@@ -1,6 +1,6 @@
 [Service]
 ExecStart=%h/.dropbox-dist/dropboxd
-ExecStartPre=/bin/sleep 10
+ExecStartPre=/bin/sleep 2
 Restart=on-failure
 RestartSec=1
 

@@ -1,8 +1,8 @@
 # This is a comment
-#gtk-theme-name=""
-#gtk-icon-theme-name="elementary-xfce-dark"
-gtk-icon-sizes="panel-menu=48,48:panel=48,48:gtk-menu=48,48:gtk-large-toolbar=48,48:gtk-small-toolbar=48,48:gtk-button=48,48"
-gtk-font-name="Sans 8"
+gtk-theme-name="Arc-Dark"
+gtk-icon-theme-name=elementary-xfce-dark
+gtk-icon-sizes=panel-menu=48,48:panel=48,48:gtk-menu=48,48:gtk-large-toolbar=48,48:gtk-small-toolbar=48,48:gtk-button=48,48
+gtk-font-name=Sans 7
 
 #### Firefox text fix goes inside the theme name/gtk-2.0/gtkrc (or an app
 #### fix in the gtk-2.0/styles) This should work with all problematic
