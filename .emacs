@@ -33,6 +33,7 @@
      ensime
      erlang
      f
+     neotree
      python-mode
      s
      scad-mode
