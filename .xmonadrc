@@ -2,6 +2,7 @@
 
 setxkbmap -option ctrl:nocaps
 
+rm /home/tjarvstrand/.xmonad/workspace-log
 mkfifo /home/tjarvstrand/.xmonad/workspace-log
 
 systemctl --user start desktop.target
