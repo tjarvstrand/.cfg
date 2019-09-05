@@ -23,7 +23,7 @@ awk -v histfile=$historyfile '
 			x[$0]=1
 		}
 	} !x[$0]++ ' "$cache" \
-        | grep -v -f ${HOME}/.config/dmenu_run_exceptions \
+        | grep -vx -f ${HOME}/.config/dmenu_run_exceptions \
 	| dmenu "$@" \
 	| awk -v histfile=$historyfile '
 		BEGIN {
