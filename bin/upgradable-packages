@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+apt list --upgradable 2>/dev/null | \
+    grep 'upgradable from' | \
+    cut -d '/' -f 1 | \
+    grep -vx -f <(apt-mark showhold)
