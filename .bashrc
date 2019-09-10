@@ -134,6 +134,7 @@ alias l='ls -CF'
 alias gw='./gradlew'
 alias grep='grep --color=auto'
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+alias copy='xclip -i -sel clip'
 
 export GIT_SSH_COMMAND="ssh -q"
 
@@ -216,9 +217,11 @@ export JAVA_OPTS="-Xmx2G -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -
 export PATH=$PATH:${HOME}/.npm/bin
 
 
-
 # Bazel ------------------------------------------------------------------------
-source "${HOME}/.bazel/bin/bazel-complete.bash"
+if [ -f "${HOME}/.bazel/bin/bazel-complete.bash" ]
+then
+    source "${HOME}/.bazel/bin/bazel-complete.bash"
+fi
 
 # Riak -------------------------------------------------------------------------
 ulimit -n 65536
@@ -378,6 +381,12 @@ if [ -f "${HOME}/.bashrc.local" ]
 then
     source "${HOME}/.bashrc.local"
 fi
+
+if [ -f "${HOME}/.bashrc.$(hostname)" ]
+then
+    source "${HOME}/.bashrc.$(hostname)"
+fi
+
 
 if [ "$NO_TMUX" == "" ] && which tmux > /dev/null && [[ -z "${TMUX}" ]]
 then
