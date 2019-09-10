@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+set -e
+
+DEV=${DEV:-false}
+BUNDLE_OUTPUT=${BUNDLE_OUTPUT:-android/app/src/main/assets/index.android.bundle}
+ASSET_DEST=android/app/src/main/res
+
+mkdir -p $(dirname ${BUNDLE_OUTPUT})
+mkdir -p ${ASSET_DEST}
+
+react-native bundle \
+             --platform android \
+             --dev ${DEV} \
+             --entry-file index.js \
+             --bundle-output "${BUNDLE_OUTPUT}" \
+             --assets-dest "${ASSET_DEST}"
