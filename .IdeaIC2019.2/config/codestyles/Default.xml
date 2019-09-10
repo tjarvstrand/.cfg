@@ -1,1 +1,6 @@
-<code_scheme name="Default" version="173" />
+<code_scheme name="Default" version="173">
+  <ScalaCodeStyleSettings>
+    <option name="classCountToUseImportOnDemand" value="2000" />
+    <option name="collectImports" value="false" />
+  </ScalaCodeStyleSettings>
+</code_scheme>

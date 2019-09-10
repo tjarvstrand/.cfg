@@ -668,8 +668,9 @@
       "from" : "1"
     } ],
     "rules" : {
-      "event_id" : [ "{util#class_name}", "{enum#_}" ],
+      "event_id" : [ "{util#class_name}", "{enum#_}", "{enum:used}" ],
       "event_data" : {
+        "factory" : [ "{util#class_name}" ],
         "plugin" : [ "{util#plugin}" ],
         "plugin_type" : [ "{util#plugin_type}" ]
       },
@@ -1236,7 +1237,13 @@
       "from" : "11"
     } ],
     "rules" : {
-      "event_id" : [ "{util#productivity}" ]
+      "event_id" : [ "{util#productivity}", "{enum:feature.used}" ],
+      "event_data" : {
+        "group" : [ "{util#productivity_group}" ],
+        "id" : [ "{util#productivity}" ],
+        "plugin" : [ "{util#plugin}" ],
+        "plugin_type" : [ "{util#plugin_type}" ]
+      }
     }
   }, {
     "id" : "project.fs",
@@ -2098,5 +2105,5 @@
       "version" : "(\\d+\\.?)*\\d+"
     }
   },
-  "version" : "757"
+  "version" : "767"
 }
