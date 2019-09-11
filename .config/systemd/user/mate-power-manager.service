@@ -1,6 +1,6 @@
 [Service]
 Type=simple
-ExecStart=/usr/bin/xfce4-power-manager --no-daemon
+ExecStart=/usr/bin/mate-power-manager
 Restart=always
 RestartSec=1
 
