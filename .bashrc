@@ -135,6 +135,7 @@ alias gw='./gradlew'
 alias grep='grep --color=auto'
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 alias copy='xclip -i -sel clip'
+alias dc='docker-compose'
 
 export GIT_SSH_COMMAND="ssh -q"
 
