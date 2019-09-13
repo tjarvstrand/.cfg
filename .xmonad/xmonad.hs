@@ -43,9 +43,9 @@ myManageHook =
 
 myLogHook :: [X ()]
 myLogHook =
- [ ewmhDesktopsLogHook >> setWMName "LG3D"  -- java workaround
+ [ fadeInactiveLogHook 0.75
+ , ewmhDesktopsLogHook >> setWMName "LG3D"  -- java workaround
  , eventLogHook
- , fadeInactiveLogHook 0.7
  ]
 
 eventLogHook = do
