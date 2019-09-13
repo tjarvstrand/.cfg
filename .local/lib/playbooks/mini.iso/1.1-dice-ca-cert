@@ -1,0 +1,16 @@
+---
+- name: Install packages
+  hosts: all
+  become: yes
+  tasks:
+    - action: get_url
+      args:
+        url: https://git.frostbite.com/frostbite-ew/ea-root-cert-debian/raw/master/local/ea-root.crt
+        dest: /usr/share/ca-certificates
+    - shell: update-ca-certificates
+    - message: "Don't forget to import /usr/share/ca-certificates/ea-root.crt into Firefox"
+
+# Local Variables:
+# mode: yaml
+# End:
+

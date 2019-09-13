@@ -1,0 +1,65 @@
+---
+- name: Create User
+  tags: user
+  hosts: all
+  become: yes
+  vars:
+    ansible_ssh_user: pi
+    ansible_ssh_pass: raspberry
+  tasks:
+    - action: user
+      args:
+        name: tjarvstrand
+        password: "$1$snt$k1egiasF3ogFi6cPceSRI/"
+        shell: /bin/bash
+    - action: authorized_key
+      args:
+        user: tjarvstrand
+        key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
+    - action: lineinfile
+      args:
+        dest: /etc/sudoers
+        regexp: '^tjarvstrand'
+        line: 'tjarvstrand ALL=(ALL:ALL) ALL'
+    - action: locale_gen
+      args:
+        name: en_US.UTF-8
+
+- name: "Delete pi user"
+  tags: delete-user
+  hosts: all
+  become: yes
+  vars:
+    ansible_ssh_user: tjarvstrand
+  tasks:
+    - action: user
+      args:
+        name: pi
+        state: absent
+        remove: yes
+
+- name: "Wifi"
+  tags: network
+  hosts: all
+  become: yes
+  vars_prompt:
+    - name: "wifi_password"
+      prompt: "Enter Wifi password"
+      private: yes
+  tasks:
+    - shell: 'wpa_passphrase "wlan" {{wifi_password}} | grep -v "^\s*#psk"'
+      register: wpa_passphrase_result
+    - copy:
+        dest: /etc/wpa_supplicant/wpa_supplicant.conf
+        content: |
+          country=GB
+          ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+          update_config=1
+          {{ wpa_passphrase_result.stdout }}
+    - shell: wpa_cli reconfigure
+    - shell: ifconfig wlan0 up
+
+# Local Variables:
+# mode: yaml
+# End:
+

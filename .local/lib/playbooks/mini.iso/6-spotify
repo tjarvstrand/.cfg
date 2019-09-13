@@ -1,0 +1,22 @@
+---
+- name: Spotify
+  hosts: all
+  become: yes
+  tasks:
+    - action: apt_key
+      name: Add Spotify apt key
+      args:
+        keyserver: hkp://keyserver.ubuntu.com:80
+        id: 931FF8E79F0876134EDDBDCCA87FF9DF48BF1C90
+    - action: apt_repository
+      name: Add apt repositories
+      args:
+        repo: "deb http://repository.spotify.com stable non-free"
+    - action: apt
+      args:
+        update_cache: yes
+        name: spotify-client
+
+# Local Variables:
+# mode: yaml
+# End:

@@ -1,0 +1,383 @@
+---
+- name: misc packages
+  tags:
+    - packages
+  hosts: all
+  become: yes
+  tasks:
+    - action: apt_repository
+      name: Add apt repositories
+      args:
+        repo: "{{item}}"
+      with_items:
+        #- ppa:ubuntu-wine/ppa
+        - ppa:hluk/copyq
+        #- ppa:leolik/leolik # notify-osd fork # doesn't have ardwark yet
+
+    - action: apt_repository
+      name: Add apt repositories
+      args:
+        repo: ppa:leolik/leolik
+        codename: zesty # notify-osd fork # doesn't have ardwark yet
+
+    - action: apt
+      args:
+        update_cache: yes
+
+    - action: apt
+      args:
+        name:
+
+          # Libraries
+          - libgtk-3-dev # For building themes
+          - gstreamer1.0-pulseaudio # For Firefox pulseaudio
+          - ubuntu-restricted-extras # media codecs
+
+          #
+          - blueman # bluetooth applet
+          - feh # Desktop background
+          - libnotify-bin
+          - notify-osd
+          - redshift # screen color temperature
+          - mate-power-manager
+          - xfce4-screenshooter
+
+          # System tools
+          - baobab
+          - copyq
+          - dconf-editor
+          - dconf-gsettings-backend
+          - dconf-service
+          - gconf-editor
+          - gparted
+          - gsettings-desktop-schemas
+          - gsettings-ubuntu-schemas
+          - lightdm
+          - light-locker
+          - light-locker-settings
+          - nautilus-dropbox
+          - network-manager-openvpn-gnome
+          - pavucontrol
+          - suckless-tools
+          - synaptic
+          - terminator
+          - unity-greeter
+
+          # Applications
+          - eog # Eye of Gnome
+          - evince # pdf reader
+          - filezilla
+          - firefox
+          - gimp
+          - gnome-calculator
+          - gnome-font-viewer
+          - graphviz
+          - nautilus
+          - transmission
+          - vinagre # vnc
+          - virtualbox
+          - vlc
+          - wireshark
+
+          # UI
+          - arc-theme
+          - elementary-xfce-icon-theme
+          - numix-gtk-theme # for xfce4-notifyd
+          - ttf-mscorefonts-installer
+          - ttf-ubuntu-font-family
+          - xcursor-themes
+          - ubuntu-wallpapers
+
+          - xmonad
+          - libdbusmenu-gtk3-dev
+
+          - qtile
+
+    - action: copy
+      args:
+        src: files/usr/share/lightdm/lightdm.conf.d/60-session.conf
+        dest: /usr/share/lightdm/lightdm.conf.d/60-session.conf
+
+- name: light
+  hosts: all
+  tags:
+    - light
+  vars:
+    dir: "{{ \"~/src/light\" | expanduser }}"
+  tasks:
+    - name: install dependencies
+      action: apt
+      become: yes
+      args:
+        name: help2man
+    - action: git
+      args:
+        repo: git://github.com/haikarainen/light.git
+        dest: "{{dir}}"
+    - shell: "{{dir}}/autogen.sh"
+      args:
+        chdir: "{{dir}}"
+    - shell: "./configure && make"
+      args:
+        chdir: "{{dir}}"
+    - shell: "make install"
+      become: yes
+      args:
+        chdir: "{{dir}}"
+
+- name: X
+  hosts: all
+  tags:
+    - x
+  tasks:
+    # - name: XOrg config
+    #   action: copy
+    #   become: yes
+    #   args:
+    #     src: files/usr/share/X11/xorg.conf.d/100-compositing.conf
+    #     dest: /usr/share/X11/xorg.conf.d/100-compositing.conf
+    - name: X defaults
+      action: copy
+      args:
+        dest: ~/.Xdefaults
+        content: |
+          URxvt.depth: 32
+          URxvt*background: rgba:0000/0000/0000/cccc
+          Xcursor.size: 24
+    - action: copy
+      become: yes
+      args:
+        dest: /etc/udev/rules.d/70-drm_event.rules
+        content: |
+          KERNEL=="card0", SUBSYSTEM=="drm", RUN+="/home/tjarvstrand/bin/udev_drm_event"
+    - action: service
+      become: yes
+      args:
+        name: udev
+        state: restarted
+
+# - name: qtile
+#   hosts: all
+#   tags:
+#     - qtile
+#   become: yes
+#   tasks:
+#     - action: apt
+#       args:
+#         name: "{{item}}"
+#       with_items:
+#         - aptitude # for update checking
+#         - libffi-dev
+#         - libiw-dev
+#         - libxcb-cursor0
+#         - libxcb-cursor-dev
+#         - libxcb-render0-dev
+#         - libpangocairo-1.0-0
+#         - python-dbus
+#     - action: pip
+#       args:
+#         name: "{{item}}"
+#       with_items:
+#         - xcffib
+#         - cairocffi
+#         - trollius
+#         - iwlib
+#         - qtile
+#         - sh
+#     - action: file
+#       args:
+#         state: directory
+#         dest: /usr/share/xsessions
+#     - action: copy
+#       args:
+#         dest: /usr/share/xsessions/qtile.desktop
+#         content: |
+#           [Desktop Entry]
+#           Encoding=UTF-8
+#           Name=qtile
+#           Comment=A full-featured, pure-Python tiling window manager
+#           TryExec=qtile
+#           Exec=qtile
+#           Type=Application
+#     - action: copy
+#       args:
+#         dest: /usr/share/lightdm/lightdm.conf.d/60-qtile.conf
+#         content: |
+#           [Seat:*]
+#           user-session=qtile
+
+# - name: qtile hacking
+#   hosts: all
+#   tasks:
+#     - action: apt
+#       become: yes
+#       args:
+#         name: "{{item}}"
+#       with_items:
+#         - xserver-xephyr
+#       action: pip
+#       args:
+#         name: "{{item}}"
+#         virtualenv: "{{lookup('ENV', 'HOME')}}/.virtualenv"
+#       with_items:
+#         - cairocffi
+#         - iwlib
+#         - nose
+#         - sh
+#         - trollius
+#         - xcffib
+#         - python-mpd2
+#         - google-api-python-client
+
+- name: dmenu
+  hosts: all
+  vars:
+    user_home: "{{ lookup('ENV', 'HOME') }}"
+  tasks:
+    - action: apt
+      args:
+        name:
+          - libxft-dev
+          - libxft2
+          - libxinerama-dev
+      become: yes
+    - action: git
+      args:
+        repo: git://git.suckless.org/dmenu
+        dest: ~/src/dmenu
+      ignore_errors: yes
+    - shell: "make"
+      args:
+        chdir: "~/src/dmenu"
+    - shell: "make install"
+      become: yes
+      args:
+        chdir: "{{user_home}}/src/dmenu"
+
+- name: Dropbox linking
+  hosts: all
+  tags:
+    - dropbox
+  tasks:
+    - set_fact:
+        dropbox_link_dirs:
+          - Desktop
+          - Documents
+          - Pictures
+          - .themes
+          - .icons
+    - action: file
+      name: Delete directories
+      args:
+        state: absent
+        dest: "~/{{item}}"
+      with_items:
+       - "{{dropbox_link_dirs}}"
+    - action: file
+      name: Create symlinks
+      args:
+        force: yes
+        state: link
+        src: "~/Dropbox/{{item}}"
+        dest: "~/{{item}}"
+      with_items:
+       - "{{dropbox_link_dirs}}"
+
+
+- name: Misc. Settings
+  hosts: all
+  tags:
+    - settings
+  tasks:
+    - shell: 'gsettings set apps.light-locker late-locking false'
+    - shell: 'gsettings set apps.light-locker lock-after-screensaver 0'
+    - shell: 'gsettings set apps.light-locker lock-on-suspend false'
+    - shell: 'gsettings set apps.light-locker lock-on-lid false'
+    - shell: 'gsettings set apps.light-locker idle-hint false'
+
+      # Fonts are also set in ~/.gtkrc-2.0, ~/.config/gtk-3.0/settings.ini and ~/.Xdefaults
+    - shell: 'gsettings set org.gnome.desktop.interface cursor-size 16'
+    - shell: 'gsettings set org.gnome.desktop.interface cursor-theme DMZ-White'
+    - shell: 'gsettings set org.gnome.desktop.interface gtk-theme Arc-Dark'
+    - shell: 'update-alternatives --set x-cursor-theme /usr/share/icons/DMZ-White/cursor.theme'
+      become: yes
+
+    - name: Enable Eye of Gnome in Nautilus etc.
+      action: lineinfile
+      become: yes
+      args:
+        backrefs: yes
+        regexp: '^(Exec=.*)'
+        line: '\1 %F'
+        path: /usr/share/applications/eog.desktop
+
+
+- name: Polybar
+  hosts: all
+  tags:
+    - polybar
+  vars:
+    dir: "{{ \"~/src/polybar\" | expanduser }}"
+  tasks:
+    - name: Install deps
+      action: apt
+      become: yes
+      args:
+        name:
+          - cmake
+          - cmake-data
+          - pkg-config
+          - libcairo2-dev
+          - libxcb1-dev
+          - libxcb-util0-dev
+          - libxcb-randr0-dev
+          - libxcb-composite0-dev
+          - python-xcbgen
+          - xcb-proto
+          - libxcb-image0-dev
+          - libxcb-ewmh-dev
+          - libxcb-icccm4-dev
+          - python3-sphinx
+
+          # Optional
+          - libxcb-xkb-dev
+    - name: Clone repo
+      action: git
+      args:
+        recursive: yes
+        repo: https://github.com/jaagr/polybar.git
+        dest: "{{dir}}"
+    - name: Create build directory
+      action: file
+      args:
+        state: directory
+        dest: "{{dir}}/build"
+    - name: Compile
+      shell: cmake ..
+      args:
+        chdir: "{{dir}}/build"
+    - name: Install
+      shell: make install
+      become: yes
+      args:
+        chdir: "{{dir}}/build"
+    - action: get_url
+      name: Fetch Font Awesome
+      args:
+        dest: "{{ \"~/Downloads\" | expanduser }}"
+        url: https://use.fontawesome.com/releases/v5.10.2/fontawesome-free-5.10.2-desktop.zip
+    - name: Unpack Font Awesome
+      action: unarchive
+      become: yes
+      args:
+        src: "{{ \"~/Downloads\" | expanduser }}/fontawesome-free-5.10.2-desktop.zip"
+        dest: "/usr/share/fonts"
+
+- name: Restart
+  hosts: all
+  tasks:
+    - debug: msg="Reboot the machine now!"
+
+# Local Variables:
+# mode: yaml
+# End:

@@ -1,0 +1,24 @@
+#!/usr/bin/env python
+
+import fileinput
+import sys
+
+if len(sys.argv) < 3:
+  out = sys.argv[1]
+else:
+  out = sys.argv[2]
+
+out_str = ''
+
+for line in fileinput.input(sys.argv[1]):
+  words = line.split()
+  if not (len(words) >= 1 and words[0] == 'custom') and \
+     not (len(words) >= 2 and words[1] == 'custom:'):
+    out_str += line
+  if line.strip() == '! layout':
+    out_str += '  custom          Custom Layouts\n'
+  elif line.strip() == '! variant':
+    out_str += '  us-sv-dvorak    custom: US/SV Dvorak\n'
+
+with open(out, 'w') as f:
+  f.write(out_str)

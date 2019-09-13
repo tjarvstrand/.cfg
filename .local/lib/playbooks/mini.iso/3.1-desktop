@@ -1,0 +1,13 @@
+---
+- name: Lightdm setup
+  hosts: all
+  tasks:
+    - shell: xhost +SI:localuser:lightdm
+      become: yes
+    - shell: gsettings set com.canonical.unity-greeter draw-grid false
+      become: yes
+      become_user: lightdm
+
+# Local Variables:
+# mode: yaml
+# End:

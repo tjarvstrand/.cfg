@@ -1,0 +1,291 @@
+---
+- name: User
+  hosts: all
+  become: yes
+  tasks:
+    - name: Add user to groups
+      action: user
+      args:
+        append: yes
+        groups:
+          - dialout
+          - lpadmin
+          - kvm
+        user: tjarvstrand
+
+- name: System
+  hosts: all
+  become: yes
+  tags: system
+  tasks:
+    - name: Set Grub linux cmdline
+      action: lineinfile
+      args:
+        regexp: "^GRUB_CMDLINE_LINUX_DEFAULT"
+        # Workaround for https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1722478
+        #line: 'GRUB_CMDLINE_LINUX_DEFAULT="nosplash"'
+        line: 'GRUB_CMDLINE_LINUX_DEFAULT="nosplash psmouse.synaptics_intertouch=0"'
+        dest: /etc/default/grub
+        backup: yes
+    - name: Update grub
+      shell: update-grub
+
+- name: Directories
+  hosts: all
+  tasks:
+    - action: file
+      name: Delete
+      args:
+        path: "{{item}}"
+        state: absent
+      with_items:
+        - ~/Music
+        - ~/Public
+        - ~/Templates
+        - ~/Videos
+        - ~/examples.desktop
+
+- name: Install base packages
+  hosts: all
+  become: yes
+  tags:
+    - base-packages
+  tasks:
+    - name: Disable installation of recommended packages
+      action: lineinfile
+      args:
+        create: yes
+        regexp: "[# ]*APT::Install-Recommends.*"
+        line: 'APT::Install-Recommends "false";'
+        dest: /etc/apt/apt.conf.d/99z-norecommend
+    - name: Disable installation of recommended packages
+      action: lineinfile
+      args:
+        regexp: "[# ]*APT::Install-Suggests.*"
+        line: 'APT::Install-Suggests "false";'
+        dest: /etc/apt/apt.conf.d/99z-norecommend
+
+    - action: apt
+      name: Install lsb-core
+      args:
+        name: lsb-core
+    - shell: lsb_release -a | grep Codename | cut -f 2
+      register: ubuntu_codename
+    # - action: apt_key
+    #   name: Add apt keys
+    #   args:
+    #     keyserver: hkp://keyserver.ubuntu.com:80
+    #     id: 94558F59
+
+    - name: Add ubuntu partner
+      action: apt_repository
+      args:
+        repo: "deb http://archive.canonical.com/ubuntu {{ubuntu_codename.stdout}} partner"
+
+    - name: Add Git ppa
+      action: apt_repository
+      args:
+        repo: ppa:git-core/ppa
+
+    # - name: Add ubuntu universe
+    #   action: apt_repository
+    #   args:
+    #     repo: "deb http://archive.ubuntu.com/ubuntu {{ubuntu_codename.stdout}} main universe restricted multiverse"
+
+    - action: apt
+      args:
+        update_cache: yes
+
+    - action: apt
+      name: Install packages
+      args:
+        update_cache: yes
+        state: latest
+        name:
+          - alsa-utils
+          - aptitude
+          - apt-transport-https
+          - autoconf
+          - build-essential
+          - cifs-utils # Samba
+          - cups
+          - cups-bsd
+          - cups-pdf
+          - curl
+          - cryptsetup # luks encryption
+          - cryptsetup-bin # luks encryption
+          - daemontools # check this out!
+          - emacs
+          - emacs-el
+          - emacs-goodies-el
+          - git
+          - gnupg
+          - gnupg-agent
+          - gzip
+          - jq
+          - lsb-core
+          - markdown
+          - mono-complete
+          - nautilus-dropbox
+          - nodejs
+          - network-manager
+          - network-manager-openvpn
+          - net-tools
+          - printer-driver-all
+          - python-dev
+          - read-edid
+          - rng-tools
+          - qemu-kvm # virtualization stuff
+          - software-properties-common
+          - ssh-askpass
+          - ruby
+          - ruby-dev
+          - tar
+          - tmux
+          - tree
+          - unrar
+          - usbmount # Automount usb
+          - xcompmgr
+          - x11-xkb-utils
+          - xbacklight
+          - xinput
+          - wmname
+
+          # erlang/otp
+          - libncurses5-dev
+          - libssl-dev
+
+    - name: Set console font size
+      action: replace
+      args:
+        dest: /etc/default/console-setup
+        regexp: "FONTSIZE=.*"
+        replace: "FONTSIZE=10x20"
+    - shell: localectl set-keymap dvorak
+    - action: lineinfile
+      args:
+        regexp: "[# ]*keycode 58 ="
+        line: "keycode 58 = Control"
+        dest: /etc/console-setup/remap.inc
+    - shell: dpkg-reconfigure -f noninteractive keyboard-configuration
+    - name: Set inotify watch limit
+      action: lineinfile
+      args:
+        regexp: "fs.inotify.max_user_watches.*"
+        line: "fs.inotify.max_user_watches=524288"
+        dest: /etc/sysctl.conf
+    - shell: sysctl -p --system
+
+    - name: Configure journalctl
+      action: lineinfile
+      args:
+        regexp: "[#]?Storage=.*"
+        line: "Storage=persistent"
+        dest: /etc/systemd/journald.conf
+
+    - name: Configure journalctl
+      action: lineinfile
+      args:
+        regexp: "[#]?SystemMaxUse=.*"
+        line: "SystemMaxUse=20M"
+        dest: /etc/systemd/journald.conf
+
+    - name: Configure usbmount
+      action: lineinfile
+      args:
+        regexp: ^MOUNTOPTIONS=
+        line: MOUNTOPTIONS="sync,noexec,nodev,noatime,nodiratime,uid=1000,gid=1000"
+        dest: /etc/usbmount/usbmount.conf
+
+    - name: Restart journal
+      action: systemd
+      args:
+        name: systemd-journald
+        state: restarted
+
+- name: Networking
+  hosts: all
+  become: yes
+  tags: network
+  tasks:
+    - name: Disable auto up of ethernet interfaces
+      action: replace
+      args:
+        dest: /etc/network/interfaces
+        backup: yes
+        regexp: "(#*)?(.*?(eth[0-9]|en.[0-9]).*?\n)"
+        replace: '#\2'
+    - name: Disable auto up of ethernet interfaces
+      action: replace
+      args:
+        dest: /etc/NetworkManager/NetworkManager.conf
+        backup: yes
+        regexp: managed=false
+        replace: managed=true
+    - name: Override NetworkManager only managing wifi
+      action: copy
+      args:
+        dest: /etc/NetworkManager/conf.d/10-globally-managed-devices.conf
+        content: ""
+    - name: Create script to auto enable/disable wifi
+      action: copy
+      args:
+        dest: /etc/NetworkManager/dispatcher.d/99-wifi-disable-on-ethernet
+        mode: u=rwx,g=r,o=r
+        content: |
+          #!/bin/sh
+          myname=${0##*/}
+          log() { logger -p user.info -t "${myname}[$$]" "$*"; }
+          IFACE=$1
+          ACTION=$2
+
+          case ${IFACE} in
+              eth*|eno*|usb*)
+                  case ${ACTION} in
+                      up)
+                          log "disabling wifi radio"
+                          nmcli radio wifi off
+                      ;;
+                      down)
+                          log "enabling wifi radio"
+                          nmcli radio wifi on
+                      ;;
+                  esac
+              ;;
+          esac
+
+- name: LastPass CLI
+  hosts: all
+  tags: lastpass
+  vars:
+    lastpass_dir: "{{lookup('env','HOME') + '/src/lastpass-cli'}}"
+  tasks:
+    - name: Install LastPass CLI package dependencies
+      action: apt
+      become: yes
+      args:
+        state: latest
+        name:
+          - cmake
+          - libcurl4-openssl-dev
+          - libxml2-dev
+          - xclip
+    - action: git
+      name: Clone repo
+      args:
+        repo: git://github.com/lastpass/lastpass-cli.git
+        dest: "{{lastpass_dir}}"
+    - name: Build LastPass
+      shell: make
+      args:
+        chdir: "{{lastpass_dir}}"
+    - name: Install LastPass
+      shell: make install
+      become: yes
+      args:
+        chdir: "{{lastpass_dir}}"
+
+
+# Local Variables:
+# mode: yaml
+# End:

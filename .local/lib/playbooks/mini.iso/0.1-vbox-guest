@@ -1,0 +1,22 @@
+---
+- name: Install packages
+  hosts: all
+  become: yes
+  tasks:
+    - action: apt
+      args:
+        update_cache: yes
+
+    - action: apt
+      name: Install packages
+      args:
+        name: "{{item}}"
+        state: latest
+      with_items:
+        - virtualbox-guest-dkms
+        - virtualbox-guest-utils
+
+# Local Variables:
+# mode: yaml
+# End:
+

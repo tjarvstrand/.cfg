@@ -1,0 +1,12 @@
+partial alphanumeric_keys
+xkb_symbols "us-sv-dvorak" {
+
+    name[Group1]= "US/SV Dvorak";
+
+    include "us(dvorak)"
+
+    key <AC01> { [	a,       A,      aring, 	Aring] };
+    key <AC02> { [      o,       O,	 adiaeresis, 	Adiaeresis] };
+    key <AC03> { [      e,       E, 	 odiaeresis, 	Odiaeresis] };
+    include "level3(ralt_switch)"
+};

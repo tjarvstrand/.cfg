@@ -1,0 +1,136 @@
+---
+- name: Set up Home Assistant prerequisites
+  tags: prerequisites
+  hosts: all
+  become: yes
+  tasks:
+    - name: Install apt deps
+      action: apt
+      args:
+        name: "{{item}}"
+        state: latest
+      with_items:
+        - python3
+        - python3-venv
+        - python3-pip
+    - name: Create home-assistant user
+      action: user
+      args:
+        name: home-assistant
+        groups: dialout
+        system: yes
+        create_home: yes
+    - name: Create Home Assistant installation directory
+      action: file
+      args:
+        state: directory
+        path: /srv/home-assistant
+        owner: home-assistant
+        group: home-assistant
+    - name: Create Home Assistant configuration directory
+      action: file
+      args:
+        state: directory
+        path: /home/home-assistant/.home-assistant
+        owner: home-assistant
+        group: home-assistant
+
+# mount with:
+# sudo mount -t cifs -o uid=tjarvstrand,user=home-assistant //192.168.1.170/home-assistant ${HOME}/home-assistant/
+- name: Samba
+  tags: samba
+  hosts: all
+  become: yes
+  vars_prompt:
+    - name: smbpasswd
+      prompt: "Enter Samba password for home-assistant user"
+      private: yes
+  tasks:
+    - name: Install samba packages
+      action: apt
+      args:
+        name: "{{item}}"
+      with_items:
+        - samba
+        - samba-common-bin
+
+    - name: Add samba shares
+      action: blockinfile
+      args:
+        dest: /etc/samba/smb.conf
+        backup: yes
+        block: |
+          [home-assistant]
+          comment=home-assistant user data
+          path=/home/home-assistant
+          browseable=Yes
+          writeable=Yes
+          only guest=no
+          public=no
+          create mask=0777
+          directory mask=0777
+
+    - name: Create home-assistant samba user
+      shell: "(echo {{ smbpasswd }}; echo {{ smbpasswd }}) | smbpasswd -s -a home-assistant"
+
+    - name: Enable Samba service
+      action: service
+      args:
+        name: smbd
+        enabled: true
+        state: restarted
+
+
+- name: Set up Home Assistant virtualenv
+  tags: install
+  hosts: all
+  become: yes
+  tasks:
+    - name: Setup virtualenv
+      action: pip
+      args:
+        name: "{{item}}"
+        virtualenv: /srv/home-assistant
+        virtualenv_command: pyvenv
+      with_items:
+        - wheel
+        - homeassistant
+        - pyserial
+    - shell: "chown -R home-assistant: /srv/home-assistant"
+      args:
+        warn: no
+    - name: Home assistant SystemD file
+      action: copy
+      args:
+        dest: /etc/systemd/system/home-assistant.service
+        backup: yes
+        content: |
+          [Unit]
+          Description=Home Assistant
+          After=network-online.target
+          
+          [Service]
+          Type=simple
+          User=%i
+          ExecStart=/srv/home-assistant/bin/hass -c "/home/home-assistant/.home-assistant"
+          
+          [Install]
+          WantedBy=multi-user.target
+
+    - name: Checkout IRBlaster scripts
+      action: git
+      args:
+        repo: git@github.com:tjarvstrand/IRBlaster.git
+        dest: /home/home-assistant/IRBlaster
+
+    - name: Enable and start home-assistant service
+      action: service
+      args:
+        name: home-assistant
+        enabled: true
+        state: started
+
+# Local Variables:
+# mode: yaml
+# End:
+
