@@ -9,6 +9,7 @@ import qualified XMonad.Layout.Fullscreen as LF
 import XMonad.Util.EZConfig
 import XMonad.ManageHook
 import XMonad.Hooks.EwmhDesktops as Ewmh
+import XMonad.Hooks.FadeInactive
 import XMonad.Hooks.SetWMName
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
@@ -44,6 +45,7 @@ myLogHook :: [X ()]
 myLogHook =
  [ ewmhDesktopsLogHook >> setWMName "LG3D"  -- java workaround
  , eventLogHook
+ , fadeInactiveLogHook 0.7
  ]
 
 eventLogHook = do
@@ -56,7 +58,7 @@ eventLogHook = do
 main = xmonad $ docks $ ewmh def
   { modMask = mod4Mask
   , terminal = "urxvt"
-  , borderWidth = 2
+  , borderWidth = 1
   , manageHook =  composeAll myManageHook
   , handleEventHook = ewmhDesktopsEventHook <+> LF.fullscreenEventHook
   , logHook = composeAll myLogHook
