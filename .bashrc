@@ -2,8 +2,6 @@
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
-LastRC=$?
-
 deactivate 2>/dev/null
 
 export LC_TYPE=en_US.UTF-8
@@ -25,7 +23,6 @@ shopt -s histappend
 HISTSIZE=10000
 HISTFILESIZE=10000
 HISTIGNORE='ls:bg:fg:history'
-# HISTTIMEFORMAT='%F %T '
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
@@ -70,12 +67,6 @@ case "$TERM" in
     xterm-color) color_prompt=yes;;
 esac
 
-function aws_adfs_prompt() {
-  if [[ -n $AWS_SESSION_EXPIRATION_TIME ]] && [[ $AWS_SESSION_EXPIRATION_TIME -gt $(date +%s) ]]; then
-    echo "[$AWS_PROFILE ($(( ($AWS_SESSION_EXPIRATION_TIME - $(date -u +%s)) / 60)) minute(s) remaining)]"
-  fi
-}
-
 source ${HOME}/bin/git-prompt
 
 set_prompt () {
@@ -112,7 +103,6 @@ set_prompt () {
 
 # If this is an xterm set the title to user@host:dir
 PROMPT_COMMAND='set_prompt;update_hist'
-#PROMPT_COMMAND='set_prompt'
 case "$TERM" in
 xterm*|rxvt*)
     PROMPT_COMMAND=$PROMPT_COMMAND'; echo -ne "\033]0;${USER}@${HOSTNAME}\007"'
@@ -138,12 +128,6 @@ alias copy='xclip -i -sel clip'
 alias dc='docker-compose'
 
 export GIT_SSH_COMMAND="ssh -q"
-
-function g () {
-    find . -name "*.erl" -exec grep -rnH $@ {} \;
-}
-
-
 
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
@@ -214,7 +198,6 @@ export PATH=$PATH:$ANDROID_HOME/platform-tools
 export JAVA_OPTS="-Xmx2G -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -Xss2M -Duser.timezone=GMT"
 
 # npm --------------------------------------------------------------------------
-#export PATH=$PATH:/usr/local/lib/node/current/bin
 export PATH=$PATH:${HOME}/.npm/bin
 
 
@@ -237,13 +220,13 @@ fi
 GIT_AUTHOR_NAME="Thomas Järvstrand"
 GIT_COMMITTER_NAME="Thomas Järvstrand"
 
-export WORK_EMAIL="tjarvstrand@contractor.ea.com"
-WORK_SRC_DIR="$HOME/dice"
+export WORK_EMAIL=""
+export WORK_SRC_DIR=""
 function cd_git {
   GIT_COMMITTER_EMAIL_ORIG=${GIT_COMMITTER_EMAIL}
   GIT_AUTHOR_EMAIL_ORIG=${GIT_AUTHOR_EMAIL}
-  if [[ -n "${PWD}" ]]; then
-    if [[ "$(readlink -f ${PWD})" == *"${WORK_SRC_DIR}"* ]]; then
+  if [[ -n "${PWD}" && "${WORK_EMAIL}" != "" ]]; then
+    if [[ "${WORK_SRC_DIR}" != "" && "$(readlink -f ${PWD})" == "${WORK_SRC_DIR}"* ]]; then
         GIT_COMMITTER_EMAIL_NEW=${WORK_EMAIL}
         GIT_AUTHOR_EMAIL_NEW=${WORK_EMAIL}
     else
@@ -292,9 +275,14 @@ function cd_otp {
 function cd {
   builtin cd "${@:1}"
   cd_git
-  #cd_otp
 }
 cd $PWD
+
+function aws_adfs_prompt() {
+  if [[ -n $AWS_SESSION_EXPIRATION_TIME ]] && [[ $AWS_SESSION_EXPIRATION_TIME -gt $(date +%s) ]]; then
+    echo "[$AWS_PROFILE ($(( ($AWS_SESSION_EXPIRATION_TIME - $(date -u +%s)) / 60)) minute(s) remaining)]"
+  fi
+}
 
 function aws-with-adfs-login
  {
