@@ -26,5 +26,14 @@ if [ -d "$HOME/bin" ] ; then
     PATH="$HOME/bin:$PATH"
 fi
 
-
 export PATH="$HOME/.cargo/bin:$PATH"
+
+if [ -f "${HOME}/.profile.local" ]
+then
+    source "${HOME}/.profile.local"
+fi
+
+if [ -f "${HOME}/.profile.$(hostname)" ]
+then
+    source "${HOME}/.profile.$(hostname)"
+fi
