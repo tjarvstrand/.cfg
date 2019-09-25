@@ -122,6 +122,7 @@
           - gnupg
           - gnupg-agent
           - gzip
+          - htop
           - jq
           - lsb-core
           - markdown
