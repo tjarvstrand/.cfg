@@ -2,8 +2,6 @@
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
-deactivate 2>/dev/null
-
 export LC_TYPE=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 
@@ -136,85 +134,6 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
 
-export ERL_INETRC=${HOME}/.inetrc
-export SSH_ENV="$HOME/.ssh/environment"
-export LASTPASS_USERNAME="tjarvstrand@gmail.com"
-
-# Paths ------------------------------------------------------------------------
-
-if [[ -z $ORIG_PYTHONPATH ]]; then
-   export ORIG_PYTHONPATH="${PYTHONPATH}"
-fi
-export PYTHONPATH=${ORIG_PYTHONPATH}
-
-
-if [[ -z $ORIG_PATH ]]; then
-  export ORIG_PATH="${PATH}"
-fi
-export PATH=${ORIG_PATH}
-
-if [[ -z ${ORIG_MANPATH} ]]; then
-    if [[ -z ${MANPATH} ]]; then
-        export ORIG_MANPATH=$(manpath -q)
-    else
-        export ORIG_MANPATH=${MANPATH}
-    fi
-fi
-export MANPATH=${ORIG_MANPATH}
-
-export OTP_PATH="${HOME}/.erlang.d/current"
-export PATH="${OTP_PATH}/bin:${PATH}"
-export DIALYZER_PLT="${OTP_PATH}/dialyzer.plt"
-
-# Misc paths
-export PATH="${PATH}:${HOME}/.erlang.d/current/bin"
-
-# Go
-export GOROOT="/usr/local/lib/go"
-export GOPATH="${HOME}/src/golang"
-export PATH="${GOROOT}/bin:${GOPATH}/bin:${PATH}"
-
-# Ansible ----------------------------------------------------------------------
-export ANSIBLE_HOME=${HOME}/src/ansible
-export PATH=${ANSIBLE_HOME}/bin:${PATH}
-export MANPATH=${MANPATH}:${ANSIBLE_HOME}/docs/man
-export PYTHONPATH=${ANSIBLE_HOME}/lib:${PYTHONPATH}
-
-# Java -------------------------------------------------------------------------
-export JAVA_HOME=$(readlink -f /usr/bin/javac | sed "s:bin/javac::")
-export PATH=${PATH}:${JAVA_HOME}/bin
-
-# Scala ------------------------------------------------------------------------
-# SCALA_VERSION=2.11.11
-# export SCALA_HOME=/usr/local/lib/scala-${SCALA_VERSION}
-# export PATH=${PATH}:${SCALA_HOME}/bin
-
-# Android ----------------------------------------------------------------------
-export ANDROID_HOME=$HOME/Android/Sdk
-export PATH=$PATH:$ANDROID_HOME/emulator
-export PATH=$PATH:$ANDROID_HOME/tools
-export PATH=$PATH:$ANDROID_HOME/tools/bin
-export PATH=$PATH:$ANDROID_HOME/platform-tools
-export JAVA_OPTS="-Xmx2G -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -Xss2M -Duser.timezone=GMT"
-
-# npm --------------------------------------------------------------------------
-export PATH=$PATH:${HOME}/.npm/bin
-
-
-# Bazel ------------------------------------------------------------------------
-if [ -f "${HOME}/.bazel/bin/bazel-complete.bash" ]
-then
-    source "${HOME}/.bazel/bin/bazel-complete.bash"
-fi
-
-# Riak -------------------------------------------------------------------------
-ulimit -n 65536
-
-# Python -----------------------------------------------------------------------
-if [ -f "${HOME}/.virtualenv/bin/activate" ]
-then
-    . ${HOME}/.virtualenv/bin/activate
-fi
 
 # Git --------------------------------------------------------------------------
 GIT_AUTHOR_NAME="Thomas Järvstrand"
@@ -365,6 +284,13 @@ function tmux-session {
     fi
     tmux attach -t ${TMUX_SESSION} || tmux
 }
+
+deactivate 2>/dev/null
+if [ -f "${HOME}/.virtualenv/bin/activate" ]
+then
+    . ${HOME}/.virtualenv/bin/activate
+fi
+
 
 if [ -f "${HOME}/.bashrc.local" ]
 then
