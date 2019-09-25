@@ -6,7 +6,7 @@ TERMINATOR=$(non_bin_exec terminator)
 
 if [[ -n "${TERMINATOR_PROFILE}" ]]
 then
-    exec ${TERMINATOR} "--profile='${TERMINATOR_PROFILE}'" "$@"
+    exec ${TERMINATOR} "--profile=${TERMINATOR_PROFILE}" "$@"
 else
     exec ${TERMINATOR} "$@"
 fi

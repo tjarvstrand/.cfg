@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+
+set -e
+
+ENV=$1
+COMMAND=$2
+INDEX=$3
+ARG1=$4
+
+if [[ "${ENV}" == "latest" ]]
+then
+    HOST="latest.elasticsearch-nav-content.service.elastx.consul.dex.nu:9201"
+elif [[ "${ENV}" == "latest1" ]]
+then
+    HOST="sap-t-es201.ad.dex.nu:9201"
+elif [[ "${ENV}" == "local" ]]
+then
+    HOST="es-content.dev.bonnier.news:9200"
+else
+    echo "Invalid environment: '$1'"
+    exit 1
+fi
+
+PATH_="content/_search"
+if [[ "${COMMAND}" == "get-article" ]]
+then
+    if [[ "${ARG1}" != "" ]]
+    then
+        QUERY="{
+          \"query\": {
+            \"bool\": {
+              \"filter\": [
+                { \"term\":  { \"_id\": \"${ARG1}\" }},
+                { \"term\":  { \"objectType\": \"article\" }}
+              ]
+            }
+          }
+        }"
+    fi
+elif [[ "${COMMAND}" == "list-indices" ]]
+then
+    PATH_='_cat/indices'
+elif [[ "${COMMAND}" == "list-aliases" ]]
+then
+    PATH_='_cat/aliases'
+else
+    echo "Invalid command: ${COMMAND}"
+    exit 1
+fi
+
+URL=http://$(echo "${HOST}/${INDEX}/${PATH_}" | tr -s '/')
+curl -X GET "${URL}" -H 'Content-Type: application/json' -d "${QUERY}"

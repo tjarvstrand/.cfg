@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+$(non_bin_exec python) -m venv "$@"

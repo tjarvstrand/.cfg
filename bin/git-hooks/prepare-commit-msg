@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+if [ -z "${INHIBIT_GIT_PREPARE_COMMIT_MSG_HOOK}"]
+
 branch=$(git rev-parse --abbrev-ref HEAD)
 if [[ "${branch}" =~ ^([a-zA-Z]+-[0-9]+).* ]]
 then
