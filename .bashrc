@@ -1,7 +1,6 @@
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
-
 export LC_TYPE=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 
@@ -274,7 +273,6 @@ function tmux-session {
     fi
     TMUX_SESSIONS=$(tmux list-sessions)
     TMUX_SESSION_COUNT=${#TMUX_SESSIONS[@]}
-    echo default $DEFAULT_TMUX_SESSION
     for i in $(seq 0 $((${TMUX_SESSION_COUNT} -1))); do
         echo -e "${TMUX_SESSIONS[${i}]}"
     done
@@ -282,15 +280,8 @@ function tmux-session {
     if [[ -z "${TMUX_SESSION}" ]]; then
         exec tmux
     fi
-    tmux attach -t ${TMUX_SESSION} || tmux
+    exec tmux attach -t ${TMUX_SESSION}
 }
-
-deactivate 2>/dev/null
-if [ -f "${HOME}/.virtualenv/bin/activate" ]
-then
-    . ${HOME}/.virtualenv/bin/activate
-fi
-
 
 if [ -f "${HOME}/.bashrc.local" ]
 then
@@ -301,7 +292,6 @@ if [ -f "${HOME}/.bashrc.$(hostname)" ]
 then
     source "${HOME}/.bashrc.$(hostname)"
 fi
-
 
 if [ "$NO_TMUX" == "" ] && which tmux > /dev/null && [[ -z "${TMUX}" ]]
 then
