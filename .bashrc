@@ -120,7 +120,7 @@ alias la='ls -A'
 alias l='ls -CF'
 alias gw='./gradlew'
 alias grep='grep --color=auto'
-alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+alias config='/usr/bin/git --git-dir=$HOME/.config/cfg/ --work-tree=$HOME'
 alias copy='xclip -i -sel clip'
 alias dc='docker-compose'
 

@@ -32,9 +32,16 @@
 
 - name: Directories
   hosts: all
+  tags:
+    - directories
   tasks:
     - action: file
-      name: Delete
+      name: Create Downloads
+      args:
+        path: "~/Downloads"
+        state: directory
+    - action: file
+      name: Delete unused directories
       args:
         path: "{{item}}"
         state: absent
@@ -51,19 +58,19 @@
   tags:
     - base-packages
   tasks:
-    - name: Disable installation of recommended packages
-      action: lineinfile
-      args:
-        create: yes
-        regexp: "[# ]*APT::Install-Recommends.*"
-        line: 'APT::Install-Recommends "false";'
-        dest: /etc/apt/apt.conf.d/99z-norecommend
-    - name: Disable installation of recommended packages
-      action: lineinfile
-      args:
-        regexp: "[# ]*APT::Install-Suggests.*"
-        line: 'APT::Install-Suggests "false";'
-        dest: /etc/apt/apt.conf.d/99z-norecommend
+    # - name: Disable installation of recommended packages
+    #   action: lineinfile
+    #   args:
+    #     create: yes
+    #     regexp: "[# ]*APT::Install-Recommends.*"
+    #     line: 'APT::Install-Recommends "false";'
+    #     dest: /etc/apt/apt.conf.d/99z-norecommend
+    # - name: Disable installation of recommended packages
+    #   action: lineinfile
+    #   args:
+    #     regexp: "[# ]*APT::Install-Suggests.*"
+    #     line: 'APT::Install-Suggests "false";'
+    #     dest: /etc/apt/apt.conf.d/99z-norecommend
 
     - action: apt
       name: Install lsb-core
@@ -145,6 +152,7 @@
           - tmux
           - tree
           - unrar
+          - unzip
           - usbmount # Automount usb
           - xcompmgr
           - x11-xkb-utils

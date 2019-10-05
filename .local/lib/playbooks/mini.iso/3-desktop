@@ -1,4 +1,15 @@
 ---
+
+- name: Install lightdm
+  tags:
+    - packages
+  hosts: all
+  become: yes
+  tasks:
+    - action: apt
+      args:
+        name: lightdm
+
 - name: misc packages
   tags:
     - packages
@@ -26,6 +37,7 @@
 
     - action: apt
       args:
+        install_recommends: no
         name:
 
           # Libraries
@@ -52,7 +64,6 @@
           - gparted
           - gsettings-desktop-schemas
           - gsettings-ubuntu-schemas
-          - lightdm
           - light-locker
           - light-locker-settings
           - nautilus-dropbox
@@ -81,6 +92,7 @@
 
           # UI
           - arc-theme
+          - dmz-cursor-theme
           - elementary-xfce-icon-theme
           - numix-gtk-theme # for xfce4-notifyd
           - ttf-mscorefonts-installer
@@ -364,7 +376,7 @@
     - action: get_url
       name: Fetch Font Awesome
       args:
-        dest: "{{ \"~/Downloads\" | expanduser }}"
+        dest: "{{ \"~/Downloads\" | expanduser }}/fontawesome-free-5.10.2-desktop.zip"
         url: https://use.fontawesome.com/releases/v5.10.2/fontawesome-free-5.10.2-desktop.zip
     - name: Unpack Font Awesome
       action: unarchive

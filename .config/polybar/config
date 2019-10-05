@@ -97,7 +97,8 @@ label-margin = 2
 
 [module/screenshot]
 type = custom/text
-content = ""
+content = ""
+
 content-font = 1
 click-left = xfce4-screenshooter
 
