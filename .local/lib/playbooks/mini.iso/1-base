@@ -58,20 +58,6 @@
   tags:
     - base-packages
   tasks:
-    # - name: Disable installation of recommended packages
-    #   action: lineinfile
-    #   args:
-    #     create: yes
-    #     regexp: "[# ]*APT::Install-Recommends.*"
-    #     line: 'APT::Install-Recommends "false";'
-    #     dest: /etc/apt/apt.conf.d/99z-norecommend
-    # - name: Disable installation of recommended packages
-    #   action: lineinfile
-    #   args:
-    #     regexp: "[# ]*APT::Install-Suggests.*"
-    #     line: 'APT::Install-Suggests "false";'
-    #     dest: /etc/apt/apt.conf.d/99z-norecommend
-
     - action: apt
       name: Install lsb-core
       args:
@@ -217,20 +203,6 @@
   become: yes
   tags: network
   tasks:
-    - name: Disable auto up of ethernet interfaces
-      action: replace
-      args:
-        dest: /etc/network/interfaces
-        backup: yes
-        regexp: "(#*)?(.*?(eth[0-9]|en.[0-9]).*?\n)"
-        replace: '#\2'
-    - name: Disable auto up of ethernet interfaces
-      action: replace
-      args:
-        dest: /etc/NetworkManager/NetworkManager.conf
-        backup: yes
-        regexp: managed=false
-        replace: managed=true
     - name: Override NetworkManager only managing wifi
       action: copy
       args:

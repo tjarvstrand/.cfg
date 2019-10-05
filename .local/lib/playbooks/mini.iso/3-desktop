@@ -1,15 +1,4 @@
 ---
-
-- name: Install lightdm
-  tags:
-    - packages
-  hosts: all
-  become: yes
-  tasks:
-    - action: apt
-      args:
-        name: lightdm
-
 - name: misc packages
   tags:
     - packages
@@ -37,9 +26,7 @@
 
     - action: apt
       args:
-        install_recommends: no
         name:
-
           # Libraries
           - libgtk-3-dev # For building themes
           - gstreamer1.0-pulseaudio # For Firefox pulseaudio
@@ -64,6 +51,7 @@
           - gparted
           - gsettings-desktop-schemas
           - gsettings-ubuntu-schemas
+          - lightdm
           - light-locker
           - light-locker-settings
           - nautilus-dropbox
