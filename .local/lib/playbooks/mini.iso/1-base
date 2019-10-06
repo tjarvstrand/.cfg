@@ -13,23 +13,6 @@
           - kvm
         user: tjarvstrand
 
-- name: System
-  hosts: all
-  become: yes
-  tags: system
-  tasks:
-    - name: Set Grub linux cmdline
-      action: lineinfile
-      args:
-        regexp: "^GRUB_CMDLINE_LINUX_DEFAULT"
-        # Workaround for https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1722478
-        #line: 'GRUB_CMDLINE_LINUX_DEFAULT="nosplash"'
-        line: 'GRUB_CMDLINE_LINUX_DEFAULT="nosplash psmouse.synaptics_intertouch=0"'
-        dest: /etc/default/grub
-        backup: yes
-    - name: Update grub
-      shell: update-grub
-
 - name: Directories
   hosts: all
   tags:
@@ -126,14 +109,16 @@
           - network-manager-openvpn
           - net-tools
           - printer-driver-all
+          - plymouth
+          - plymouth-themes
           - python-dev
+          - qemu-kvm # virtualization stuff
           - read-edid
           - rng-tools
-          - qemu-kvm # virtualization stuff
-          - software-properties-common
-          - ssh-askpass
           - ruby
           - ruby-dev
+          - software-properties-common
+          - ssh-askpass
           - tar
           - tmux
           - tree
@@ -150,6 +135,12 @@
           - libncurses5-dev
           - libssl-dev
 
+- name: Configuration
+  hosts: all
+  become: yes
+  tags:
+    - config
+  tasks:
     - name: Set console font size
       action: replace
       args:
@@ -197,6 +188,83 @@
       args:
         name: systemd-journald
         state: restarted
+
+    - name: Set Grub linux cmdline
+      action: lineinfile
+      args:
+        regexp: "^GRUB_CMDLINE_LINUX_DEFAULT"
+        # Workaround for https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1722478
+        #line: 'GRUB_CMDLINE_LINUX_DEFAULT="nosplash"'
+        line: 'GRUB_CMDLINE_LINUX_DEFAULT="splash psmouse.synaptics_intertouch=0"'
+        dest: /etc/default/grub
+        backup: yes
+    - name: Set Grub resolution
+      action: lineinfile
+      args:
+        regexp: "^#?GRUB_GFXMODE="
+        regexp: "^#?GRUB_GFXMODE=2560x1440"
+        dest: /etc/default/grub
+        backup: yes
+    - name: Update grub
+      shell: update-grub
+
+    - shell:
+        lspci -nn |
+        grep VGA |
+        grep -Eio "(intel|nvidia|amd/ati)" |
+        tr '[:upper:]' '[:lower:]'
+      register: vendor
+    - action: debug
+      args:
+        var: vendor.stdout
+
+    - name: Add Intel initramfs modules for Plymouth
+      action: blockinfile
+      when: vendor.stdout == "intel"
+      args:
+        backup: yes
+        path: /etc/initramfs-tools/modules
+        block: |
+          # KMS
+          intel_agp
+          drm
+          i915 modeset=1
+
+    - name: Add ATI/AMD initramfs modules for Plymouth
+      action: blockinfile
+      when: vendor.stdout == "ati/amd"
+      args:
+        path: /etc/initramfs-tools/modules
+        block: |
+          # KMS
+          drm
+          radeon modeset=1
+
+    - name: Add Nvidia initramfs modules for Plymouth
+      action: blockinfile
+      when: vendor.stdout == "nvidia"
+      args:
+        path: /etc/initramfs-tools/modules
+        block: |
+          # KMS
+          drm
+          noveau modeset=1
+    - name: Set Grub resolution
+      action: lineinfile
+      args:
+        regexp: "^#?GRUB_GFXMODE="
+        line: "GRUB_GFXMODE=2560x1440"
+        dest: /etc/default/grub
+        backup: yes
+
+    - name: Set Plymouth theme
+      action: alternatives
+      become: yes
+      args:
+        name: default.plymouth
+        path: /usr/share/plymouth/themes/ubuntu-logo/ubuntu-logo.plymouth
+    - name: Update initramfs
+      shell: update-initramfs -u
 
 - name: Networking
   hosts: all
