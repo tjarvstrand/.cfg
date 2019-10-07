@@ -42,6 +42,7 @@
           - xfce4-screenshooter
 
           # System tools
+          - arandr
           - baobab
           - copyq
           - dconf-editor
