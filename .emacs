@@ -28,6 +28,7 @@
     (auto-complete
      auto-highlight-symbol
      color-theme
+     darcula-theme
      dash
      edts
      ensime
@@ -37,6 +38,7 @@
      python-mode
      s
      scad-mode
+     web-mode
      yaml-mode)))
 (package-install-selected-packages)
 
@@ -169,12 +171,12 @@
 (setq-default c-basic-offset 2)
 (load-library "my-sh")
 (unless basic-setup
-  (load-library "my-clojure")
+  ;; (load-library "my-clojure")
   (load-library "my-erlang")
-  (load-library "my-haskell")
+  ;; (load-library "my-haskell")
   (load-library "my-python")
   (load-library "my-ruby")
-  (load-library "my-scala")
+  ;; (load-library "my-scala")
   (load-library "my-javascript"))
 
 (require 'yaml-mode)

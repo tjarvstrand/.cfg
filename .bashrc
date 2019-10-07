@@ -266,23 +266,6 @@ function otp {
     fi
 }
 
-function tmux-session {
-    if ! pidof tmux > /dev/null
-    then
-        exec tmux
-    fi
-    TMUX_SESSIONS=$(tmux list-sessions)
-    TMUX_SESSION_COUNT=${#TMUX_SESSIONS[@]}
-    for i in $(seq 0 $((${TMUX_SESSION_COUNT} -1))); do
-        echo -e "${TMUX_SESSIONS[${i}]}"
-    done
-    read -p "Choose session [New]: " TMUX_SESSION
-    if [[ -z "${TMUX_SESSION}" ]]; then
-        exec tmux
-    fi
-    exec tmux attach -t ${TMUX_SESSION}
-}
-
 if [ -f "${HOME}/.bashrc.local" ]
 then
     source "${HOME}/.bashrc.local"
@@ -293,7 +276,9 @@ then
     source "${HOME}/.bashrc.$(hostname)"
 fi
 
-if [ "$NO_TMUX" == "" ] && which tmux > /dev/null && [[ -z "${TMUX}" ]]
-then
-    tmux-session
-fi
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="/home/tjarvstrand/.sdkman"
+source "/home/tjarvstrand/.sdkman/bin/sdkman-init.sh"
+
+tmux-session
+

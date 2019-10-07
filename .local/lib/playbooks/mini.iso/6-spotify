@@ -6,8 +6,7 @@
     - action: apt_key
       name: Add Spotify apt key
       args:
-        keyserver: hkp://keyserver.ubuntu.com:80
-        id: 931FF8E79F0876134EDDBDCCA87FF9DF48BF1C90
+        url: https://download.spotify.com/debian/pubkey.gpg
     - action: apt_repository
       name: Add apt repositories
       args:

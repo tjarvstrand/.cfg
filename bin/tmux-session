@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+if [ "$NO_TMUX" == "" ] && which tmux > /dev/null && [[ -z "${TMUX}" ]]
+then
+
+    if ! pidof tmux > /dev/null
+    then
+        exec tmux
+    fi
+    TMUX_SESSIONS=$(tmux list-sessions)
+    TMUX_SESSION_COUNT=${#TMUX_SESSIONS[@]}
+    for i in $(seq 0 $((${TMUX_SESSION_COUNT} -1))); do
+        echo -e "${TMUX_SESSIONS[${i}]}"
+    done
+    read -p "Choose session [New]: " TMUX_SESSION
+    if [[ -z "${TMUX_SESSION}" ]]; then
+        exec tmux
+    fi
+    exec tmux attach -t ${TMUX_SESSION}
+fi

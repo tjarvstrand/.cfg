@@ -63,7 +63,7 @@ main = xmonad $ docks $ ewmh def
   , layoutHook = smartBorders $ avoidStruts $ myLayout
   , startupHook = ewmhDesktopsStartup >> do
       spawn "/bin/bash ~/.xmonadrc"
-      spawn "feh --bg-fill /home/tjarvstrand/Pictures/Wallpapers/1.jpeg"
+      spawn "feh --bg-fill /home/tjarvstrand/Pictures/Wallpapers/270961.jpg"
   }
   `additionalKeysP`
     [ ("M1-<Tab>",  windows W.focusDown)

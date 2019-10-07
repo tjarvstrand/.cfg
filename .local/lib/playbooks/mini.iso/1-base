@@ -111,6 +111,7 @@
           - printer-driver-all
           - plymouth
           - plymouth-themes
+          - plymouth-theme-ubuntu-logo
           - python-dev
           - qemu-kvm # virtualization stuff
           - read-edid
@@ -202,7 +203,7 @@
       action: lineinfile
       args:
         regexp: "^#?GRUB_GFXMODE="
-        regexp: "^#?GRUB_GFXMODE=2560x1440"
+        line: "GRUB_GFXMODE=2560x1440"
         dest: /etc/default/grub
         backup: yes
     - name: Update grub
