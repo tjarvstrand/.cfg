@@ -58,6 +58,7 @@
           - nautilus-dropbox
           - network-manager-openvpn-gnome
           - pavucontrol
+          - playerctl
           - suckless-tools
           - synaptic
           - terminator
