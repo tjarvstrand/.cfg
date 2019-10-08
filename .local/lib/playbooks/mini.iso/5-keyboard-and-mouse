@@ -3,7 +3,7 @@
   hosts: all
   become: yes
   vars:
-    cursor_size: 48
+    cursor_size: 16
   tasks:
     - action: file
       become: yes

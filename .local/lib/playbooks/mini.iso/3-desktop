@@ -62,6 +62,7 @@
           - synaptic
           - terminator
           - unity-greeter
+          - xfce4-volumed
 
           # Applications
           - eog # Eye of Gnome

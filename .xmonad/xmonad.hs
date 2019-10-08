@@ -64,7 +64,7 @@ main = xmonad $ docks $ ewmh def
   , startupHook = ewmhDesktopsStartup >> do
       spawn "/bin/bash ~/.xmonadrc"
   }
-  `additionalKeysP`
+  `additionalKeysP` (
     [ ("M1-<Tab>",  windows W.focusDown)
     , ("M-w",  kill)
     , ("M-M1-<Space>", sendMessage ToggleStruts)
@@ -76,11 +76,15 @@ main = xmonad $ docks $ ewmh def
     , ("XF86Suspend", spawn "systemctl suspend")
     , ("XF86WLAN", spawn "toggle-wifi")
 
-    , ("<XF86AudioMute>",        spawn "/home/tjarvstrand/bin/toggle-mute")
-    , ("<XF86AudioLowerVolume>", spawn "/home/tjarvstrand/bin/volume dec 5")
-    , ("<XF86AudioRaiseVolume>", spawn "/home/tjarvstrand/bin/volume inc 5")
+    -- , ("<XF86AudioMute>",        spawn "/home/tjarvstrand/bin/toggle-mute")
+    -- , ("<XF86AudioLowerVolume>", spawn "/home/tjarvstrand/bin/volume dec 5")
+    -- , ("<XF86AudioRaiseVolume>", spawn "/home/tjarvstrand/bin/volume inc 5")
     , ("<XF86MonBrightnessUp>",  spawn "/home/tjarvstrand/bin/backlight inc 5")
     , ("<XF86MonBrightnessDown>", spawn "/home/tjarvstrand/bin/backlight dec 5")
     , ("C-<XF86MonBrightnessUp>", spawn "/home/tjarvstrand/bin/backlight inc 10")
     , ("C-<XF86MonBrightnessDown>", spawn "/home/tjarvstrand/bin/backlight dec 10")
-    ]
+    ] ++
+    [ (otherModMasks ++ "M-" ++ tag, action tag) | tag <- myWorkspaces
+    , (otherModMasks, action) <- [ ("", windows . W.view) -- was W.greedyView
+                                 , ("S-", windows . W.shift)]
+    ])

@@ -43,7 +43,7 @@ then
     VOLUME=${MAX_VOLUME}
 fi
 
-
+set +e
 amixer set Speaker on > /dev/null
 amixer set Headphone on > /dev/null
 amixer set Master ${VOLUME}% > /dev/null
