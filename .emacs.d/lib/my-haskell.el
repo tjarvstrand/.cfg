@@ -2,9 +2,9 @@
 (add-to-list 'exec-path "/home/tjarvstrand/.cabal/bin")
 (add-to-list 'exec-path "/opt/ghc/bin")
 
-(require 'lsp)
-(require 'lsp-ui)
-(require 'lsp-haskell)
+;; (require 'lsp)
+;; (require 'lsp-ui)
+;; (require 'lsp-haskell)
 
 
 ;; (setq haskell-hasktags-path "/home/tjarvstrand/.cabal/bin/hasktags")

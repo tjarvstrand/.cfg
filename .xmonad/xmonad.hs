@@ -14,7 +14,10 @@ import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
 import XMonad.Layout.NoBorders
 import XMonad.Actions.CycleWindows
+import XMonad.Actions.UpdatePointer
+import XMonad.Actions.PhysicalScreens
 import XMonad.Util.NamedWindows
+import XMonad.Util.EZConfig
 
 import qualified XMonad.StackSet as W
 
@@ -43,28 +46,25 @@ myManageHook =
 myLogHook :: [X ()]
 myLogHook =
  [ ewmhDesktopsLogHook >> setWMName "LG3D"  -- java workaround
+ , updatePointer (0.0, 0.0) (0, 0)
  , eventLogHook
  ]
 
+printWorkspaceLog screen =
+  let S screenId = W.screen screen
+      tag = W.tag $ W.workspace screen
+      file = "/home/tjarvstrand/.xmonad/workspace-log-" ++ (show screenId)
+  in
+    io $ appendFile file (tag ++ "\n")
+
 eventLogHook = do
   winset <- gets windowset
-  let currWs = W.currentTag winset
-  io $ appendFile "/home/tjarvstrand/.xmonad/workspace-log" (currWs ++ "\n")
+  forM_ (W.current winset: W.visible winset) printWorkspaceLog
 
 
+myWorkspaces = ["1","2","3","4","5","6","7","8","9"]
 
-main = xmonad $ docks $ ewmh def
-  { modMask = mod4Mask
-  , terminal = "urxvt"
-  , borderWidth = 1
-  , manageHook =  composeAll myManageHook
-  , handleEventHook = ewmhDesktopsEventHook <+> LF.fullscreenEventHook
-  , logHook = composeAll myLogHook
-  , layoutHook = smartBorders $ avoidStruts $ myLayout
-  , startupHook = ewmhDesktopsStartup >> do
-      spawn "/bin/bash ~/.xmonadrc"
-  }
-  `additionalKeysP` (
+keybindings =
     [ ("M1-<Tab>",  windows W.focusDown)
     , ("M-w",  kill)
     , ("M-M1-<Space>", sendMessage ToggleStruts)
@@ -84,7 +84,22 @@ main = xmonad $ docks $ ewmh def
     , ("C-<XF86MonBrightnessUp>", spawn "/home/tjarvstrand/bin/backlight inc 10")
     , ("C-<XF86MonBrightnessDown>", spawn "/home/tjarvstrand/bin/backlight dec 10")
     ] ++
-    [ (otherModMasks ++ "M-" ++ tag, action tag) | tag <- myWorkspaces
+    [ (otherModMasks ++ "M-" ++ key, action key)
+    | key  <- myWorkspaces
     , (otherModMasks, action) <- [ ("", windows . W.view) -- was W.greedyView
                                  , ("S-", windows . W.shift)]
-    ])
+    ]
+
+main = xmonad $ docks $ ewmh def
+  { modMask = mod4Mask
+  , workspaces = myWorkspaces
+  , terminal = "urxvt"
+  , borderWidth = 1
+  , manageHook =  composeAll myManageHook
+  , handleEventHook = ewmhDesktopsEventHook <+> LF.fullscreenEventHook
+  , logHook = composeAll myLogHook
+  , layoutHook = smartBorders $ avoidStruts $ myLayout
+  , startupHook = ewmhDesktopsStartup >> do
+      spawn "/bin/bash ~/.xmonadrc"
+  }
+  `additionalKeysP` keybindings

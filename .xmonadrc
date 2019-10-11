@@ -2,7 +2,8 @@
 
 setxkbmap -option ctrl:nocaps
 
-mkfifo /home/tjarvstrand/.xmonad/workspace-log
+mkfifo /home/tjarvstrand/.xmonad/workspace-log-0
+mkfifo /home/tjarvstrand/.xmonad/workspace-log-1
 
 feh --bg-fill /home/tjarvstrand/Pictures/Wallpapers/270961.jpg
 systemctl --user start desktop.target

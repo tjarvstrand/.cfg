@@ -1,5 +1,12 @@
 (require 'thingatpt)
 
+(defun tmpbuf (buf)
+  "open a buffer,
+if it doesn't exist, open a new one"
+  (interactive "sBuffer name: ")
+  (switch-to-buffer
+   (get-buffer-create (concat "*" buf "*"))))
+
 (defmacro save-column (&rest body)
   `(let ((column (current-column)))
      (unwind-protect

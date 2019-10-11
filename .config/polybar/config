@@ -20,6 +20,7 @@
 ;background = ${xrdb:color0:#222}
 background = #dd222222
 background-alt = #dd444444
+background-alt2 = #dd445555
 ;foreground = ${xrdb:color7:#222}
 foreground = #dfdfdf
 foreground-alt = #555
@@ -67,7 +68,7 @@ font-1 = "Font Awesome 5 Free Solid;3"
 ;font-1 = awesome:pixelsize=16;1
 ;font-2 = awesome:pixelsize=16;1
 
-modules-left = workspaces-xmonad xwindow
+modules-left = workspaces-xmonad workspaces-xmonad-2 xwindow
 modules-center = spacer2 music-play music-pause music-currently-playing
 modules-right = checkupdates screenshot xkeyboard separator filesystem cpu memory temperature separator date separator
 
@@ -131,11 +132,19 @@ format-background = ${colors.background-alt}
 
 [module/workspaces-xmonad]
 type = custom/script
-exec = tail -F /home/tjarvstrand/.xmonad/workspace-log
-exec-if = [ -p /home/tjarvstrand/.xmonad/workspace-log ]
+exec = tail -F /home/tjarvstrand/.xmonad/workspace-log-0
+exec-if = [ -p /home/tjarvstrand/.xmonad/workspace-log-0 ]
 tail = true
 format-padding = 2
 format-background = ${colors.background-alt}
+
+[module/workspaces-xmonad-2]
+type = custom/script
+exec = tail -F /home/tjarvstrand/.xmonad/workspace-log-1
+exec-if = [ -p /home/tjarvstrand/.xmonad/workspace-log-1 ]
+tail = true
+format-padding = 2
+format-background = ${colors.background-alt2}
 
 [module/xwindow]
 type = internal/xwindow
