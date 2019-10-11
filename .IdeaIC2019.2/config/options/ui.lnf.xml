@@ -1,5 +1,6 @@
 <application>
   <component name="UISettings">
+    <option name="EDITOR_TAB_LIMIT" value="100" />
     <option name="OVERRIDE_NONIDEA_LAF_FONTS" value="true" />
   </component>
 </application>

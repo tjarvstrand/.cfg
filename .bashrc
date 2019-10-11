@@ -276,9 +276,12 @@ then
     source "${HOME}/.bashrc.$(hostname)"
 fi
 
-#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-export SDKMAN_DIR="/home/tjarvstrand/.sdkman"
-source "/home/tjarvstrand/.sdkman/bin/sdkman-init.sh"
+if [ -f "/home/tjarvstrand/.sdkman/bin/sdkman-init.sh" ]
+then
+    #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+    export SDKMAN_DIR="/home/tjarvstrand/.sdkman"
+    source "/home/tjarvstrand/.sdkman/bin/sdkman-init.sh"
+fi
 
 tmux-session
 
