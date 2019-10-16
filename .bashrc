@@ -97,10 +97,10 @@ set_prompt () {
     GIT_REPO=$(basename $(git rev-parse --show-toplevel 2> /dev/null) 2> /dev/null)
     if [ -n "${GIT_REPO}" ]
     then
-        GIT_REPO="${MAGENTA}${GIT_REPO}/${RESET_COLOR}"
+        GIT_REPO="${MAGENTA}${GIT_REPO}${RESET_COLOR}"
     fi
     DATE="$CYAN\D{%T %x}$RESETCOLOR"
-    PS1="$RES [$DATE] ${GIT_REPO}${GIT}\n\W \$ "
+    PS1="$RES [$DATE] ${GIT_REPO} ${GIT}\n\W \$ "
 }
 
 # If this is an xterm set the title to user@host:dir
