@@ -62,11 +62,11 @@ def use_external(internal, external):
             (internal, external))
 
 def use_right_of(internal, external):
-    call("xrandr --output %s --auto --output %s --auto --right-of %s" %
+    call("xrandr --output %s --auto --output %s --auto --primary --right-of %s" %
              (internal, external, internal))
 
 def use_left_of(internal, external):
-    call("xrandr --output %s --auto --output %s --auto --left-of %s" %
+    call("xrandr --output %s --auto --output %s --auto --primary  --left-of %s" %
              (internal, external, internal))
 
 def use_mirror(internal_name, internal_modes, external_name, external_modes):

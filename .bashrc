@@ -25,7 +25,7 @@ HISTIGNORE='ls:bg:fg:history'
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
-HISTFILE_DIR=${HOME}/.bash_hist
+HISTFILE_DIR=${HOME}/.cache/bash_history
 mkdir -p ${HISTFILE_DIR}
 HISTFILE=${HISTFILE_DIR}/${BASHPID}
 GLOBAL_HISTFILE=${HISTFILE_DIR}/global
@@ -64,7 +64,7 @@ case "$TERM" in
     xterm-color) color_prompt=yes;;
 esac
 
-source ${HOME}/bin/git-prompt
+source ${HOME}/.local/bin/git-prompt
 
 set_prompt () {
     LASTRC=$?

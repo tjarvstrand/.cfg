@@ -1,3 +1,3 @@
 #!/bin/bash
 
-exec "${HOME}/bin/git-hooks/prepare-commit-msg" "$@"
+exec "${HOME}/.local/bin/git-hooks/prepare-commit-msg" "$@"
