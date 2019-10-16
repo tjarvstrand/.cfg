@@ -128,6 +128,7 @@ alias grep='grep --color=auto'
 alias config='/usr/bin/git --git-dir=$HOME/.config/cfg/ --work-tree=$HOME'
 alias copy='xclip -i -sel clip'
 alias dc='docker-compose'
+alias aoeu='asdf'
 
 export GIT_SSH_COMMAND="ssh -q"
 
@@ -281,7 +282,14 @@ then
     source "${HOME}/.bashrc.$(hostname)"
 fi
 
-if [ -f "/home/tjarvstrand/.sdkman/bin/sdkman-init.sh" ]
+if [ -d "${HOME}/.local/lib/asdf" ]
+then
+    export ASDF_DATA_DIR="${HOME}/.cache/asdf"
+    source "${HOME}/.local/lib/asdf/asdf.sh"
+    source "${HOME}/.local/lib/asdf/completions/asdf.bash"
+fi
+
+if [ -f "${HOME}/.sdkman/bin/sdkman-init.sh" ]
 then
     #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
     export SDKMAN_DIR="/home/tjarvstrand/.sdkman"
