@@ -23,7 +23,7 @@
   excludesfile = "~/.gitignore"
   pager = "less -F -X"
 [init]
-	templatedir = ~/.git_templates
+	templatedir = ~/.local/lib/git/template
 [status]
   [submodule]
     summary = 0

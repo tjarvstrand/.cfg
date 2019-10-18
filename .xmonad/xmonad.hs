@@ -76,13 +76,13 @@ keybindings =
     , ("XF86Suspend", spawn "systemctl suspend")
     , ("XF86WLAN", spawn "toggle-wifi")
 
-    -- , ("<XF86AudioMute>",        spawn "/home/tjarvstrand/bin/toggle-mute")
-    -- , ("<XF86AudioLowerVolume>", spawn "/home/tjarvstrand/bin/volume dec 5")
-    -- , ("<XF86AudioRaiseVolume>", spawn "/home/tjarvstrand/bin/volume inc 5")
-    , ("<XF86MonBrightnessUp>",  spawn "/home/tjarvstrand/bin/backlight inc 5")
-    , ("<XF86MonBrightnessDown>", spawn "/home/tjarvstrand/bin/backlight dec 5")
-    , ("C-<XF86MonBrightnessUp>", spawn "/home/tjarvstrand/bin/backlight inc 10")
-    , ("C-<XF86MonBrightnessDown>", spawn "/home/tjarvstrand/bin/backlight dec 10")
+    -- , ("<XF86AudioMute>",        spawn "toggle-mute")
+    -- , ("<XF86AudioLowerVolume>", spawn "volume dec 5")
+    -- , ("<XF86AudioRaiseVolume>", spawn "volume inc 5")
+    , ("<XF86MonBrightnessUp>",  spawn "backlight inc 5")
+    , ("<XF86MonBrightnessDown>", spawn "backlight dec 5")
+    , ("C-<XF86MonBrightnessUp>", spawn "backlight inc 10")
+    , ("C-<XF86MonBrightnessDown>", spawn "backlight dec 10")
     ] ++
     [ (otherModMasks ++ "M-" ++ key, action key)
     | key  <- myWorkspaces

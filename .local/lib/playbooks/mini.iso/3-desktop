@@ -8,15 +8,6 @@
     - action: apt_repository
       name: Add apt repositories
       args:
-        repo: "{{item}}"
-      with_items:
-        #- ppa:ubuntu-wine/ppa
-        - ppa:hluk/copyq
-        #- ppa:leolik/leolik # notify-osd fork # doesn't have ardwark yet
-
-    - action: apt_repository
-      name: Add apt repositories
-      args:
         repo: ppa:leolik/leolik
         codename: zesty # notify-osd fork # doesn't have ardwark yet
 
@@ -44,7 +35,6 @@
           # System tools
           - arandr
           - baobab
-          - copyq
           - dconf-editor
           - dconf-gsettings-backend
           - dconf-service
@@ -95,7 +85,12 @@
           - libdbusmenu-gtk3-dev
 
           - qtile
-
+    - name: Xsession file
+      action: copy
+      become: yes
+      args:
+        src: files/etc/X11/Xsession.d/56mysession
+        dest: /etc/X11/Xsession.d/56mysession
     - action: copy
       args:
         src: files/usr/share/lightdm/lightdm.conf.d/60-session.conf
@@ -152,7 +147,7 @@
       args:
         dest: /etc/udev/rules.d/70-drm_event.rules
         content: |
-          KERNEL=="card0", SUBSYSTEM=="drm", RUN+="/home/tjarvstrand/bin/udev_drm_event"
+          KERNEL=="card0", SUBSYSTEM=="drm", RUN+="/home/tjarvstrand/.local/bin/udev_drm_event"
     - action: service
       become: yes
       args:

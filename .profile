@@ -9,34 +9,11 @@
 #umask 022
 
 export EMAIL="tjarvstrand@gmail.com"
-# if running bash
-if [ -n "$BASH_VERSION" ]; then
-    # include .bashrc if it exists
-    if [ -f "$HOME/.bashrc" ]; then
-	. "$HOME/.bashrc"
-    fi
-fi
-
-# set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/.local/bin" ]; then
-    PATH="$HOME/.local/bin:$PATH"
-fi
-
-if [ -d "$HOME/bin" ] ; then
-    PATH="$HOME/bin:$PATH"
-fi
-
 export ERL_INETRC=${HOME}/.inetrc
 export SSH_ENV="$HOME/.ssh/environment"
 export LASTPASS_USERNAME="tjarvstrand@gmail.com"
 
 # Paths ------------------------------------------------------------------------
-
-if [[ -z $ORIG_PYTHONPATH ]]; then
-   export ORIG_PYTHONPATH="${PYTHONPATH}"
-fi
-export PYTHONPATH=${ORIG_PYTHONPATH}
-
 
 if [[ -z $ORIG_PATH ]]; then
   export ORIG_PATH="${PATH}"
@@ -51,6 +28,19 @@ if [[ -z ${ORIG_MANPATH} ]]; then
     fi
 fi
 export MANPATH=${ORIG_MANPATH}
+
+if [ -d "$HOME/.local/bin" ]; then
+    export PATH="$HOME/.local/bin:$PATH"
+fi
+
+if [ -d "$HOME/bin" ] ; then
+    export PATH="$HOME/bin:$PATH"
+fi
+
+if [[ -z $ORIG_PYTHONPATH ]]; then
+   export ORIG_PYTHONPATH="${PYTHONPATH}"
+fi
+export PYTHONPATH=${ORIG_PYTHONPATH}
 
 export OTP_PATH="${HOME}/.erlang.d/current"
 export PATH="${OTP_PATH}/bin:${PATH}"

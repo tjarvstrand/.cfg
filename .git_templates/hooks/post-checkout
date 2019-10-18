@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-exec "${HOME}/.local/bin/git-hooks/post-checkout" "$@"

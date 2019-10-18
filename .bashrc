@@ -1,6 +1,9 @@
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
+
+source "${HOME}/.profile"
+
 export LC_TYPE=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 
