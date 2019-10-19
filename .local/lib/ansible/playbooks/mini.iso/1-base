@@ -319,6 +319,7 @@
     - name: Rename z.sh directory
       shell: "mv z-{{version.stdout}} z"
       args:
+        creates: "~/.local/lib/z"
         chdir: "~/.local/lib"
 
 - name: LastPass CLI

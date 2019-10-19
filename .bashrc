@@ -139,8 +139,9 @@ export GIT_SSH_COMMAND="ssh -q"
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
 if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
-    . /etc/bash_completion
+    source /etc/bash_completion
 fi
+source "${HOME}/.local/lib/ansible/completion.bash"
 
 
 # Git --------------------------------------------------------------------------
@@ -283,6 +284,12 @@ fi
 if [ -f "${HOME}/.bashrc.$(hostname)" ]
 then
     source "${HOME}/.bashrc.$(hostname)"
+fi
+
+deactivate 2>/dev/null
+if [ -f "${HOME}/.virtualenv/bin/activate" ]
+then
+    . ${HOME}/.virtualenv/bin/activate
 fi
 
 if [ -d "${HOME}/.local/lib/asdf" ]

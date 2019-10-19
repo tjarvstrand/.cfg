@@ -101,9 +101,3 @@ fi
 
 # Riak -------------------------------------------------------------------------
 ulimit -n 65536
-
-deactivate 2>/dev/null
-if [ -f "${HOME}/.virtualenv/bin/activate" ]
-then
-    . ${HOME}/.virtualenv/bin/activate
-fi
