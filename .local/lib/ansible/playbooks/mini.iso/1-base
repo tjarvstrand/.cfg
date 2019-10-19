@@ -47,11 +47,6 @@
         name: lsb-core
     - shell: lsb_release -a | grep Codename | cut -f 2
       register: ubuntu_codename
-    # - action: apt_key
-    #   name: Add apt keys
-    #   args:
-    #     keyserver: hkp://keyserver.ubuntu.com:80
-    #     id: 94558F59
 
     - name: Add ubuntu partner
       action: apt_repository
@@ -62,11 +57,6 @@
       action: apt_repository
       args:
         repo: ppa:git-core/ppa
-
-    # - name: Add ubuntu universe
-    #   action: apt_repository
-    #   args:
-    #     repo: "deb http://archive.ubuntu.com/ubuntu {{ubuntu_codename.stdout}} main universe restricted multiverse"
 
     - action: apt
       args:
@@ -303,6 +293,33 @@
                   esac
               ;;
           esac
+
+- name: CLI tools
+  hosts: all
+  tags: cli
+  vars:
+    lastpass_dir: "{{lookup('env','HOME') + '/src/lastpass-cli'}}"
+  tasks:
+    - name: Get latest version number of z.sh
+      shell: curl -Ls -o /dev/null -w %{url_effective} https://github.com/rupa/z/releases/latest | grep -Eo '[0-9.]+$'
+      args:
+        warn: no
+      register: version
+    - debug: var=version.stdout
+    - name: Fetch z.sh
+      action: get_url
+      args:
+        url: "http://github.com/rupa/z/archive/{{version.stdout}}.tar.gz"
+        dest: "~/Downloads/z-v{{version.stdout}}.tar.gz"
+    - name: Extract z.sh
+      action: unarchive
+      args:
+        src: "~/Downloads/z-v{{version.stdout}}.tar.gz"
+        dest: "~/.local/lib"
+    - name: Rename z.sh directory
+      shell: "mv z-{{version.stdout}} z"
+      args:
+        chdir: "~/.local/lib"
 
 - name: LastPass CLI
   hosts: all
