@@ -186,7 +186,7 @@
         regexp: "^GRUB_CMDLINE_LINUX_DEFAULT"
         # Workaround for https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1722478
         #line: 'GRUB_CMDLINE_LINUX_DEFAULT="nosplash"'
-        line: 'GRUB_CMDLINE_LINUX_DEFAULT="splash psmouse.synaptics_intertouch=0"'
+        line: 'GRUB_CMDLINE_LINUX_DEFAULT="splash quiet psmouse.synaptics_intertouch=0"'
         dest: /etc/default/grub
         backup: yes
     - name: Set Grub resolution
