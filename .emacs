@@ -8,55 +8,6 @@
 
 (defvar basic-setup nil)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; ELPA
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-                         ("marmalade" . "http://marmalade-repo.org/packages/")
-                         ("melpa" . "http://melpa.milkbox.net/packages/")
-                         ("melpa-stable" . "http://stable.melpa.org/packages/")
-                         ))
-(unless (file-directory-p "~/.emacs.d/elpa")
-    (make-directory "~/.emacs.d/elpa"))
-(require 'package)
-(setq package-enable-at-startup nil)
-(package-initialize)
-
-(setq package-selected-packages
-   (quote
-    (auto-complete
-     auto-highlight-symbol
-     color-theme
-     darcula-theme
-     dash
-     edts
-     ensime
-     erlang
-     f
-     neotree
-     python-mode
-     s
-     scad-mode
-     web-mode
-     yaml-mode)))
-(package-install-selected-packages)
-
-;;;;;;;;;;;;;;;;;;;;;
-;; Misc
-(setq initial-major-mode 'fundamental-mode)
-(setq initial-scratch-message
-      "# This buffer is for notes you don't want to save.\n\n")
-
-(load-library "my-misc")
-(load-library "misc-cmds")
-(load-library "show-point-mode")
-;; (load-library "mismatched-parens")
-
-(toggle-buffer-tail "*Messages*" "on")
-
-(add-hook 'find-file-hook 'subword-mode)
-(fset 'yes-or-no-p ' y-or-n-p)
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -88,14 +39,33 @@
  '(inhibit-startup-screen t)
  '(js-indent-level 2)
  '(message-log-max 10000)
- '(neo-auto-indent-point t)
- '(neo-autorefresh nil)
- '(neo-confirm-change-root (quote off-p))
- '(neo-smart-open t)
- '(neo-window-width 75)
  '(package-selected-packages
    (quote
-    (lsp-ui lsp-haskell lsp-mode typescript-mode darcula-theme clojure-mode clojure-mode-extra-font-locking idea-darkula-theme projectile find-file-in-project js2-mode js3-mode web-mode cider haskell-mode graphviz-dot-mode flymd markdown-mode groovy-mode go-mode rust-mode auto-complete auto-highlight-symbol color-theme dash ensime erlang f python-mode s yaml-mode neotree)))
+    (
+     auto-complete
+     auto-highlight-symbol
+     cider
+     color-theme
+     darcula-theme
+     dash
+     f
+     find-file-in-project
+     flymd
+     go-mode
+     graphviz-dot-mode
+     groovy-mode
+     haskell-mode
+     idea-darkula-theme
+     js2-mode
+     js3-mode
+     markdown-mode
+     python-mode
+     rust-mode
+     s
+     scad-mode
+     web-mode
+     yaml-mode
+     )))
  '(safe-local-variable-values
    (quote
     ((py-smart-indentation)
@@ -109,13 +79,46 @@
  '(web-mode-css-indent-offset 2)
  '(web-mode-markup-indent-offset 2))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ELPA
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; FIXME Use `use-package`
+
+(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+                         ("marmalade" . "http://marmalade-repo.org/packages/")
+                         ("melpa" . "http://melpa.milkbox.net/packages/")
+                         ("melpa-stable" . "http://stable.melpa.org/packages/")
+                         ))
+(unless (file-directory-p "~/.emacs.d/elpa")
+    (make-directory "~/.emacs.d/elpa"))
+(require 'package)
+(setq package-enable-at-startup nil)
+(package-initialize)
+(package-install-selected-packages)
+
+
+;;;;;;;;;;;;;;;;;;;;;
+;; Misc
+(setq initial-major-mode 'fundamental-mode)
+(setq initial-scratch-message
+      "# This buffer is for notes you don't want to save.\n\n")
+
+(load-library "my-misc")
+(load-library "misc-cmds")
+(load-library "show-point-mode")
+
+(toggle-buffer-tail "*Messages*" "on")
+
+(add-hook 'find-file-hook 'subword-mode)
+(fset 'yes-or-no-p ' y-or-n-p)
+
+
 (setq x-select-enable-clipboard 1)
 (setq-default indent-tabs-mode nil)
 
 (require 'smart-beginning-of-line)
 
-(add-to-list 'load-path "/home/tjarvstrand/src/emacs-neotree")
-(require 'neotree)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Keybindings
 (load-library "my-keybindings")

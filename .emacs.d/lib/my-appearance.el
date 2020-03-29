@@ -2,7 +2,7 @@
 ;; (load-library "my-theme.el")
 ;; (color-theme-my-theme)
 
-(require 'darcula-theme)
+(require 'darcula-theme nil t)
 
 (load-library "my-misc")
 
