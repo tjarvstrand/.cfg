@@ -141,7 +141,10 @@ export GIT_SSH_COMMAND="ssh -q"
 if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     source /etc/bash_completion
 fi
-source "${HOME}/.local/lib/ansible/completion.bash"
+if [ -f  "${HOME}/.local/lib/ansible/completion.bash" ]
+then
+    source "${HOME}/.local/lib/ansible/completion.bash"
+fi
 
 
 # Git --------------------------------------------------------------------------
@@ -291,6 +294,12 @@ if [ -f "${HOME}/.virtualenv/bin/activate" ]
 then
     . ${HOME}/.virtualenv/bin/activate
 fi
+
+if [ -d "${HOME}/.local/lib/z" ]
+then
+    source "${HOME}/.local/lib/z/z.sh"
+fi
+
 
 if [ -d "${HOME}/.local/lib/asdf" ]
 then
