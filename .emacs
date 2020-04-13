@@ -42,10 +42,6 @@
  '(package-selected-packages
    (quote
     (
-     auto-complete
-     auto-highlight-symbol
-     cider
-     color-theme
      darcula-theme
      dash
      f
@@ -175,7 +171,7 @@
 (load-library "my-sh")
 (unless basic-setup
   ;; (load-library "my-clojure")
-  (load-library "my-erlang")
+  ;;(load-library "my-erlang")
   ;; (load-library "my-haskell")
   (load-library "my-python")
   (load-library "my-ruby")

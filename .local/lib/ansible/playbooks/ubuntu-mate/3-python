@@ -1,0 +1,43 @@
+---
+- name: Configure virtualenv
+  hosts: all
+  tasks:
+    - name: Install pip
+      action: apt
+      args:
+        name:
+          - python3-pip
+          - python3-venv
+      become: yes
+    - name: Symlink python3-pip to pip
+      become: yes
+      action: file
+      args:
+        src: /usr/bin/pip3
+        dest: /usr/bin/pip
+        state: link
+    - name: Install libffi
+      action: apt
+      args:
+        name: libffi-dev
+      become: yes
+
+    - name: Setup virtualenv
+      action: pip
+      args:
+        virtualenv_command: /usr/bin/python3 -m venv
+        virtualenv_site_packages: yes
+        virtualenv: "{{lookup('ENV', 'HOME')}}/.virtualenv"
+        name:
+          - boto
+          - keyring
+          - requests
+          - Jinja2
+          - awscli
+          - stashy
+          - docker-compose
+          - localstack
+
+# Local Variables:
+# mode: yaml
+# End:

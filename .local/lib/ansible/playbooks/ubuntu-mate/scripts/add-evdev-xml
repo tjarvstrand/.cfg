@@ -1,0 +1,36 @@
+#!/usr/bin/env python
+
+from xml.etree import ElementTree
+import sys
+xml = \
+  '''<variant>
+       <configItem>
+         <name>dvorak-sv</name>
+         <description>English (Dvorak with Swedish keys)</description>
+       </configItem>
+    </variant>
+'''
+
+layout = ElementTree.fromstring(xml)
+
+tree = ElementTree.parse(sys.argv[1])
+layout_list = tree.find('layoutList')
+layouts = layout_list.findall('layout')
+layout = [l for l in layouts if l.find('configItem').find('name').text == 'us'][0]
+variant_list = layout.find('variantList')
+variant = [v for v in layout.find('variantList') if v.find('configItem').find('name').text == "dvorak-sv"]
+if variant:
+  variant_list.remove(variant[0])
+variant_list.append(ElementTree.fromstring(xml))
+
+
+if len(sys.argv) < 3:
+  out = sys.argv[1]
+else:
+  out = sys.argv[2]
+
+with open(out, 'w') as f:
+  f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
+  f.write('<!DOCTYPE xkbConfigRegistry SYSTEM "xkb.dtd">\n')
+  tree.write(f, encoding = "UTF-8", xml_declaration = False)
+  f.write('\n')

@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+set -x
+
+# Keyboard
+dconf write /org/mate/desktop/peripherals/keyboard/kbd/options "['caps\tcaps:ctrl_modifier']"
+dconf write /org/mate/mate-menu/hot-key "'disabled'"
+dconf write /com/solus-project/brisk-menu/hot-key "'disabled'"
+dconf write /org/mate/desktop/peripherals/keyboard/kbd/layouts "['us\tdvorak-sv', 'se']"
+
+# Mouse
+dconf write /org/mate/desktop/peripherals/touchpad/two-finger-click 3 # Right click
+dconf write /org/mate/desktop/peripherals/touchpad/three-finger-click 2 # Middle click
+dconf write /org/mate/desktop/peripherals/touchpad/natural-scroll true
+
+# Sound
+dconf write /org/mate/desktop/sound/input-feedback-sounds false
+dconf write /org/mate/desktop/sound/event-sounds false
+dconf write /org/mate/desktop/sound/theme-name "'__no_sounds'"
+dconf write /org/mate/terminal/profiles/default/silent-bell true
+
+# Appearance
+dconf write /org/mate/desktop/background/show-desktop-icons false
+dconf write /org/mate/desktop/interface/gtk-theme "'Ambiant-MATE-Dark'"
+dconf write /org/mate/desktop/interface/icon-theme "'Ambiant-MATE'"
+dconf write /org/mate/notification-daemon/theme "'slider'"
+dconf write /org/mate/marco/general/theme "'Ambiant-MATE-Dark'"
+
+# Panel
+dconf write /com/solus-project/brisk-menu/label-visible "false"
+dconf write /org/mate/panel/general/toplevel-id-list "['top']"
+dconf write /org/mate/panel/toplevels/top/background/type "'color'"
+dconf write /org/mate/panel/toplevels/top/background/color "'rgb(46,52,54)'"
+
+# # Qtile
+# dconf write /org/mate/desktop/session/required-components/windowmanager "'qtile'"
+# dconf write /org/mate/desktop/session/required-components/panel "''"

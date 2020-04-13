@@ -1,25 +1,15 @@
-import XMonad
-import qualified XMonad.StackSet as W
-
 import Control.Monad
-import Data.Function
-import Data.List
-import XMonad.Layout.Gaps
+import XMonad
+import XMonad.Actions.UpdatePointer
 import qualified XMonad.Layout.Fullscreen as LF
-import XMonad.Util.EZConfig
-import XMonad.ManageHook
 import XMonad.Hooks.EwmhDesktops as Ewmh
 import XMonad.Hooks.SetWMName
 import XMonad.Hooks.ManageDocks
-import XMonad.Hooks.ManageHelpers
+import XMonad.Hooks.ManageHelpers (isDialog)
 import XMonad.Layout.NoBorders
-import XMonad.Actions.CycleWindows
-import XMonad.Actions.UpdatePointer
-import XMonad.Actions.PhysicalScreens
-import XMonad.Util.NamedWindows
-import XMonad.Util.EZConfig
-
+import XMonad.ManageHook
 import qualified XMonad.StackSet as W
+import XMonad.Util.EZConfig
 
 myLayout = smartBorders tiled |||
            -- Mirror tiled |||
@@ -62,7 +52,7 @@ eventLogHook = do
   forM_ (W.current winset: W.visible winset) printWorkspaceLog
 
 
-myWorkspaces = ["1","2","3","4","5","6","7","8","9"]
+myWorkspaces = ["1","2","3","4","5"]
 
 keybindings =
     [ ("M1-<Tab>",  windows W.focusDown)
@@ -79,10 +69,10 @@ keybindings =
     -- , ("<XF86AudioMute>",        spawn "toggle-mute")
     -- , ("<XF86AudioLowerVolume>", spawn "volume dec 5")
     -- , ("<XF86AudioRaiseVolume>", spawn "volume inc 5")
-    , ("<XF86MonBrightnessUp>",  spawn "backlight inc 5")
-    , ("<XF86MonBrightnessDown>", spawn "backlight dec 5")
-    , ("C-<XF86MonBrightnessUp>", spawn "backlight inc 10")
-    , ("C-<XF86MonBrightnessDown>", spawn "backlight dec 10")
+    -- , ("<XF86MonBrightnessUp>",  spawn "backlight inc 5")
+    -- , ("<XF86MonBrightnessDown>", spawn "backlight dec 5")
+    -- , ("C-<XF86MonBrightnessUp>", spawn "backlight inc 10")
+    -- , ("C-<XF86MonBrightnessDown>", spawn "backlight dec 10")
     ] ++
     [ (otherModMasks ++ "M-" ++ key, action key)
     | key  <- myWorkspaces

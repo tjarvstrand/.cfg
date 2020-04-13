@@ -1,0 +1,226 @@
+---
+- name: Directories
+  hosts: all
+  tags:
+    - directories
+  tasks:
+    - action: file
+      name: Delete unused directories
+      args:
+        path: "{{item}}"
+        state: absent
+      with_items:
+        - ~/Music
+        - ~/Public
+        - ~/Templates
+        - ~/Videos
+        - ~/examples.desktop
+
+- name: Install base packages
+  hosts: all
+  become: yes
+  tags:
+    - base-packages
+  tasks:
+    - shell: lsb_release -a | grep Codename | cut -f 2
+      register: ubuntu_codename
+
+    - name: Add ubuntu partner
+      action: apt_repository
+      args:
+        repo: "deb http://archive.canonical.com/ubuntu {{ubuntu_codename.stdout}} partner"
+
+    - name: Add Git ppa
+      action: apt_repository
+      args:
+        repo: ppa:git-core/ppa
+
+    - action: apt
+      name: Install packages
+      args:
+        update_cache: yes
+        state: latest
+        name:
+          - aptitude
+          - apt-transport-https
+          - autoconf
+          - build-essential
+          - cifs-utils # Samba
+          - curl
+          - emacs
+          - emacs-goodies-el
+          - git
+          - gpg-agent
+          - htop
+          - jq
+          - markdown
+          - mono-complete
+          - nautilus-dropbox
+          - nodejs
+          - printer-driver-all
+          - printer-driver-cups-pdf
+          - python-dev
+          - qemu-kvm # virtualization stuff
+          - read-edid
+          - rng-tools
+          - ssh-askpass
+          - tmux
+          - tree
+          - unrar
+          - xcompmgr
+          - wmname
+
+          # Development
+          - libssl-dev
+
+          # Libraries
+          - ubuntu-restricted-extras # media codecs
+
+          # System tools
+          - baobab
+          - dconf-editor
+          - gparted
+          - nautilus-dropbox
+          - pavucontrol
+          - suckless-tools
+          - synaptic
+          - terminator
+
+          # Applications
+          - filezilla
+          - gimp
+          - graphviz
+          - transmission
+          - vinagre # vnc
+          - virtualbox
+          - vlc
+          - wireshark
+
+          - xmonad
+          - libdbusmenu-gtk3-dev
+
+- name: Configuration
+  hosts: all
+  tags:
+    - config
+  tasks:
+    - name: Set inotify watch limit
+      become: yes
+      action: lineinfile
+      args:
+        regexp: "fs.inotify.max_user_watches.*"
+        line: "fs.inotify.max_user_watches=524288"
+        dest: /etc/sysctl.conf
+    - shell: sysctl -p --system
+
+    - name: Configure journalctl
+      become: yes
+      action: lineinfile
+      args:
+        regexp: "[#]?Storage=.*"
+        line: "Storage=persistent"
+        dest: /etc/systemd/journald.conf
+
+    - name: Configure journalctl
+      become: yes
+      action: lineinfile
+      args:
+        regexp: "[#]?SystemMaxUse=.*"
+        line: "SystemMaxUse=20M"
+        dest: /etc/systemd/journald.conf
+
+    - name: Restart journal
+      become: yes
+      action: systemd
+      args:
+        name: systemd-journald
+        state: restarted
+
+    - name: Disable Avahi local network detection
+      become: yes
+      action: lineinfile
+      args:
+        backup: yes
+        dest: /etc/default/avahi-daemon
+        regexp: "^AVAHI_DAEMON_DETECT_LOCAL="
+        line: "AVAHI_DAEMON_DETECT_LOCAL=0"
+
+    - name: Create xmonad autostart desktop file
+      action: copy
+      args:
+        backup: yes
+        src: /usr/share/applications/xmonad.desktop
+        dest: ~/.config/autostart/xmonad.desktop
+
+    - name: Tweak xmonad autostart desktop file
+      action: lineinfile
+      args:
+        backup: yes
+        dest: ~/.config/autostart/xmonad.desktop
+        line: "Exec=xmonad --replace"
+        regexp: "^Exec="
+
+    - name: Set dconf values
+      script: scripts/dconf
+
+- name: CLI tools
+  hosts: all
+  tags: cli
+  tasks:
+    - name: Get latest version number of z.sh
+      shell: curl -Ls -o /dev/null -w %{url_effective} https://github.com/rupa/z/releases/latest | grep -Eo '[0-9.]+$'
+      args:
+        warn: no
+      register: version
+    - debug: var=version.stdout
+    - name: Fetch z.sh
+      action: get_url
+      args:
+        url: "http://github.com/rupa/z/archive/v{{version.stdout}}.tar.gz"
+        dest: "~/Downloads/z-v{{version.stdout}}.tar.gz"
+    - name: Extract z.sh
+      action: unarchive
+      args:
+        src: "~/Downloads/z-v{{version.stdout}}.tar.gz"
+        dest: "~/.local/lib"
+    - name: Rename z.sh directory
+      shell: "mv z-{{version.stdout}} z"
+      args:
+        creates: "~/.local/lib/z"
+        chdir: "~/.local/lib"
+
+- name: LastPass CLI
+  hosts: all
+  tags: lastpass
+  vars:
+    lastpass_dir: "{{lookup('env','HOME') + '/src/lastpass-cli'}}"
+  tasks:
+    - name: Install LastPass CLI package dependencies
+      action: apt
+      become: yes
+      args:
+        state: latest
+        name:
+          - cmake
+          - libcurl4-openssl-dev
+          - libxml2-dev
+          - xclip
+    - action: git
+      name: Clone repo
+      args:
+        repo: git://github.com/lastpass/lastpass-cli.git
+        dest: "{{lastpass_dir}}"
+    - name: Build LastPass
+      shell: make
+      args:
+        chdir: "{{lastpass_dir}}"
+    - name: Install LastPass
+      shell: make install
+      become: yes
+      args:
+        chdir: "{{lastpass_dir}}"
+
+
+# Local Variables:
+# mode: yaml
+# End:

@@ -1,0 +1,65 @@
+---
+- name: Configure Keyboard and mouse/touchpad
+  hosts: all
+  become: yes
+  tasks:
+    - name: Add custom layout symbols
+      action: blockinfile
+      args:
+        backup: yes
+        dest: /usr/share/X11/xkb/symbols/us
+        block: |
+          partial alphanumeric_keys
+          xkb_symbols "dvorak-sv" {
+            name[Group1]= "US/SV Dvorak";
+            include "us(dvorak)"
+
+            key <AC01> { [	a,       A,      aring, 	Aring] };
+            key <AC02> { [      o,       O,	 adiaeresis, 	Adiaeresis] };
+            key <AC03> { [      e,       E, 	 odiaeresis, 	Odiaeresis] };
+            include "level3(ralt_switch)"
+          };
+
+    - name: Add custom layout to evdev.lst
+      action: lineinfile
+      args:
+        backup: yes
+        dest: /usr/share/X11/xkb/rules/evdev.lst
+        insertafter: "! variant"
+        line: "  dvorak-sv       us: English (Dvorak with Swedish keys)"
+        regexp: "\\S*dvorak-sv"
+
+    - action: copy
+      name: Backup evdev.xml
+      args:
+        backup: yes
+        src: /usr/share/X11/xkb/rules/evdev.xml
+        dest: /usr/share/X11/xkb/rules/evdev.xml.bak
+
+    - script: scripts/add-evdev-xml /usr/share/X11/xkb/rules/evdev.xml
+      name: Add xkb rules to evdev.xml
+
+    - action: lineinfile
+      name: Set default keyboard layout
+      args:
+        dest: /etc/default/keyboard
+        regexp: ^XKBLAYOUT
+        line: XKBLAYOUT="us,se"
+    - action: lineinfile
+      name: Set default keyboard layout variant
+      args:
+        dest: /etc/default/keyboard
+        regexp: ^XKBVARIANT
+        line: XKBVARIANT="dvorak-sv,"
+    - action: lineinfile
+      name: Set default keyboard layout options
+      args:
+        dest: /etc/default/keyboard
+        regexp: ^XKBOPTIONS
+        line: XKBOPTIONS="caps:ctrl_modifier"
+    - shell: dpkg-reconfigure keyboard-configuration -p high
+      name: Set default layout
+
+# Local Variables:
+# mode: yaml
+# End:
