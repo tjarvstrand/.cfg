@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+if [ "$#" -lt 2 ]; then
+    echo "Usage: dd-write-iso FILE DEVICE"
+    exit 1
+fi
+
+dd if=$1 of=$2 bs=4M conv=fsync status=progress
