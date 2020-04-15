@@ -111,7 +111,10 @@
         regexp: "fs.inotify.max_user_watches.*"
         line: "fs.inotify.max_user_watches=524288"
         dest: /etc/sysctl.conf
-    - shell: sysctl -p --system
+
+    - name: Refresh sysctl settings
+      become: yes
+      shell: sysctl -p --system
 
     - name: Configure journalctl
       become: yes
@@ -152,13 +155,21 @@
         src: /usr/share/applications/xmonad.desktop
         dest: ~/.config/autostart/xmonad.desktop
 
-    - name: Tweak xmonad autostart desktop file
+    - name: Add --replace to xmonad desktop file command
       action: lineinfile
       args:
         backup: yes
         dest: ~/.config/autostart/xmonad.desktop
         line: "Exec=xmonad --replace"
         regexp: "^Exec="
+
+    - name: Remove NoDisplay from xmonad autostart desktop file
+      action: lineinfile
+      args:
+        backup: yes
+        dest: ~/.config/autostart/xmonad.desktop
+        regexp: "^NoDisplay"
+        state: absent
 
     - name: Set dconf values
       script: scripts/dconf
