@@ -308,6 +308,12 @@ then
     source "${HOME}/.local/lib/asdf/completions/asdf.bash"
 fi
 
+export JAVA_OPTS="-Xss4m"
+if asdf current java 2>&1
+then
+    export JAVA_HOME=$(asdf where java)
+fi
+
 if [ -f "${HOME}/.sdkman/bin/sdkman-init.sh" ]
 then
     #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!

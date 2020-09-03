@@ -61,8 +61,10 @@ export MANPATH=${MANPATH}:${ANSIBLE_HOME}/docs/man
 export PYTHONPATH=${ANSIBLE_HOME}/lib:${PYTHONPATH}
 
 # Java -------------------------------------------------------------------------
-export JAVA_HOME=$(readlink -f /usr/bin/javac | sed "s:/bin/javac::")
-export PATH=${PATH}:${JAVA_HOME}/bin
+if [ -f /usr/bin/javac ]; then
+    export JAVA_HOME=$(readlink -f /usr/bin/javac | sed "s:/bin/javac::")
+    export PATH=${PATH}:${JAVA_HOME}/bin
+fi
 
 # Scala ------------------------------------------------------------------------
 # SCALA_VERSION=2.11.11
