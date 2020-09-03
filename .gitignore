@@ -16,3 +16,4 @@
 .ensime_cache
 ensime.sbt
 .s3
+.tool-versions

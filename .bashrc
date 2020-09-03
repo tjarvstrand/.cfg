@@ -132,6 +132,7 @@ alias config='/usr/bin/git --git-dir=$HOME/.config/cfg/ --work-tree=$HOME'
 alias copy='xclip -i -sel clip'
 alias dc='docker-compose'
 alias aoeu='asdf'
+alias curl='curl -sS'
 
 export GIT_SSH_COMMAND="ssh -q"
 
@@ -279,6 +280,13 @@ function otp {
     fi
 }
 
+function jq_less {
+    jq -rC $@ | less -FR
+}
+
+alias jq=jq_less
+
+
 if [ -f "${HOME}/.bashrc.local" ]
 then
     source "${HOME}/.bashrc.local"
@@ -309,7 +317,7 @@ then
 fi
 
 export JAVA_OPTS="-Xss4m"
-if asdf current java 2>&1
+if which asdf > /dev/null && asdf plugin list | grep -qs '^java' && asdf current java 2>&1
 then
     export JAVA_HOME=$(asdf where java)
 fi

@@ -1,0 +1,7 @@
+<profile version="1.0">
+  <option name="myName" value="Default" />
+  <inspection_tool class="DuplicatedCode" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+    <scope name="Tests" level="WEAK WARNING" enabled="false" />
+  </inspection_tool>
+  <inspection_tool class="ZeroIndexToHead" enabled="false" level="WARNING" enabled_by_default="false" />
+</profile>

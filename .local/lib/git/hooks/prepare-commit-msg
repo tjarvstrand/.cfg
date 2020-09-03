@@ -16,7 +16,7 @@ else
     # Allows us to read user input below, assigns stdin to keyboard
     exec < /dev/tty
     read -p "Specify a commit message prefix for ${branch} (empty for none): " prefix
-    echo $branch=$prefix > "${PWD}/.git-commit-prefix"
+    echo $branch=$prefix >> "${PWD}/.git-commit-prefix"
 fi
 
 prefix=$(echo $prefix | tr -d '[:space:]')

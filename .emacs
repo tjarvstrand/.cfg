@@ -1,5 +1,10 @@
 (setq inhibit-x-resources t)
 
+(defconst user-home (getenv "HOME"))
+(add-to-list 'exec-path (format "%s/.cache/asdf/shims" user-home))
+(add-to-list 'exec-path (format "%s/.local/lib/asdf/bin" user-home))
+(setenv "ASDF_DATA_DIR" (format "%s/.cache/asdf" user-home))
+
 (let ((lib-dir (concat user-emacs-directory "/lib")))
   (add-to-list 'load-path lib-dir)
   (dolist  (dir (directory-files lib-dir t "^[^.]"))
@@ -8,6 +13,61 @@
 
 (defvar basic-setup nil)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ELPA
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+                         ("marmalade" . "http://marmalade-repo.org/packages/")
+                         ("melpa" . "https://melpa.org/packages/")
+                         ("melpa-stable" . "http://stable.melpa.org/packages/")
+                         ))
+(unless (file-directory-p "~/.emacs.d/elpa")
+    (make-directory "~/.emacs.d/elpa"))
+(require 'package)
+(setq package-enable-at-startup nil)
+
+(package-initialize)
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+;;;;;;;;;;;;;;;;;;;;;
+;; Use package
+(require 'use-package)
+
+(setq use-package-always-defer t
+      use-package-always-ensure t)
+
+(use-package auto-complete)
+(use-package color-theme)
+(use-package darcula-theme)
+(use-package dash)
+(use-package edts)
+(use-package erlang)
+(use-package f)
+(use-package python-mode)
+(use-package s)
+(use-package scad-mode)
+(use-package web-mode)
+(use-package yaml-mode)
+
+;;;;;;;;;;;;;;;;;;;;;
+;; Misc
+(setq initial-major-mode 'fundamental-mode)
+(setq initial-scratch-message
+      "# This buffer is for notes you don't want to save.\n\n")
+
+(load-library "my-misc")
+(load-library "misc-cmds")
+(load-library "show-point-mode")
+;; (load-library "mismatched-parens")
+
+(toggle-buffer-tail "*Messages*" "on")
+
+(add-hook 'find-file-hook 'subword-mode)
+(fset 'yes-or-no-p ' y-or-n-p)
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -28,11 +88,9 @@
  '(edts-inhibit-package-check t)
  '(edts-man-root "~/.emacs.d/edts/doc/R15B03")
  '(electric-indent-mode nil)
- '(ensime-auto-generate-config t)
- '(ensime-implicit-gutter-icons nil)
- '(ensime-startup-notification nil)
  '(epushover-token "8voZIQ79jOdclr92TizvFcVr84gpnb")
  '(epushover-user-key "iExDziORD2VAffHJFa4nHh5BKlOYwZ")
+ '(groovy-indent-offset 2)
  '(ido-enable-tramp-completion nil)
  '(ido-use-filename-at-point nil)
  '(ido-use-url-at-point nil)
@@ -41,27 +99,7 @@
  '(message-log-max 10000)
  '(package-selected-packages
    (quote
-    (
-     darcula-theme
-     dash
-     f
-     find-file-in-project
-     flymd
-     go-mode
-     graphviz-dot-mode
-     groovy-mode
-     haskell-mode
-     idea-darkula-theme
-     js2-mode
-     js3-mode
-     markdown-mode
-     python-mode
-     rust-mode
-     s
-     scad-mode
-     web-mode
-     yaml-mode
-     )))
+    (darcula-theme dash f find-file-in-project flymd go-mode graphviz-dot-mode groovy-mode haskell-mode idea-darkula-theme js2-mode js3-mode markdown-mode python-mode rust-mode s scad-mode web-mode yaml-mode)))
  '(safe-local-variable-values
    (quote
     ((py-smart-indentation)
@@ -74,25 +112,6 @@
  '(web-mode-code-indent-offset 2)
  '(web-mode-css-indent-offset 2)
  '(web-mode-markup-indent-offset 2))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; ELPA
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; FIXME Use `use-package`
-
-(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-                         ("marmalade" . "http://marmalade-repo.org/packages/")
-                         ("melpa" . "http://melpa.milkbox.net/packages/")
-                         ("melpa-stable" . "http://stable.melpa.org/packages/")
-                         ))
-(unless (file-directory-p "~/.emacs.d/elpa")
-    (make-directory "~/.emacs.d/elpa"))
-(require 'package)
-(setq package-enable-at-startup nil)
-(package-initialize)
-(package-install-selected-packages)
-
 
 ;;;;;;;;;;;;;;;;;;;;;
 ;; Misc
@@ -175,11 +194,12 @@
   ;; (load-library "my-haskell")
   (load-library "my-python")
   (load-library "my-ruby")
-  ;; (load-library "my-scala")
   (load-library "my-javascript"))
 
-(require 'yaml-mode)
-(add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
+(add-to-list 'auto-mode-alist
+             '("\\.yml$" . yaml-mode))
+(add-to-list 'auto-mode-alist
+             '("\\(/BUILD\\|/WORKSPACE\\|\\.bzl\\)$" . python-mode))
 (add-hook 'yaml-mode-hook
           (lambda ()
             (define-key yaml-mode-map "\C-m" 'newline-and-indent)))
@@ -216,8 +236,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ensime-implicit-highlight ((t nil)))
- '(flymake-warnline ((t (:underline (:color "gold" :style wave))))))
+ '(flymake-warning ((t (:underline (:color "gold" :style wave))))))
 (put 'erase-buffer 'disabled nil)
 
 (let ((local-config-file (expand-file-name "~/.emacs.local")))

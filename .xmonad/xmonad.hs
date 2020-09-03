@@ -59,7 +59,7 @@ keybindings =
     , ("M-w",  kill)
     , ("M-M1-<Space>", sendMessage ToggleStruts)
     , ("C-<Return>", spawn "dmenu_run_history -b -i")
-    , ("C-M1-l", spawn "light-locker-command -l")
+    , ("C-M1-l", spawn "mate-screensaver-command -l")
 
     , ("<Print>", spawn "xfce4-screenshooter --fullscreen --save /home/tjarvstrand/Pictures/Screenshots")
 

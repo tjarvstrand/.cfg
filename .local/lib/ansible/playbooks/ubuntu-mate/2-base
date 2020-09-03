@@ -64,6 +64,7 @@
           - read-edid
           - rng-tools
           - ssh-askpass
+          - ssh-askpass-gnome
           - tmux
           - tree
           - unrar

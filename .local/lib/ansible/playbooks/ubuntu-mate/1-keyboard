@@ -3,6 +3,14 @@
   hosts: all
   become: yes
   tasks:
+    - action: apt
+      name: Install packages
+      args:
+        update_cache: yes
+        state: latest
+        name:
+          - python-is-python3
+
     - name: Add custom layout symbols
       action: blockinfile
       args:

@@ -1,0 +1,95 @@
+<application>
+  <component name="ProjectManager">
+    <defaultProject>
+      <component name="MavenImportPreferences">
+        <option name="generalSettings">
+          <MavenGeneralSettings>
+            <option name="mavenHome" value="$APPLICATION_HOME_DIR$/plugins/maven/lib/maven3" />
+          </MavenGeneralSettings>
+        </option>
+      </component>
+      <component name="ProjectInspectionProfilesVisibleTreeState">
+        <entry key="Project Default">
+          <profile-state>
+            <expanded-state>
+              <State />
+              <State>
+                <id>Code styleScala</id>
+              </State>
+              <State>
+                <id>CollectionsScala</id>
+              </State>
+              <State>
+                <id>ComparingCollectionsScala</id>
+              </State>
+              <State>
+                <id>GeneralScala</id>
+              </State>
+              <State>
+                <id>IndicesCollectionsScala</id>
+              </State>
+              <State>
+                <id>Scala</id>
+              </State>
+            </expanded-state>
+            <selected-state>
+              <State>
+                <id>ZeroIndexToHead</id>
+              </State>
+            </selected-state>
+          </profile-state>
+        </entry>
+      </component>
+      <component name="ProjectViewState">
+        <option name="autoscrollFromSource" value="true" />
+        <option name="autoscrollToSource" value="true" />
+        <option name="hideEmptyMiddlePackages" value="true" />
+        <option name="showLibraryContents" value="true" />
+        <option name="showModules" value="false" />
+      </component>
+      <component name="PropertiesComponent">
+        <property name="scala_project_settings_configurable.last_selected_tab_index" value="0" />
+        <property name="settings.editor.selected.configurable" value="org.jetbrains.plugins.scala.settings.ScalaProjectSettingsConfigurable" />
+      </component>
+      <component name="SbtLocalSettings">
+        <option name="projectSyncType">
+          <map>
+            <entry key="$USER_HOME$/bonnier/nav" value="PREVIEW" />
+            <entry key="$USER_HOME$/src/json4s" value="PREVIEW" />
+            <entry key="$USER_HOME$/src/silencer" value="PREVIEW" />
+          </map>
+        </option>
+      </component>
+      <component name="ScalaProjectSettings">
+        <option name="customScalatestSyntaxHighlighting" value="true" />
+        <option name="enableJavaToScalaConversion" value="false" />
+        <option name="intInjectionMapping">
+          <map>
+            <entry key="xml" value="XML" />
+          </map>
+        </option>
+        <option name="showArgumentsToByNameParams" value="true" />
+        <option name="showImplisitConversions" value="true" />
+      </component>
+      <component name="ScalaSbtSettings">
+        <option name="customVMPath" />
+      </component>
+      <component name="masterDetails">
+        <states>
+          <state key="ProjectJDKs.UI">
+            <settings>
+              <last-edited>1.8</last-edited>
+              <splitter-proportions>
+                <option name="proportions">
+                  <list>
+                    <option value="0.2" />
+                  </list>
+                </option>
+              </splitter-proportions>
+            </settings>
+          </state>
+        </states>
+      </component>
+    </defaultProject>
+  </component>
+</application>
