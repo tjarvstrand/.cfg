@@ -98,6 +98,9 @@
           - wireshark
 
           - xmonad
+          - ghc
+          - libghc-xmonad-contrib-dev
+          - libghc-xmonad-dev
           - libdbusmenu-gtk3-dev
 
 - name: Configuration

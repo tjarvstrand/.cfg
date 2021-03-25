@@ -7,3 +7,4 @@
   5. `config config --local status.showUntrackedFiles no`
   6. `source ~/.bashrc`
   7. `config remote set-url origin git@github.com:tjarvstrand/.cfg.git`
+  8. `config config remote.origin.fetch +refs/heads/*:refs/remotes/origin/*`

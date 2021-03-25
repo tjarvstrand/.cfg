@@ -61,7 +61,11 @@ export MANPATH=${MANPATH}:${ANSIBLE_HOME}/docs/man
 export PYTHONPATH=${ANSIBLE_HOME}/lib:${PYTHONPATH}
 
 # Java -------------------------------------------------------------------------
-if [ -f /usr/bin/javac ]; then
+JAVA_HOME_SCRIPT="$HOME/.cache/asdf/plugins/java/set-java-home.bash"
+if [ -f "$JAVA_HOME_SCRIPT" ]; then
+    bash "$JAVA_HOME_SCRIPT"
+    export PATH=${PATH}:${JAVA_HOME}/bin
+elif [ -f /usr/bin/javac ]; then
     export JAVA_HOME=$(readlink -f /usr/bin/javac | sed "s:/bin/javac::")
     export PATH=${PATH}:${JAVA_HOME}/bin
 fi

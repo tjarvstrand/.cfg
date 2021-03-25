@@ -17,7 +17,6 @@
 ;; ELPA
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
                          ("marmalade" . "http://marmalade-repo.org/packages/")
                          ("melpa" . "https://melpa.org/packages/")
@@ -59,10 +58,14 @@
 (setq initial-scratch-message
       "# This buffer is for notes you don't want to save.\n\n")
 
+(setq x-select-enable-clipboard 1)
+(setq-default indent-tabs-mode nil)
+
+(require 'smart-beginning-of-line)
+
 (load-library "my-misc")
 (load-library "misc-cmds")
 (load-library "show-point-mode")
-;; (load-library "mismatched-parens")
 
 (toggle-buffer-tail "*Messages*" "on")
 
@@ -112,27 +115,6 @@
  '(web-mode-code-indent-offset 2)
  '(web-mode-css-indent-offset 2)
  '(web-mode-markup-indent-offset 2))
-
-;;;;;;;;;;;;;;;;;;;;;
-;; Misc
-(setq initial-major-mode 'fundamental-mode)
-(setq initial-scratch-message
-      "# This buffer is for notes you don't want to save.\n\n")
-
-(load-library "my-misc")
-(load-library "misc-cmds")
-(load-library "show-point-mode")
-
-(toggle-buffer-tail "*Messages*" "on")
-
-(add-hook 'find-file-hook 'subword-mode)
-(fset 'yes-or-no-p ' y-or-n-p)
-
-
-(setq x-select-enable-clipboard 1)
-(setq-default indent-tabs-mode nil)
-
-(require 'smart-beginning-of-line)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Keybindings

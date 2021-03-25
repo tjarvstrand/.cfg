@@ -36,7 +36,6 @@ myManageHook =
 myLogHook :: [X ()]
 myLogHook =
  [ ewmhDesktopsLogHook >> setWMName "LG3D"  -- java workaround
- , updatePointer (0.0, 0.0) (0, 0)
  , eventLogHook
  ]
 
