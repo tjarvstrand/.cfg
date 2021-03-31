@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+exec docker run --net=host --rm -it -u $(id -u) -w "${PWD}" -v "${HOME}:${HOME}" -v "/etc/passwd:/etc/passwd" --entrypoint="/opt/cassandra/bin/cqlsh" cassandra $@

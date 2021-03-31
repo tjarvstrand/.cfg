@@ -4,6 +4,7 @@
 .#*
 \#*
 .edts
+.envrc
 *~
 .xmonad/xmonad-*
 .xmonad/xmonad.errors

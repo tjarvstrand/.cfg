@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# 1. Check device with `dmesg | grep /input/`
+#    eg. [  217.359994] input: SteelSeries SteelSeries Rival 100 Gaming Mouse as /devices/pci0000:00/0000:00:14.0/usb1/1-1/1-1.4/1-1.4:1.1/0003:1038:1702.0008/input/input37
+# means eg. 1-1.4 is the most "narrowed down" device ID and would result in /sys/bus/usb/devices/1-1.4/power/wakeup in the code below
+# 2. Put this file in /lib/systemd/system-sleep/SomeName with the correct ID in the code below
+# 3. Make it executable.
+
+case $1 in
+    pre)
+        
+        echo enabled > /sys/bus/usb/devices/<insert id here>/power/wakeup
+        ;;
+esac
