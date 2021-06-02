@@ -216,7 +216,18 @@ then
     source "/home/tjarvstrand/.sdkman/bin/sdkman-init.sh"
 fi
 
-eval "$(direnv hook bash)"
+if which direnv; then
+    eval "$(direnv hook bash)"
+fi
+
+# Strip trailing semicolon
+export PROMPT_COMMAND="${PROMPT_COMMAND%;}"
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f "$HOME/.local/lib/google-cloud-sdk/path.bash.inc" ]; then . "$HOME/.local/lib/google-cloud-sdk/path.bash.inc"; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f "$HOME/.local/lib/google-cloud-sdk/completion.bash.inc" ]; then . "$HOME/.local/lib/google-cloud-sdk/completion.bash.inc"; fi
 
 tmux-session
 
