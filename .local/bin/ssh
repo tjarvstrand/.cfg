@@ -3,7 +3,7 @@
 unset SSH_ASKPASS
 unset GIT_ASKPASS
 
-export LPASS_SSH_KEY_ID=${LPASS_SSH_KEY_ID:-tjarvstrand}
+export SSH_KEY_ID=${SSH_KEY_ID:-$(id -un)@$(hostname)}
 
 ARG=${1}
 
@@ -34,16 +34,11 @@ function ensure_ssh_agent_started {
 }
 
 function ensure_ssh_key_added {
-    if ssh-add -l | cut -d ' ' -f 3 | grep -q -E "${LPASS_SSH_KEY_ID}\$"
+    if ssh-add -l | cut -d ' ' -f 3 | grep -q -E "${SSH_KEY_ID}"
     then
         log id_rsa already added to agent
     else
-        SSH_ASKPASS=lpass-ssh-askpass
-        FIFO=$(mktemp -u --suffix=.${LPASS_SSH_KEY_ID})
-        mkfifo -m 600 ${FIFO}
-        trap "rm -rf ${FIFO}" EXIT
-        ${LPASS} show --field='Private Key' ssh/${LPASS_SSH_KEY_ID} 2>/dev/null > ${FIFO} &
-        log $(ssh-add ${FIFO} < /dev/null)
+        ssh-add
     fi
 }
 
