@@ -1,8 +1,5 @@
-;; color-theme
-;; (load-library "my-theme.el")
-;; (color-theme-my-theme)
 
-(require 'darcula-theme nil t)
+(load-theme 'darcula t)
 
 (load-library "my-misc")
 

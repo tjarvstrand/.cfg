@@ -53,7 +53,7 @@ function update_hist() {
 
 for f in $(find ${HISTFILE_DIR} -name '[0-9]*');
 do
-    (ps aux | grep bash | grep $(basename $f) > /dev/null) || rm -v ${f}
+    (ps aux | grep bash | grep $(basename $f) > /dev/null) || (echo -n "Removing " && rm -v ${f})
 done
 history -c
 history -r ${GLOBAL_HISTFILE}
@@ -131,7 +131,7 @@ alias grep='grep --color=auto'
 alias config='/usr/bin/git --git-dir=$HOME/.config/cfg/ --work-tree=$HOME'
 alias copy='xclip -i -sel clip'
 alias dc='docker-compose'
-alias aoeu='asdf'
+alias a='asdf'
 alias curl='curl -sS'
 
 export GIT_SSH_COMMAND="ssh -q"
@@ -150,28 +150,9 @@ fi
 
 # Git --------------------------------------------------------------------------
 GIT_AUTHOR_NAME="Thomas Järvstrand"
-GIT_COMMITTER_NAME="Thomas Järvstrand"
+GIT_COMMITTER_NAME="$GIT_AUTHOR_NAME"
 
-export WORK_EMAIL=""
-export WORK_SRC_DIR=""
-function cd_git {
-  GIT_COMMITTER_EMAIL_ORIG=${GIT_COMMITTER_EMAIL}
-  GIT_AUTHOR_EMAIL_ORIG=${GIT_AUTHOR_EMAIL}
-  if [[ -n "${PWD}" && "${WORK_EMAIL}" != "" ]]; then
-    if [[ "${WORK_SRC_DIR}" != "" && "$(readlink -f ${PWD})" == "${WORK_SRC_DIR}"* ]]; then
-        GIT_COMMITTER_EMAIL_NEW=${WORK_EMAIL}
-        GIT_AUTHOR_EMAIL_NEW=${WORK_EMAIL}
-    else
-        GIT_COMMITTER_EMAIL_NEW=${EMAIL}
-        GIT_AUTHOR_EMAIL_NEW=${EMAIL}
-    fi
-    if [[ "${GIT_AUTHOR_EMAIL_NEW}" != "${GIT_AUTHOR_EMAIL}" ]]; then
-        export GIT_COMMITTER_EMAIL=${GIT_COMMITTER_EMAIL_NEW}
-        export GIT_AUTHOR_EMAIL=${GIT_AUTHOR_EMAIL_NEW}
-        echo git email: ${GIT_AUTHOR_EMAIL_NEW}
-    fi
-  fi
-}
+# Other -----------------------------------------------------------------------
 
 function jq_less {
     $(which jq) -rC $@ | less -FR
@@ -216,7 +197,7 @@ then
     source "/home/tjarvstrand/.sdkman/bin/sdkman-init.sh"
 fi
 
-if which direnv; then
+if which direnv > /dev/null; then
     eval "$(direnv hook bash)"
 fi
 

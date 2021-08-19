@@ -19,3 +19,5 @@ ensime.sbt
 .s3
 .idea
 .tool-versions
+.ssh
+!.ssh/config*

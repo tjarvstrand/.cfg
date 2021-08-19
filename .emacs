@@ -17,10 +17,10 @@
 ;; ELPA
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-                         ("marmalade" . "http://marmalade-repo.org/packages/")
+(setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
+                         ;; ("marmalade" . "https://marmalade-repo.org/packages/")
                          ("melpa" . "https://melpa.org/packages/")
-                         ("melpa-stable" . "http://stable.melpa.org/packages/")
+                         ("melpa-stable" . "https://stable.melpa.org/packages/")
                          ))
 (unless (file-directory-p "~/.emacs.d/elpa")
     (make-directory "~/.emacs.d/elpa"))
@@ -60,6 +60,7 @@
 
 (setq x-select-enable-clipboard 1)
 (setq-default indent-tabs-mode nil)
+(setq ring-bell-function (lambda ()))
 
 (require 'smart-beginning-of-line)
 
@@ -77,17 +78,15 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(ahs-case-fold-search nil)
- '(ahs-default-range (quote ahs-range-display))
+ '(ahs-default-range 'ahs-range-display)
  '(ahs-idle-interval 1)
  '(comment-multi-line t)
  '(company-minimum-prefix-length 1)
  '(create-lockfiles nil)
- '(custom-enabled-themes (quote (idea-darkula)))
  '(custom-safe-themes
-   (quote
-    ("420689cc31d01fe04b8e3adef87b8838ff52faa169e69ca4e863143ae9f3a9f9" "82b67c7e21c3b12be7b569af7c84ec0fb2d62105629a173e2479e1053cff94bd" "b04425cc726711a6c91e8ebc20cf5a3927160681941e06bc7900a5a5bfe1a77f" "c74e83f8aa4c78a121b52146eadb792c9facc5b1f02c917e3dbb454fca931223" "3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" "a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" default)))
+   '("420689cc31d01fe04b8e3adef87b8838ff52faa169e69ca4e863143ae9f3a9f9" "82b67c7e21c3b12be7b569af7c84ec0fb2d62105629a173e2479e1053cff94bd" "b04425cc726711a6c91e8ebc20cf5a3927160681941e06bc7900a5a5bfe1a77f" "c74e83f8aa4c78a121b52146eadb792c9facc5b1f02c917e3dbb454fca931223" "3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" "a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" default))
  '(debug-on-error nil)
- '(ediff-window-setup-function (quote ediff-setup-windows-plain))
+ '(ediff-window-setup-function 'ediff-setup-windows-plain)
  '(edts-inhibit-package-check t)
  '(edts-man-root "~/.emacs.d/edts/doc/R15B03")
  '(electric-indent-mode nil)
@@ -101,15 +100,13 @@
  '(js-indent-level 2)
  '(message-log-max 10000)
  '(package-selected-packages
-   (quote
-    (darcula-theme dash f find-file-in-project flymd go-mode graphviz-dot-mode groovy-mode haskell-mode idea-darkula-theme js2-mode js3-mode markdown-mode python-mode rust-mode s scad-mode web-mode yaml-mode)))
+   '(darcula-theme dash f find-file-in-project flymd go-mode graphviz-dot-mode groovy-mode haskell-mode js2-mode js3-mode markdown-mode python-mode rust-mode s scad-mode web-mode yaml-mode))
  '(safe-local-variable-values
-   (quote
-    ((py-smart-indentation)
+   '((py-smart-indentation)
      (python-indent . 2)
      (py-indent-offset . 2)
      (erlang-indent-level . 2)
-     (allout-layout . t))))
+     (allout-layout . t)))
  '(vc-follow-symlinks t)
  '(web-mode-attr-value-indent-offset 1)
  '(web-mode-code-indent-offset 2)

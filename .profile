@@ -11,7 +11,6 @@
 export EMAIL="tjarvstrand@gmail.com"
 export ERL_INETRC=${HOME}/.inetrc
 export SSH_ENV="$HOME/.ssh/environment"
-export LASTPASS_USERNAME="tjarvstrand@gmail.com"
 
 # Paths ------------------------------------------------------------------------
 
@@ -93,6 +92,10 @@ then
     source "${HOME}/.bazel/bin/bazel-complete.bash"
 fi
 
+# Riak -------------------------------------------------------------------------
+ulimit -n 65536
+
+# Other ------------------------------------------------------------------------
 export PATH="$HOME/.cargo/bin:$PATH"
 
 if [ -f "${HOME}/.profile.local" ]
@@ -105,5 +108,3 @@ then
     source "${HOME}/.profile.$(hostname)"
 fi
 
-# Riak -------------------------------------------------------------------------
-ulimit -n 65536
