@@ -1,0 +1,44 @@
+---
+- name: Docker
+  hosts: all
+  become: yes
+  tasks:
+
+    - action: apt
+      name: Install lsb-core
+      args:
+        name:
+          - lsb-core
+
+    - shell: lsb_release -cs
+      register: ubuntu_codename
+
+    - action: apt_key
+      name: Add docker apt keys
+      args:
+        url: https://download.docker.com/linux/ubuntu/gpg
+
+    - action: apt_repository
+      name: Add docker apt repositories
+      args:
+        repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ubuntu_codename.stdout}} stable"
+
+    - action: apt
+      name: Install docker-ce
+      args:
+        update_cache: yes
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+
+    - action: user
+      name: Add user to docker group
+      args:
+        user: "{{ lookup('env','USER') }}"
+        group: docker
+        append: yes
+
+# Local Variables:
+# mode: yaml
+# End:

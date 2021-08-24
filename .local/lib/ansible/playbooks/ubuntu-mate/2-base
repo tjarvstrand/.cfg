@@ -103,6 +103,21 @@
           - libghc-xmonad-dev
           - libdbusmenu-gtk3-dev
 
+    - name: Install snap packages
+      action: community.general.snap
+      args:
+        name:
+          - spotify
+
+    - name: Install classic snap packages
+      action: community.general.snap
+      args:
+        classic: yes
+        name:
+          - android-studio
+          - google-cloud-sdk
+          - intellij-idea-community
+
 - name: Configuration
   hosts: all
   tags:
@@ -178,62 +193,63 @@
     - name: Set dconf values
       script: scripts/dconf
 
-- name: CLI tools
+- name: z.sh
   hosts: all
-  tags: cli
+  tags:
+    - cli
+    - z
   tasks:
     - name: Get latest version number of z.sh
       shell: curl -Ls -o /dev/null -w %{url_effective} https://github.com/rupa/z/releases/latest | grep -Eo '[0-9.]+$'
       args:
         warn: no
-      register: version
-    - debug: var=version.stdout
+      register: z_version
+    - debug: var=z_version.stdout
     - name: Fetch z.sh
       action: get_url
       args:
-        url: "http://github.com/rupa/z/archive/v{{version.stdout}}.tar.gz"
-        dest: "~/Downloads/z-v{{version.stdout}}.tar.gz"
+        url: "http://github.com/rupa/z/archive/v{{z_version.stdout}}.tar.gz"
+        dest: "~/Downloads/z-v{{z_version.stdout}}.tar.gz"
     - name: Extract z.sh
       action: unarchive
       args:
-        src: "~/Downloads/z-v{{version.stdout}}.tar.gz"
+        src: "~/Downloads/z-v{{z_version.stdout}}.tar.gz"
         dest: "~/.local/lib"
     - name: Rename z.sh directory
-      shell: "mv z-{{version.stdout}} z"
+      shell: "mv z-{{z_version.stdout}} z"
       args:
         creates: "~/.local/lib/z"
         chdir: "~/.local/lib"
 
-- name: LastPass CLI
+- name: asdf-vm
   hosts: all
-  tags: lastpass
+  tags:
+    - cli
+    - asdf
   vars:
-    lastpass_dir: "{{lookup('env','HOME') + '/src/lastpass-cli'}}"
+    asdf_version: 0.8.1
   tasks:
-    - name: Install LastPass CLI package dependencies
-      action: apt
-      become: yes
+    # - name: Get latest version number of asdf
+    #   shell: curl -Ls -o /dev/null -w %{url_effective} https://github.com/asdf-vm/asdf/releases/latest | grep -Eo '[0-9.]+$'
+    #   args:
+    #     warn: no
+    #   register: asdf_version
+    - debug: var=asdf_version
+    - name: Fetch asdf
+      action: get_url
       args:
-        state: latest
-        name:
-          - cmake
-          - libcurl4-openssl-dev
-          - libxml2-dev
-          - xclip
-    - action: git
-      name: Clone repo
+        url: "http://github.com/asdf-vm/asdf/archive/v{{asdf_version}}.tar.gz"
+        dest: "~/Downloads/asdf-v{{asdf_version}}.tar.gz"
+    - name: Extract asdf
+      action: unarchive
       args:
-        repo: git://github.com/lastpass/lastpass-cli.git
-        dest: "{{lastpass_dir}}"
-    - name: Build LastPass
-      shell: make
+        src: "~/Downloads/asdf-v{{asdf_version}}.tar.gz"
+        dest: "~/.local/lib"
+    - name: Rename asdf directory
+      shell: "mv asdf-{{asdf_version}} asdf"
       args:
-        chdir: "{{lastpass_dir}}"
-    - name: Install LastPass
-      shell: make install
-      become: yes
-      args:
-        chdir: "{{lastpass_dir}}"
+        creates: "~/.local/lib/asdf"
+        chdir: "~/.local/lib"
 
 
 # Local Variables:

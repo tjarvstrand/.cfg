@@ -12,6 +12,18 @@ export EMAIL="tjarvstrand@gmail.com"
 export ERL_INETRC=${HOME}/.inetrc
 export SSH_ENV="$HOME/.ssh/environment"
 
+PROP="libinput Natural Scrolling Enabled"
+
+for id in $(xinput --list |
+               grep -E 'slave\s+pointer' |
+               grep -Eo 'id=[0-9]+' |
+               cut -d'=' -f 2); do
+    if xinput list-props $id |
+            grep -qi "$PROP"; then
+        xinput set-prop $id "$PROP" 1
+    fi
+done
+
 # Paths ------------------------------------------------------------------------
 
 if [[ -z $ORIG_PATH ]]; then
@@ -91,6 +103,11 @@ if [ -f "${HOME}/.bazel/bin/bazel-complete.bash" ]
 then
     source "${HOME}/.bazel/bin/bazel-complete.bash"
 fi
+
+# Dart -------------------------------------------------------------------------
+export PATH="$PATH":"$HOME/.pub-cache/bin"
+
+
 
 # Riak -------------------------------------------------------------------------
 ulimit -n 65536
