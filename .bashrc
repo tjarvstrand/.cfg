@@ -160,17 +160,6 @@ function jq_less {
 
 alias jq=jq_less
 
-
-if [ -f "${HOME}/.bashrc.local" ]
-then
-    source "${HOME}/.bashrc.local"
-fi
-
-if [ -f "${HOME}/.bashrc.$(hostname)" ]
-then
-    source "${HOME}/.bashrc.$(hostname)"
-fi
-
 deactivate 2>/dev/null
 if [ -f "${HOME}/.virtualenv/bin/activate" ]
 then
@@ -209,6 +198,10 @@ if [ -f "$HOME/.local/lib/google-cloud-sdk/path.bash.inc" ]; then . "$HOME/.loca
 
 # The next line enables shell command completion for gcloud.
 if [ -f "$HOME/.local/lib/google-cloud-sdk/completion.bash.inc" ]; then . "$HOME/.local/lib/google-cloud-sdk/completion.bash.inc"; fi
+
+for f in "$HOME"/.bashrc.d/*; do
+    source $f
+done
 
 tmux-session
 
