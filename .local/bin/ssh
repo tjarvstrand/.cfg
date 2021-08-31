@@ -7,8 +7,6 @@ export SSH_KEY_ID=${SSH_KEY_ID:-$(id -un)@$(hostname)}
 
 ARG=${1}
 
-LPASS=lpass
-
 function log {
     if [[ "${ARG}" != "-q" ]]
     then
