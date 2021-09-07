@@ -16,15 +16,17 @@ export SSH_ENV="$HOME/.ssh/environment"
 
 PROP="libinput Natural Scrolling Enabled"
 
-for id in $(xinput --list |
-               grep -E 'slave\s+pointer' |
-               grep -Eo 'id=[0-9]+' |
-               cut -d'=' -f 2); do
-    if xinput list-props $id |
-            grep -qi "$PROP"; then
+if which -s xinput; then
+  for id in $(xinput --list |
+                  grep -E 'slave\s+pointer' |
+                  grep -Eo 'id=[0-9]+' |
+                  cut -d'=' -f 2); do
+      if xinput list-props $id |
+              grep -qi "$PROP"; then
         xinput set-prop $id "$PROP" 1
     fi
-done
+  done
+fi
 
 # Paths ------------------------------------------------------------------------
 
