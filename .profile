@@ -21,7 +21,7 @@ export SSH_ENV="$HOME/.ssh/environment"
 
 PROP="libinput Natural Scrolling Enabled"
 
-if which -s xinput; then
+if which xinput > /dev/null; then
   for id in $(xinput --list |
                   grep -E 'slave\s+pointer' |
                   grep -Eo 'id=[0-9]+' |
