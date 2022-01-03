@@ -8,6 +8,8 @@
 # for ssh logins, install and configure the libpam-umask package.
 #umask 022
 
+export LANG=en_SE.UTF-8
+
 export CLICOLOR=1
 
 export EMAIL="tjarvstrand@gmail.com"

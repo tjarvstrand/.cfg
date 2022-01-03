@@ -53,8 +53,9 @@ function update_hist() {
 
 for f in $(find ${HISTFILE_DIR} -name '[0-9]*');
 do
-    (ps aux | grep bash | grep $(basename $f) > /dev/null) || (echo -n "Removing " && rm -v ${f})
+    (ps -p $(basename $f) > /dev/null) || (echo -n "Removing " && rm -v ${f})
 done
+
 history -c
 history -r ${GLOBAL_HISTFILE}
 history -r ${HISTFILE}
