@@ -8,7 +8,7 @@
     - brew
     - iterm
     - Ukulele
-  1. `brew install bash asdf grep coreutils findutils gnu-sed cask`
+  1. `brew install bash asdf grep coreutils findutils gnu-sed direnv`
   1. `brew install --cask --no-quarantine emacs`
   1. `chsh -s /usr/local/bin/bash`
 

@@ -8,7 +8,10 @@
 # for ssh logins, install and configure the libpam-umask package.
 #umask 022
 
-export LANG=en_SE.UTF-8
+export LANG=en_US.UTF-8
+export LC_TYPE=en_US.UTF-8
+export LC_CTYPE=UTF-8
+export LC_ALL=en_US.UTF-8
 
 export CLICOLOR=1
 
