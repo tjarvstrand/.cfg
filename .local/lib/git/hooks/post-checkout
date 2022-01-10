@@ -7,14 +7,14 @@ OUT_DIR="${HOME}/.cache/git-branches"
 
 mkdir -p "${OUT_DIR}"
 
-BRANCH_FILE="${OUT_DIR}/$(git rev-parse --show-toplevel | tr '/' '-')"
+BRANCH_FILE="${OUT_DIR}/$(git rev-parse --show-toplevel | tr '/' '~')"
 touch "${BRANCH_FILE}"
 
-sed -i "/${GIT_CURRENT_BRANCH}$/d" "${BRANCH_FILE}"
+sed -i "\\#${GIT_CURRENT_BRANCH}\$#d" "${BRANCH_FILE}"
 echo "${GIT_CURRENT_BRANCH}" >> "${BRANCH_FILE}"
 
 for f in ${OUT_DIR}/*
 do
-    DIR=$(basename $f | tr '-' '/')
+    DIR=$(basename $f | tr '~' '/')
     [ -d "${DIR}" ] || rm $f
 done

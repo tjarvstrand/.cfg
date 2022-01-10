@@ -16,7 +16,6 @@ osx () {
             ln -s /usr/local/bin/g$c $HOME/bin/$c
         fi
     done
-
 }
 
 [[ $OSTYPE == 'darwin'* ]] && osx
