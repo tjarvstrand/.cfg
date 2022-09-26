@@ -122,7 +122,6 @@ export PATH="$PATH":"$HOME/.pub-cache/bin"
 ulimit -n 65536
 
 # Other ------------------------------------------------------------------------
-export PATH="$HOME/.cargo/bin:$PATH"
 
 if [ -f "${HOME}/.profile.local" ]
 then

@@ -12,10 +12,16 @@ osx () {
 
     mkdir -p $HOME/bin
     for c in {grep,readlink,sed}; do
-        if [ ! -f $HOME/bin/$c ]; then
-            ln -s /usr/local/bin/g$c $HOME/bin/$c
+        if [ ! -L "$HOME/bin/$c" ]; then
+        x    ln -sv "/opt/homebrew/bin/g$c" "$HOME/bin/$c"
         fi
     done
+
+    export PATH="$PATH:/opt/homebrew/bin"
+    for f in /opt/homebrew/etc/bash_completion.d/*; do
+        . $f
+    done
+
 }
 
 [[ $OSTYPE == 'darwin'* ]] && osx

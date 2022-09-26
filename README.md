@@ -2,22 +2,24 @@
 
 ## Set up
 
-### Mac OS prep:
+### Mac OS:
   1. `ssh-keygen`
   1. Install
     - brew
     - iterm
     - Ukulele
-  1. `brew install bash asdf grep coreutils findutils gnu-sed direnv`
+  1. `brew install bash grep coreutils findutils gnu-sed direnv jq`
   1. `brew install --cask --no-quarantine emacs`
-  1. `chsh -s /usr/local/bin/bash`
+  1. `sudo chsh -s /opt/homebrew/bin/bash $USER`
+  1. Do main steps below
+  1. Install ~/.config/ukulele/Dvorak Custom for ALL USERS
+  1. Clone asdf
 
 ### Main steps
 
   1. `sudo apt install git`
   2. `git clone https://github.com/tjarvstrand/.cfg.git $HOME/.config/cfg`
-  2. `git clone --bare https://github.com/tjarvstrand/.cfg.mac.git $HOME/.config/cfg.mac`
-  3. `alias config='/usr/bin/git --git-dir=$HOME/.config/cfg.mac/ --work-tree=$HOME'`
+  3. `alias config='/usr/bin/git --git-dir=$HOME/.config/cfg/ --work-tree=$HOME'`
   4. `config checkout -f`
   6. `config config --local status.showUntrackedFiles no`
   7. `source ~/.bashrc`
