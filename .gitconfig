@@ -39,3 +39,4 @@
 	df = diff
 	st = status
 	ci = commit
+	root = rev-parse --show-toplevel
