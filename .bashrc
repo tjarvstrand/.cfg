@@ -167,38 +167,12 @@ then
     . ${HOME}/.virtualenv/bin/activate
 fi
 
-if [ -d "${HOME}/.local/lib/asdf" ]
-then
-    export ASDF_DATA_DIR="${HOME}/.cache/asdf"
-    source "${HOME}/.local/lib/asdf/asdf.sh"
-    source "${HOME}/.local/lib/asdf/completions/asdf.bash"
-fi
-
-export JAVA_OPTS="-Xss4m"
-if which asdf > /dev/null && asdf plugin list | grep -qs '^java' && asdf current java 2>&1
-then
-    export JAVA_HOME=$(asdf where java)
-fi
-
-if [ -f "${HOME}/.sdkman/bin/sdkman-init.sh" ]
-then
-    #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-    export SDKMAN_DIR="/home/tjarvstrand/.sdkman"
-    source "/home/tjarvstrand/.sdkman/bin/sdkman-init.sh"
-fi
-
 if which direnv > /dev/null; then
     eval "$(direnv hook bash)"
 fi
 
 # Strip trailing semicolon
 export PROMPT_COMMAND="${PROMPT_COMMAND%;}"
-
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f "$HOME/.local/lib/google-cloud-sdk/path.bash.inc" ]; then . "$HOME/.local/lib/google-cloud-sdk/path.bash.inc"; fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f "$HOME/.local/lib/google-cloud-sdk/completion.bash.inc" ]; then . "$HOME/.local/lib/google-cloud-sdk/completion.bash.inc"; fi
 
 for f in "$HOME"/.bashrc.d/*; do
     source $f
