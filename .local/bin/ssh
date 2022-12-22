@@ -33,8 +33,8 @@ function ensure_ssh_keys_added {
     for f in {id_rsa,id_dsa,id_ecdsa,id_ecdsa_sk,id_ed25519,id_ed25519_sk}; do
         file="$HOME/.ssh/$f"
         if [ -f "$file" ]; then
-            fingerprint="$(ssh-keygen -l -f $file | cut -d ' ' -f 2)"
-            if ssh-add -l | cut -d ' ' -f 2 | grep -q -E "$fingerprint"; then
+            fingerprint="$(ssh-keygen -l -f $file | cut -d ' ' -f 2 | base64)"
+            if ssh-add -l | cut -d ' ' -f 2 | base64 | grep -q -E "$fingerprint"; then
                 log $f already added to agent
             else
                 ssh-add $file
