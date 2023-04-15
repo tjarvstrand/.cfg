@@ -107,6 +107,7 @@
      (py-indent-offset . 2)
      (erlang-indent-level . 2)
      (allout-layout . t)))
+ '(tab-width 2)
  '(vc-follow-symlinks t)
  '(web-mode-attr-value-indent-offset 1)
  '(web-mode-code-indent-offset 2)
