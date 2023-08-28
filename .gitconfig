@@ -24,6 +24,7 @@
   pager = "less -F -X"
 [init]
 	templatedir = ~/.local/lib/git/template
+	defaultBranch = main
 [status]
   [submodule]
     summary = 0

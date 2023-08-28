@@ -1,7 +1,5 @@
 
 osx () {
-    source '/Library/Developer/CommandLineTools/usr/share/git-core/git-completion.bash'
-
     mkdir -p $HOME/bin
     for c in {grep,readlink,sed}; do
         if [ ! -L "$HOME/bin/$c" ]; then
@@ -10,9 +8,7 @@ osx () {
     done
 
     export PATH="/opt/homebrew/bin:$PATH"
-    for f in /opt/homebrew/etc/bash_completion.d/*; do
-        . $f
-    done
+    source /opt/homebrew/etc/bash_completion
 
     export ANDROID_HOME="$HOME/Library/Android/sdk"
 
