@@ -1,5 +1,4 @@
-
-osx () {
+if [[ $OSTYPE == 'darwin'* ]]; then
     mkdir -p $HOME/bin
     for c in {grep,readlink,sed}; do
         if [ ! -L "$HOME/bin/$c" ]; then
@@ -8,10 +7,10 @@ osx () {
     done
 
     export PATH="/opt/homebrew/bin:$PATH"
-    source /opt/homebrew/etc/bash_completion
+    if [ -f /opt/homebrew/etc/bash_completion ]; then
+        source /opt/homebrew/etc/bash_completion
+    fi
 
     export ANDROID_HOME="$HOME/Library/Android/sdk"
+fi
 
-}
-
-[[ $OSTYPE == 'darwin'* ]] && osx
