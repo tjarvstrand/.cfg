@@ -46,7 +46,7 @@
 (run-with-timer 0.2 nil #'(lambda () (split-windows-to-size 80)))
 
 ;; Line numbers on
-(global-linum-mode 1)
+(global-display-line-numbers-mode 1)
 (line-number-mode 1)
 (column-number-mode 1)
 
