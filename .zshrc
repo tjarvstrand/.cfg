@@ -60,7 +60,11 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 # see 'man strftime' for details.
 HIST_STAMPS="dd/mm/yyyy"
 
-plugins=(asdf direnv git gcloud)
+zstyle :omz:plugins:ssh-agent lazy yes
+
+setopt complete_aliases
+
+plugins=(asdf direnv git gcloud ssh-agent)
 
 source $ZSH/oh-my-zsh.sh
 
