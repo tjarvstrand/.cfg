@@ -21,3 +21,4 @@ ensime.sbt
 .tool-versions
 .ssh
 !.ssh/config*
+**/.DS_Store

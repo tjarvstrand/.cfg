@@ -19,6 +19,8 @@ export EMAIL="tjarvstrand@gmail.com"
 export ERL_INETRC=${HOME}/.inetrc
 export SSH_ENV="$HOME/.ssh/environment"
 
+export EDITOR="emacs --no-site-file --no-splash -nw --debug-init -q --eval '(setq basic-setup t)' -l ~/.emacs"
+
 PROP="libinput Natural Scrolling Enabled"
 
 if which xinput > /dev/null; then
@@ -99,7 +101,7 @@ fi
 if [ -d "$HOME/Android/Sdk" ]; then
     export ANDROID_HOME=$HOME/Android/Sdk
 elif [ -d "$HOME/Library/Android/sdk/" ]; then
-    export ANDROID_HOME="$HOME/Library/Android/sdk/"
+    export ANDROID_HOME="$HOME/Library/Android/sdk"
 fi
 if [ -n "$ANDROID_HOME" ]; then
     export PATH=$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools

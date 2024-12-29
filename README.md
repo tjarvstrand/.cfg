@@ -8,10 +8,13 @@
     - brew
     - iterm
     - Ukulele
-  1. `brew install bash grep coreutils findutils gnu-sed direnv jq`
+  1. `brew install bash grep coreutils findutils gnu-sed direnv jq tmux`
+  1. `sudo ln -s /opt/homebrew/bin/tmux /usr/local/bin`
   1. `brew install --cask --no-quarantine emacs`
-  1. `sudo chsh -s /opt/homebrew/bin/bash $USER`
-  1. Do main steps below
+  1. Install oh-my-zsh
+  1. Add paths to a file in  /etc/paths.d:
+     - /usr/local/bin
+     - /opt/homebrew/bin
   1. Install ~/.config/ukulele/Dvorak Custom for ALL USERS
   1. Clone asdf
 

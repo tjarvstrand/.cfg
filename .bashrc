@@ -7,58 +7,56 @@ source "${HOME}/.profile"
 export LC_TYPE=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 
-export EDITOR="emacs --no-site-file --no-splash -nw --debug-init -q --eval '(setq basic-setup t)' -l ~/.emacs"
-
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
 # don't put duplicate lines in the history. See bash(1) for more options
 # ... or force ignoredups and ignorespace
-HISTCONTROL=ignoredups:ignorespace
+# HISTCONTROL=ignoredups:ignorespace
 
 # append to the history file, don't overwrite it
-shopt -s histappend
+# shopt -s histappend
 
-# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-HISTSIZE=10000
-HISTFILESIZE=10000
-HISTIGNORE='ls:bg:fg:history'
+# # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+# HISTSIZE=10000
+# HISTFILESIZE=10000
+# HISTIGNORE='ls:bg:fg:history'
 
-# check the window size after each command and, if necessary,
-# update the values of LINES and COLUMNS.
-shopt -s checkwinsize
+# # check the window size after each command and, if necessary,
+# # update the values of LINES and COLUMNS.
+# shopt -s checkwinsize
 
-HISTFILE_DIR=${HOME}/.cache/bash_history
-mkdir -p ${HISTFILE_DIR}
-HISTFILE=${HISTFILE_DIR}/${BASHPID}
-GLOBAL_HISTFILE=${HISTFILE_DIR}/global
-function update_hist() {
-    cmd="$(history | tail -n 1 | sed 's/^[ 0-9]*//'| sed 's/\\/\\\\/g')"
-    awk='$0 != cmd {print $0} END {print cmd}'
+# HISTFILE_DIR=${HOME}/.cache/bash_history
+# mkdir -p ${HISTFILE_DIR}
+# HISTFILE=${HISTFILE_DIR}/${BASHPID}
+# GLOBAL_HISTFILE=${HISTFILE_DIR}/global
+# function update_hist() {
+#     cmd="$(history | tail -n 1 | sed 's/^[ 0-9]*//'| sed 's/\\/\\\\/g')"
+#     awk='$0 != cmd {print $0} END {print cmd}'
 
-    touch ${HISTFILE}
-    awk -v cmd="${cmd}" "${awk}" ${HISTFILE} > ${HISTFILE}.tmp
-    mv ${HISTFILE}.tmp ${HISTFILE}
+#     touch ${HISTFILE}
+#     awk -v cmd="${cmd}" "${awk}" ${HISTFILE} > ${HISTFILE}.tmp
+#     mv ${HISTFILE}.tmp ${HISTFILE}
 
-    touch ${GLOBAL_HISTFILE}
-    awk -v cmd="${cmd}" "${awk}" ${GLOBAL_HISTFILE} > ${GLOBAL_HISTFILE}.tmp
-    mv ${GLOBAL_HISTFILE}.tmp ${GLOBAL_HISTFILE}
+#     touch ${GLOBAL_HISTFILE}
+#     awk -v cmd="${cmd}" "${awk}" ${GLOBAL_HISTFILE} > ${GLOBAL_HISTFILE}.tmp
+#     mv ${GLOBAL_HISTFILE}.tmp ${GLOBAL_HISTFILE}
 
-    # Local history will be present in both local and global history, but local
-    # history will be first so that's ok for now.
-    history -c
-    history -r ${GLOBAL_HISTFILE}
-    history -r ${HISTFILE}
-}
+#     # Local history will be present in both local and global history, but local
+#     # history will be first so that's ok for now.
+#     history -c
+#     history -r ${GLOBAL_HISTFILE}
+#     history -r ${HISTFILE}
+# }
 
-for f in $(find ${HISTFILE_DIR} -name '[0-9]*');
-do
-    (ps -p $(basename $f) > /dev/null) || (echo -n "Removing " && rm -v ${f})
-done
+# for f in $(find ${HISTFILE_DIR} -name '[0-9]*');
+# do
+#     (ps -p $(basename $f) > /dev/null) || (echo -n "Removing " && rm -v ${f})
+# done
 
-history -c
-history -r ${GLOBAL_HISTFILE}
-history -r ${HISTFILE}
+# history -c
+# history -r ${GLOBAL_HISTFILE}
+# history -r ${HISTFILE}
 
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
@@ -108,7 +106,7 @@ set_prompt () {
 }
 
 # If this is an xterm set the title to user@host:dir
-PROMPT_COMMAND='set_prompt;update_hist'
+PROMPT_COMMAND='set_prompt'
 case "$TERM" in
 xterm*|rxvt*)
     PROMPT_COMMAND=$PROMPT_COMMAND'; echo -ne "\033]0;${USER}@${HOSTNAME}\007"'
@@ -167,10 +165,6 @@ then
     . ${HOME}/.virtualenv/bin/activate
 fi
 
-if which direnv > /dev/null; then
-    eval "$(direnv hook bash)"
-fi
-
 # Strip trailing semicolon
 export PROMPT_COMMAND="${PROMPT_COMMAND%;}"
 
@@ -178,5 +172,10 @@ for f in "$HOME"/.bashrc.d/*; do
     source $f
 done
 
-tmux-session
+if which direnv > /dev/null; then
+    eval "$(direnv hook bash)"
+fi
+
+[[ -f ~/.bash-preexec.sh ]] && source ~/.bash-preexec.sh
+eval "$(atuin init bash)"
 

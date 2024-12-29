@@ -3,6 +3,7 @@
 (defconst user-home (getenv "HOME"))
 (add-to-list 'exec-path (format "%s/.cache/asdf/shims" user-home))
 (add-to-list 'exec-path (format "%s/.local/lib/asdf/bin" user-home))
+(add-to-list 'exec-path "/opt/homebrew/bin")
 (setenv "ASDF_DATA_DIR" (format "%s/.cache/asdf" user-home))
 
 (let ((lib-dir (concat user-emacs-directory "/lib")))
@@ -100,7 +101,7 @@
  '(js-indent-level 2)
  '(message-log-max 10000)
  '(package-selected-packages
-   '(darcula-theme dash f find-file-in-project flymd go-mode graphviz-dot-mode groovy-mode haskell-mode js2-mode js3-mode markdown-mode python-mode rust-mode s scad-mode web-mode yaml-mode))
+   '(terraform-mode darcula-theme dash f find-file-in-project flymd go-mode graphviz-dot-mode groovy-mode haskell-mode js2-mode js3-mode markdown-mode python-mode rust-mode s scad-mode web-mode yaml-mode))
  '(safe-local-variable-values
    '((py-smart-indentation)
      (python-indent . 2)
