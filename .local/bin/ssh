@@ -43,7 +43,7 @@ function ensure_ssh_keys_added {
     done
 }
 
-if [ -z "$SSH_AGENT_DISABLE"]
+if [ -z "$SSH_AGENT_DISABLE" ]
 then
     ensure_ssh_agent_started
     ensure_ssh_keys_added

@@ -1,8 +1,9 @@
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
+source "${HOME}/.profile"
 
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.config/oh-my-zsh"
+
+export SSH_AGENT_DISABLE="true"
 
 for f in "$HOME"/.zshrc.d/*; do
     source $f
@@ -64,7 +65,7 @@ zstyle :omz:plugins:ssh-agent lazy yes
 
 setopt complete_aliases
 
-plugins=(asdf direnv git gcloud ssh-agent)
+plugins=(asdf direnv gcloud gitfast ssh-agent)
 
 source $ZSH/oh-my-zsh.sh
 
