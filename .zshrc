@@ -1,9 +1,11 @@
 source "${HOME}/.profile"
 
 # Path to your Oh My Zsh installation.
-export ZSH="$HOME/.config/oh-my-zsh"
+export ZSH="$HOME/.local/lib/oh-my-zsh"
+export ZSH_CUSTOM="$HOME/.config/oh-my-zsh"
 
 export SSH_AGENT_DISABLE="true"
+export VIRTUAL_ENV_DISABLE_PROMPT="true"
 
 for f in "$HOME"/.zshrc.d/*; do
     source $f
@@ -64,6 +66,7 @@ HIST_STAMPS="dd/mm/yyyy"
 zstyle :omz:plugins:ssh-agent lazy yes
 
 setopt complete_aliases
+setopt NO_BEEP NO_AUTOLIST BASH_AUTOLIST NO_MENUCOMPLETE NO_AUTO_MENU
 
 plugins=(asdf direnv gcloud gitfast ssh-agent)
 

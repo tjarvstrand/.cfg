@@ -5,3 +5,5 @@ alias copy='xclip -i -sel clip'
 alias dc='docker-compose'
 alias a='asdf'
 alias curl='curl -sS'
+
+hash -d dl="$HOME/Downloads"

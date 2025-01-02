@@ -11,7 +11,7 @@
   1. `brew install bash grep coreutils findutils gnu-sed direnv jq tmux`
   1. `sudo ln -s /opt/homebrew/bin/tmux /usr/local/bin`
   1. `brew install --cask --no-quarantine emacs`
-  1. Install oh-my-zsh
+  1. Install oh-my-zsh in .local/lib/oh-my-zsh
   1. Add paths to a file in  /etc/paths.d:
      - /usr/local/bin
      - /opt/homebrew/bin
