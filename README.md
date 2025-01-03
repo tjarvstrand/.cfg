@@ -25,9 +25,10 @@
   3. `alias config='/usr/bin/git --git-dir=$HOME/.config/cfg/ --work-tree=$HOME'`
   4. `config checkout -f`
   6. `config config --local status.showUntrackedFiles no`
-  7. `source ~/.bashrc`
-  8. `config remote set-url origin git@github.com:tjarvstrand/.cfg.git`
-  9. `config config remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'`
+  7. `config submodule update --init`
+  8. `source ~/.bashrc`
+  9. `config remote set-url origin git@github.com:tjarvstrand/.cfg.git`
+  10. `config config remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'`
 
 ### Linux
 

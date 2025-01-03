@@ -7,4 +7,5 @@ if [[ $OSTYPE == 'darwin'* ]]; then
     done
 
     export ANDROID_HOME="$HOME/Library/Android/sdk"
+    export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"
 fi

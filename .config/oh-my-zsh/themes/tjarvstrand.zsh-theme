@@ -1,4 +1,4 @@
-export PROMPT_COMMAND="echo -ne '\033]0;${USER}@${HOST}\007';$PROMPT_COMMAND"
+export PROMPT_COMMAND="echo -ne '\033]0;${USER}@${HOST}\007'"
 precmd() { eval "$PROMPT_COMMAND" }
 
 git_repo () {
@@ -16,7 +16,7 @@ PROMPT+=$'[%{$fg[cyan]%}%D{%X}%{$reset_color%}] '
 PROMPT+='%{$fg[magenta]%}$(git_repo)%{$reset_color%} $(git_prompt_info)'
 
 # Current directory. Use $PWD, since  %~ doesn't expand `hash`.
-PROMPT+=$'\n$(basename $PWD) $ '
+PROMPT+=$'\n%B$(basename $(pwd | sed "s,$HOME,~,")) $%b '
 
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg[green]%}"
 ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%}"
