@@ -7,7 +7,17 @@ export ZSH_CUSTOM="$HOME/.config/oh-my-zsh"
 export SSH_AGENT_DISABLE="true"
 export VIRTUAL_ENV_DISABLE_PROMPT="true"
 
-for f in "$HOME"/.zshrc.d/*; do
+# You may need to manually set your language environment
+export LC_TYPE=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+
+autoload -U select-word-style
+select-word-style bash
+
+autoload -Uz compinit
+compinit
+
+for f in "$HOME"/.zshrc.d/*.zsh; do
     source $f
 done
 
@@ -63,7 +73,7 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 # see 'man strftime' for details.
 HIST_STAMPS="dd/mm/yyyy"
 
-zstyle :omz:plugins:ssh-agent lazy yes
+#zstyle :omz:plugins:ssh-agent lazy yes
 
 setopt complete_aliases
 setopt NO_BEEP NO_AUTOLIST BASH_AUTOLIST NO_MENUCOMPLETE NO_AUTO_MENU
@@ -72,10 +82,7 @@ plugins=(asdf direnv gcloud gitfast ssh-agent)
 
 source $ZSH/oh-my-zsh.sh
 
-# User configuration
-
-# You may need to manually set your language environment
-export LC_TYPE=en_US.UTF-8
-export LC_ALL=en_US.UTF-8
+eval "$(oh-my-posh init zsh --config ${HOME}/.zshrc.d/theme.omp.json)"
 
 eval "$(atuin init zsh)"
+

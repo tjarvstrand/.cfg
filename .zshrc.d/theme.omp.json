@@ -1,0 +1,88 @@
+{
+  "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
+  "blocks": [
+    {
+      "alignment": "left",
+      "segments": [
+        {
+          "type": "status",
+          "style": "diamond",
+          "foreground_templates": [
+            "{{ if eq .Code 0 }}green{{ else }}red{{ end }}"
+          ],
+          "template": "<b>{{ if eq .Code 0 }}✓{{ else }}✗{{ end }}</b> ",
+          "properties": {
+            "always_enabled": true
+          }
+        },
+        {
+          "type": "text",
+          "style": "plain",
+          "foreground": "red",
+          "template": "["
+        },
+        {
+          "type": "time",
+          "style": "plain",
+          "foreground": "#FFFFFF",
+          "template": "<b>{{ .CurrentDate | date .Format }}</b>",
+          "properties": {
+            "time_format": "15:04:05"
+          }
+        },
+        {
+          "type": "text",
+          "style": "plain",
+          "foreground": "red",
+          "template": "]"
+        },
+        {
+          "foreground": "#0CA0D8",
+          "properties": {
+            "folder_separator_icon": "/",
+            "style": "full"
+          },
+          "style": "plain",
+          "template": " \uf07b {{ .Path }} ",
+          "type": "path"
+        }
+      ],
+      "type": "prompt"
+    },
+    {
+      "alignment": "right",
+      "overflow": "hide",
+      "segments": [
+        {
+          "type": "git",
+          "style": "plain",
+          "foreground": "#14A5AE",
+          "powerline_symbol": "\ue0b0",
+          "template": "{{ .HEAD }}{{if or (.Working.Changed) (.Staging.Changed) }}  {{ end }}{{if .Working.Unmerged }} <red>{{ .Working.Unmerged }}</red>{{end}}{{if .Working.Untracked}} <blue>{{ .Working.Untracked }}</blue>{{end}}{{ if (add .Working.Added .Working.Deleted .Working.Modified) }} <green>{{ add .Working.Added .Working.Deleted .Working.Modified }}</green>{{ end }}{{ if (add .Staging.Added .Staging.Deleted .Staging.Modified) }} <yellow>{{ add .Staging.Added .Staging.Deleted .Staging.Modified }}</yellow>{{ end }}{{ if gt .StashCount 0 }} <magenta> {{ .StashCount }}</magenta>{{ end }}",
+          "properties": {
+            "fetch_stash_count": true,
+            "fetch_upstream_icon": true,
+            "fetch_status": true,
+            "fetch_upstream_icon": true
+          }
+        }
+      ],
+      "type": "prompt"
+    },
+    {
+      "alignment": "left",
+      "newline": true,
+      "segments": [
+        {
+          "foreground": "green",
+          "style": "plain",
+          "template": "<red># ",
+          "type": "text"
+        }
+      ],
+      "type": "prompt"
+    }
+  ],
+  "version": 3
+}
+
