@@ -4,7 +4,6 @@ source "${HOME}/.profile"
 export ZSH="$HOME/.local/lib/oh-my-zsh"
 export ZSH_CUSTOM="$HOME/.config/oh-my-zsh"
 
-export SSH_AGENT_DISABLE="true"
 export VIRTUAL_ENV_DISABLE_PROMPT="true"
 
 # You may need to manually set your language environment
@@ -73,12 +72,10 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 # see 'man strftime' for details.
 HIST_STAMPS="dd/mm/yyyy"
 
-#zstyle :omz:plugins:ssh-agent lazy yes
-
 setopt complete_aliases
 setopt NO_BEEP NO_AUTOLIST BASH_AUTOLIST NO_MENUCOMPLETE NO_AUTO_MENU
 
-plugins=(asdf direnv gcloud gitfast ssh-agent)
+plugins=(asdf direnv gcloud gitfast)
 
 source $ZSH/oh-my-zsh.sh
 

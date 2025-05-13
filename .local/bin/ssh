@@ -8,14 +8,14 @@ ARG=${1}
 function log {
     if [[ "${ARG}" != "-q" ]]
     then
-        echo ${@}
+        echo ${@} >&2
     fi
 }
 
 function start_ssh_agent {
     log "Initialising new SSH agent..."
     /usr/bin/ssh-agent | grep -v '^echo' > "${SSH_ENV}"
-    log succeeded
+    log "succeeded"
     chmod 600 "${SSH_ENV}"
     . "${SSH_ENV}" > /dev/null
 }
@@ -35,7 +35,7 @@ function ensure_ssh_keys_added {
         if [ -f "$file" ]; then
             fingerprint="$(ssh-keygen -l -f $file | cut -d ' ' -f 2 | base64)"
             if ssh-add -l | cut -d ' ' -f 2 | base64 | grep -q -E "$fingerprint"; then
-                log $f already added to agent
+                log "Key $f already added to agent"
             else
                 ssh-add $file
             fi
