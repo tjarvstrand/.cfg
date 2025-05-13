@@ -20,7 +20,7 @@ export EMAIL="tjarvstrand@gmail.com"
 export ERL_INETRC=${HOME}/.inetrc
 export SSH_ENV="$HOME/.ssh/environment"
 
-export EDITOR="emacs --no-site-file --no-splash -nw --debug-init -q --eval '(setq basic-setup t)' -l ~/.emacs"
+export EDITOR="emacs --no-site-file --no-splash -nw -q"
 
 PROP="libinput Natural Scrolling Enabled"
 
