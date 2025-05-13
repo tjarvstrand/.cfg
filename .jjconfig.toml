@@ -1,3 +1,9 @@
 [user]
 name = "Thomas Järvstrand"
 email = "tjarvstrand@gmail.com"
+
+[ui]
+pager = ":builtin"
+
+[templates]
+log = "builtin_log_compact_full_description"
