@@ -8,7 +8,7 @@
     - brew
     - iterm
     - Ukulele
-  1. `brew install bash coreutils direnv findutils gnu-sed grep jq kanata oh-my-posh wezterm`
+  1. `brew install asdf coreutils direnv findutils gnu-sed grep jq kanata oh-my-posh wezterm`
   1. `brew install --cask --no-quarantine emacs`
   1. Install oh-my-zsh in .local/lib/oh-my-zsh
   1. Add paths to a file in  /etc/paths.d:

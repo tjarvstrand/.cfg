@@ -1,8 +1,11 @@
-if [ -d "${HOME}/.local/lib/asdf" ]
+(( ! $+commands[asdf] )) && return
+
+export ASDF_DATA_DIR="${HOME}/.cache/asdf"
+path=("$ASDF_DATA_DIR/shims" $path)
+
+if [ ! -f "$ZSH_COMPLETIONS_DIR/_asdf" ]
 then
-    export ASDF_DATA_DIR="${HOME}/.cache/asdf"
-    source "${HOME}/.local/lib/asdf/asdf.sh"
-    fpath=(${ASDF_DIR}/completions $fpath)
+    asdf completion zsh > "$ZSH_COMPLETIONS_DIR/_asdf"
 fi
 
 export JAVA_OPTS="-Xss4m"
