@@ -7,3 +7,11 @@ pager = ":builtin"
 
 [templates]
 log = "builtin_log_compact_full_description"
+
+[aliases]
+a = ["abandon"]
+b = ["log", "-r" ,"mutable()&heads(mine())"]
+d = ["diff"]
+e = ["edit"]
+l = ["log"]
+r = ["rebase"]
