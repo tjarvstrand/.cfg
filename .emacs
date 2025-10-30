@@ -1,10 +1,11 @@
 (setq inhibit-x-resources t)
 
 (defconst user-home (getenv "HOME"))
-(add-to-list 'exec-path (format "%s/.cache/asdf/shims" user-home))
-(add-to-list 'exec-path (format "%s/.local/lib/asdf/bin" user-home))
+;; (add-to-list 'exec-path (format "%s/.cache/asdf/shims" user-home))
+;; (add-to-list 'exec-path (format "%s/.local/lib/asdf/bin" user-home))
+(add-to-list 'exec-path (format "%s/.local/share/mise/shims" user-home))
 (add-to-list 'exec-path "/opt/homebrew/bin")
-(setenv "ASDF_DATA_DIR" (format "%s/.cache/asdf" user-home))
+;; (setenv "ASDF_DATA_DIR" (format "%s/.cache/asdf" user-home))
 
 (let ((lib-dir (concat user-emacs-directory "/lib")))
   (add-to-list 'load-path lib-dir)
@@ -47,6 +48,7 @@
 (use-package edts)
 (use-package erlang)
 (use-package f)
+(use-package mise)
 (use-package python-mode)
 (use-package s)
 (use-package scad-mode)
@@ -58,6 +60,7 @@
 (setq initial-major-mode 'fundamental-mode)
 (setq initial-scratch-message
       "# This buffer is for notes you don't want to save.\n\n")
+(add-hook 'after-init-hook 'global-mise-mode)
 
 (setq x-select-enable-clipboard 1)
 (setq-default indent-tabs-mode nil)
@@ -85,7 +88,13 @@
  '(company-minimum-prefix-length 1)
  '(create-lockfiles nil)
  '(custom-safe-themes
-   '("420689cc31d01fe04b8e3adef87b8838ff52faa169e69ca4e863143ae9f3a9f9" "82b67c7e21c3b12be7b569af7c84ec0fb2d62105629a173e2479e1053cff94bd" "b04425cc726711a6c91e8ebc20cf5a3927160681941e06bc7900a5a5bfe1a77f" "c74e83f8aa4c78a121b52146eadb792c9facc5b1f02c917e3dbb454fca931223" "3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" "a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" default))
+   '("420689cc31d01fe04b8e3adef87b8838ff52faa169e69ca4e863143ae9f3a9f9"
+     "82b67c7e21c3b12be7b569af7c84ec0fb2d62105629a173e2479e1053cff94bd"
+     "b04425cc726711a6c91e8ebc20cf5a3927160681941e06bc7900a5a5bfe1a77f"
+     "c74e83f8aa4c78a121b52146eadb792c9facc5b1f02c917e3dbb454fca931223"
+     "3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa"
+     "a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e"
+     default))
  '(debug-on-error nil)
  '(ediff-window-setup-function 'ediff-setup-windows-plain)
  '(edts-inhibit-package-check t)
@@ -93,6 +102,7 @@
  '(electric-indent-mode nil)
  '(epushover-token "8voZIQ79jOdclr92TizvFcVr84gpnb")
  '(epushover-user-key "iExDziORD2VAffHJFa4nHh5BKlOYwZ")
+ '(graphviz-dot-dot-program "/opt/homebrew/bin/dot")
  '(groovy-indent-offset 2)
  '(ido-enable-tramp-completion nil)
  '(ido-use-filename-at-point nil)
@@ -101,13 +111,14 @@
  '(js-indent-level 2)
  '(message-log-max 10000)
  '(package-selected-packages
-   '(terraform-mode darcula-theme dash f find-file-in-project flymd go-mode graphviz-dot-mode groovy-mode haskell-mode js2-mode js3-mode markdown-mode python-mode rust-mode s scad-mode web-mode yaml-mode))
+   '(darcula-theme dash f find-file-in-project flymd go-mode
+                   graphviz-dot-mode groovy-mode haskell-mode js2-mode
+                   js3-mode markdown-mode mise python-mode rust-mode s
+                   scad-mode terraform-mode treemacs web-mode
+                   yaml-mode))
  '(safe-local-variable-values
-   '((py-smart-indentation)
-     (python-indent . 2)
-     (py-indent-offset . 2)
-     (erlang-indent-level . 2)
-     (allout-layout . t)))
+   '((py-smart-indentation) (python-indent . 2) (py-indent-offset . 2)
+     (erlang-indent-level . 2) (allout-layout . t)))
  '(tab-width 2)
  '(vc-follow-symlinks t)
  '(web-mode-attr-value-indent-offset 1)
@@ -160,6 +171,7 @@
 (setq ido-use-virtual-buffers t)
 (setq ido-auto-merge-delay-time 0)
 (setq ido-enable-flex-matching t)
+(setq ido-auto-merge-work-directories-length -1)
 ;; (ido-everywhere t)
 (ido-mode t)
 
@@ -169,7 +181,9 @@
 
 (setq-default c-basic-offset 2)
 (load-library "my-sh")
+(message "1")
 (unless basic-setup
+  (message "2")
   ;; (load-library "my-clojure")
   ;;(load-library "my-erlang")
   ;; (load-library "my-haskell")

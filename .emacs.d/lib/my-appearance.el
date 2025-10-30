@@ -1,8 +1,6 @@
 
 (load-theme 'darcula t)
 
-(load-library "my-misc")
-
 ;; Set font
 (defun set-font-size (size)
   (interactive "nSize: ")
