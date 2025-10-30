@@ -2,16 +2,39 @@
 name = "Thomas Järvstrand"
 email = "tjarvstrand@gmail.com"
 
+[[--scope]]
+--when.repositories = ["~/src/dagg"]
+[--scope.user]
+email = "thomas@dagg.ai"
+
 [ui]
 pager = ":builtin"
 
 [templates]
 log = "builtin_log_compact_full_description"
 
+[template-aliases]
+branches = '''
+  separate(" ",
+    if(current_working_copy, "*", " "),
+    format_short_change_id_with_hidden_and_divergent_info(self),
+    commit_timestamp(self).format("%h %d"),
+    self.local_bookmarks(),
+    if(description,
+      description.first_line(),
+      label(if(empty, "empty"), description_placeholder),
+    ),
+    "\n",
+  )
+'''
+
+[ui.movement]
+edit = true
+
 [aliases]
 a = ["abandon"]
-b = ["log", "-r" ,"mutable()&heads(mine())"]
+br = ["log", "--no-graph", "-T", "branches", "-r" ,"bookmarks() | heads(mine()~immutable())"]
 d = ["diff"]
 e = ["edit"]
-l = ["log"]
+l = ["log", "-r::@"]
 r = ["rebase"]
