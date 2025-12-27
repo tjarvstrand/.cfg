@@ -45,13 +45,10 @@
 (use-package color-theme)
 (use-package darcula-theme)
 (use-package dash)
-(use-package edts)
-(use-package erlang)
 (use-package f)
 (use-package mise)
 (use-package python-mode)
 (use-package s)
-(use-package scad-mode)
 (use-package web-mode)
 (use-package yaml-mode)
 (use-package diff-hl)
@@ -95,16 +92,11 @@
      default))
  '(debug-on-error nil)
  '(ediff-window-setup-function 'ediff-setup-windows-plain)
- '(edts-inhibit-package-check t)
- '(edts-man-root "~/.emacs.d/edts/doc/R15B03")
  '(eglot-code-action-indications '(eldoc-hint))
  '(eglot-events-buffer-config '(:size 200000 :format full))
  '(eglot-report-progress nil)
  '(electric-indent-mode nil)
- '(epushover-token "8voZIQ79jOdclr92TizvFcVr84gpnb")
- '(epushover-user-key "iExDziORD2VAffHJFa4nHh5BKlOYwZ")
  '(graphviz-dot-dot-program "/opt/homebrew/bin/dot")
- '(groovy-indent-offset 2)
  '(ido-enable-tramp-completion nil)
  '(ido-use-filename-at-point nil)
  '(ido-use-url-at-point nil)
@@ -112,14 +104,30 @@
  '(js-indent-level 2)
  '(message-log-max 10000)
  '(package-selected-packages
-   '(company darcula-theme dash diff-hl eglot f find-file-in-project
-             flymd go-mode graphviz-dot-mode groovy-mode haskell-mode
-             js2-mode js3-mode markdown-mode mermaid-mode mise
-             python-mode python-pytest rust-mode s scad-mode
-             terraform-mode treemacs web-mode yaml-mode))
+   '(company
+     darcula-theme
+     dash
+     diff-hl
+     eglot
+     f
+     find-file-in-project
+     flymd
+     go-mode
+     graphviz-dot-mode
+     js2-mode
+     js3-mode
+     markdown-mode
+     mermaid-mode
+     mise
+     python-mode
+     python-pytest
+     s
+     terraform-mode
+     treemacs
+     web-mode
+     yaml-mode))
  '(safe-local-variable-values
-   '((py-smart-indentation) (python-indent . 2) (py-indent-offset . 2)
-     (erlang-indent-level . 2) (allout-layout . t)))
+   '((py-smart-indentation) (python-indent . 2) (py-indent-offset . 2) (allout-layout . t)))
  '(tab-width 2)
  '(vc-follow-symlinks t)
  '(web-mode-attr-value-indent-offset 1)
@@ -185,7 +193,6 @@
 (setq ido-auto-merge-delay-time 0)
 (setq ido-enable-flex-matching t)
 (setq ido-auto-merge-work-directories-length -1)
-;; (ido-everywhere t)
 (ido-mode t)
 
 
@@ -194,14 +201,8 @@
 
 (setq-default c-basic-offset 2)
 (load-library "my-sh")
-(message "1")
 (unless basic-setup
-  (message "2")
-  ;; (load-library "my-clojure")
-  ;;(load-library "my-erlang")
-  ;; (load-library "my-haskell")
   (load-library "my-python")
-  (load-library "my-ruby")
   (load-library "my-javascript"))
 
 (add-to-list 'auto-mode-alist
