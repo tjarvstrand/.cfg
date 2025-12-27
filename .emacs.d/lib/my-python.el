@@ -1,6 +1,7 @@
 ;; Python mode
 (require 'python-mode)
-;; (require 'flycheck)
+(use-package python-pytest)
+(require 'company)
 
 (add-to-list 'project-vc-extra-root-markers ".venv")
 (add-to-list 'project-vc-extra-root-markers "pyproject.toml")
@@ -29,14 +30,19 @@ See URL `http://pypi.python.org/pypi/ruff'."
             line-end))
   :modes (python-mode python-ts-mode))
 
-;; ;; Use something adapted to your config to add `python-ruff' to `flycheck-checkers'
-;; ;; This is an MVP example:
-;; (setq python-mode-hook
-;;       (list (defun my-python-hook ()
-;;               )))
-
 (defun my-python-mode-hook ()
   (local-set-key (kbd "C-c C-c") 'comment-region)
   (local-set-key (kbd "C-c C-u") 'uncomment-region)
+  (python-ts-mode)
+  (company-mode)
+  ;; Avoid custom python sexp navigation behaviour from python-nav-forward-sexp
+  (setq forward-sexp-function nil)
+  (setq-local
+   eglot-server-programs
+   `(
+     ((python-mode python-ts-mode) . ("pylsp"))
+     )
+   )
+  (eglot-ensure)
   )
 (add-hook 'python-mode-hook 'my-python-mode-hook)

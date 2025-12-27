@@ -1,5 +1,6 @@
 
 (load-theme 'darcula t)
+(set-face-attribute 'highlight nil :background "#3a3a3a")
 
 ;; Set font
 (defun set-font-size (size)
@@ -45,6 +46,8 @@
 
 ;; Line numbers on
 (global-display-line-numbers-mode 1)
+(global-diff-hl-mode)
+(diff-hl-flydiff-mode)
 (line-number-mode 1)
 (column-number-mode 1)
 

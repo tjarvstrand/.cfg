@@ -14,13 +14,14 @@
       (add-to-list 'load-path dir))))
 
 (defvar basic-setup nil)
+(setq default-frame-alist '((left . 0) (width . 0) (fullscreen . maximized)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ELPA
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
-                         ;; ("marmalade" . "https://marmalade-repo.org/packages/")
+                         ("gnu-devel" . "https://elpa.gnu.org/devel/")
                          ("melpa" . "https://melpa.org/packages/")
                          ("melpa-stable" . "https://stable.melpa.org/packages/")
                          ))
@@ -41,7 +42,6 @@
 (setq use-package-always-defer t
       use-package-always-ensure t)
 
-(use-package auto-complete)
 (use-package color-theme)
 (use-package darcula-theme)
 (use-package dash)
@@ -54,6 +54,7 @@
 (use-package scad-mode)
 (use-package web-mode)
 (use-package yaml-mode)
+(use-package diff-hl)
 
 ;;;;;;;;;;;;;;;;;;;;;
 ;; Misc
@@ -81,9 +82,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ahs-case-fold-search nil)
- '(ahs-default-range 'ahs-range-display)
- '(ahs-idle-interval 1)
  '(comment-multi-line t)
  '(company-minimum-prefix-length 1)
  '(create-lockfiles nil)
@@ -99,6 +97,9 @@
  '(ediff-window-setup-function 'ediff-setup-windows-plain)
  '(edts-inhibit-package-check t)
  '(edts-man-root "~/.emacs.d/edts/doc/R15B03")
+ '(eglot-code-action-indications '(eldoc-hint))
+ '(eglot-events-buffer-config '(:size 200000 :format full))
+ '(eglot-report-progress nil)
  '(electric-indent-mode nil)
  '(epushover-token "8voZIQ79jOdclr92TizvFcVr84gpnb")
  '(epushover-user-key "iExDziORD2VAffHJFa4nHh5BKlOYwZ")
@@ -111,11 +112,11 @@
  '(js-indent-level 2)
  '(message-log-max 10000)
  '(package-selected-packages
-   '(darcula-theme dash f find-file-in-project flymd go-mode
-                   graphviz-dot-mode groovy-mode haskell-mode js2-mode
-                   js3-mode markdown-mode mise python-mode rust-mode s
-                   scad-mode terraform-mode treemacs web-mode
-                   yaml-mode))
+   '(company darcula-theme dash diff-hl eglot f find-file-in-project
+             flymd go-mode graphviz-dot-mode groovy-mode haskell-mode
+             js2-mode js3-mode markdown-mode mermaid-mode mise
+             python-mode python-pytest rust-mode s scad-mode
+             terraform-mode treemacs web-mode yaml-mode))
  '(safe-local-variable-values
    '((py-smart-indentation) (python-indent . 2) (py-indent-offset . 2)
      (erlang-indent-level . 2) (allout-layout . t)))
@@ -135,6 +136,8 @@
 ;; Appearance
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (load-library "my-appearance")
+(require 'eglot)
+(set-face-attribute 'eglot-highlight-symbol-face nil :background "#3d3e74")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Autosaves, backups etc.
@@ -148,6 +151,16 @@
 (delete-selection-mode  1)
 (transient-mark-mode    1)
 (winner-mode 1)
+(global-auto-revert-mode)
+
+(treemacs)
+(treemacs-filewatch-mode)
+(define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action)
+(defun treemacs--set-not-other-window ()
+  (-when-let (w (seq-find 'treemacs-is-treemacs-window? (window-list)))
+    (set-window-parameter w 'no-other-window t)))
+
+(add-hook 'window-configuration-change-hook #'treemacs--set-not-other-window)
 
 ;; Minibuffer
 (setq max-mini-window-height 10)
@@ -198,8 +211,6 @@
 (add-hook 'yaml-mode-hook
           (lambda ()
             (define-key yaml-mode-map "\C-m" 'newline-and-indent)))
-
-(setq ac-auto-show-menu t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; VC Git
