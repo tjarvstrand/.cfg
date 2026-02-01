@@ -1,6 +1,9 @@
 
 (load-theme 'darcula t)
 (set-face-attribute 'highlight nil :background "#3a3a3a")
+(set-face-inverse-video 'mode-line nil)
+(set-face-inverse-video 'mode-line-inactive nil)
+(set-face-attribute 'mode-line-inactive nil :foreground "grey80")
 
 ;; Set font
 (defun set-font-size (size)
