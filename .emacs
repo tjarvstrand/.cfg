@@ -46,6 +46,31 @@
 (use-package darcula-theme)
 (use-package dash)
 (use-package f)
+
+(use-package orderless
+  :custom
+  ;; Configure a custom style dispatcher (see the Consult wiki)
+  ;; (orderless-style-dispatchers '(+orderless-consult-dispatch orderless-affix-dispatch))
+  ;; (orderless-component-separator #'orderless-escapable-split-on-space)
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles partial-completion))))
+  (completion-category-defaults nil) ;; Disable defaults, use our settings
+  (completion-pcm-leading-wildcard t)) ;; Emacs 31: partial-completion behaves like substring
+
+(recentf-mode 1)
+(use-package
+  consult
+  :demand t)
+;;(require 'consult)
+(global-set-key (kbd "C-x b") 'consult-buffer)
+(setq consult-preview-key nil)
+
+(use-package
+  vertico
+  :demand t
+)
+(vertico-mode)
+
 (use-package mise)
 (use-package python-mode)
 (use-package s)
@@ -104,30 +129,17 @@
  '(js-indent-level 2)
  '(message-log-max 10000)
  '(package-selected-packages
-   '(company
-     darcula-theme
-     dash
-     diff-hl
-     eglot
-     f
-     find-file-in-project
-     flymd
-     go-mode
-     graphviz-dot-mode
-     js2-mode
-     js3-mode
-     markdown-mode
-     mermaid-mode
-     mise
-     python-mode
-     python-pytest
-     s
-     terraform-mode
-     treemacs
-     web-mode
-     yaml-mode))
+   '(color-theme company consult dape darcula-theme dart dart-mode
+                 diff-hl edts eglot find-file-in-project flycheck
+                 flymd go-mode graphviz-dot-mode groovy-mode
+                 haskell-mode helm idle-highlight-mode js2-mode
+                 js3-mode markdown-mode mermaid-mode mise orderless
+                 project-treemacs python-mode python-pytest
+                 run-command rust-mode scad-mode terraform-mode
+                 treemacs vertico web-mode yaml-mode))
  '(safe-local-variable-values
-   '((py-smart-indentation) (python-indent . 2) (py-indent-offset . 2) (allout-layout . t)))
+   '((py-smart-indentation) (python-indent . 2) (py-indent-offset . 2)
+     (allout-layout . t)))
  '(tab-width 2)
  '(vc-follow-symlinks t)
  '(web-mode-attr-value-indent-offset 1)
@@ -138,7 +150,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Keybindings
 (load-library "my-keybindings")
-(load-library "my-macros")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Appearance
@@ -158,42 +169,75 @@
 (menu-bar-mode 0)
 (delete-selection-mode  1)
 (transient-mark-mode    1)
+
 (winner-mode 1)
 (global-auto-revert-mode)
 
-(treemacs)
-(treemacs-filewatch-mode)
-(define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action)
-(defun treemacs--set-not-other-window ()
-  (-when-let (w (seq-find 'treemacs-is-treemacs-window? (window-list)))
-    (set-window-parameter w 'no-other-window t)))
+;; https://www.masteringemacs.org/article/demystifying-emacs-window-manager
+(setq switch-to-buffer-obey-display-actions t)
+(setq switch-to-buffer-in-dedicated-window 'pop)
 
-(add-hook 'window-configuration-change-hook #'treemacs--set-not-other-window)
+(setq display-buffer-alist nil)
+
+(setq display-buffer-alist
+      (list
+       '("\\*Help\\*"
+         (display-buffer-below-selected display-buffer-pop-up-window))
+       '("\\*Messages\\*"
+         (display-buffer-in-side-window display-buffer-pop-up-window)
+         (slot . 0)
+         (dedicated . t))
+       '("\\*Backtrace\\*"
+         (display-buffer-in-side-window display-buffer-pop-up-window)
+         (slot . 1)
+         (dedicated . t))
+      '("Treemacs:.*"
+        (display-buffer-in-side-window)
+        (side . left)
+        (slot . 0)
+        (dedicated . t)
+        (window-parameters
+         (no-other-window . t)
+         (no-delete-other-windows . t)
+         )
+        )
+      ))
+
+
+
+
+
+
+
+
+;; Treemacs
+(save-selected-window (treemacs))
+(treemacs-filewatch-mode)
+(treemacs-project-follow-mode)
+;;(setq treemacs-is-never-other-window t)
+(setq treemacs--project-follow-delay 0.5)
+(define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action)
 
 ;; Minibuffer
 (setq max-mini-window-height 10)
 (set-face-foreground 'minibuffer-prompt "white")
 (set-face-bold-p 'minibuffer-prompt t)
 
+(defun close-minibuffer (frame)
+  "Aborts the minibuffer if focus moves to another window."
+  (when (and (>= (recursion-depth) 1)
+             (not (minibuffer-window-active-p (selected-window))))
+    (abort-recursive-edit)))
+
+(add-hook 'window-selection-change-functions 'close-minibuffer)
+
+
 (require 'uniquify)
 (setq uniquify-buffer-name-style 'post-forward-angle-brackets)
 
+(use-package run-command)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; ido-mode
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; Display ido results vertically, rather than horizontally
-(setq ido-decorations (quote ("\n-> " "" "\n   " "\n   ..." "[" "]" " [No match]" " [Matched]" " [Not readable]" " [Too big]" " [Confirm]")))
-
-(add-hook 'ido-minibuffer-setup-hook #'(lambda() (set (make-local-variable 'truncate-lines) nil)))
-(add-hook 'ido-minibuffer-setup-hook #'(lambda() (enlarge-window 10)))
-
-(setq ido-use-virtual-buffers t)
-(setq ido-auto-merge-delay-time 0)
-(setq ido-enable-flex-matching t)
-(setq ido-auto-merge-work-directories-length -1)
-(ido-mode t)
+(use-package dape :demand t)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
