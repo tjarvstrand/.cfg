@@ -246,6 +246,7 @@
 (setq-default c-basic-offset 2)
 (load-library "my-sh")
 (unless basic-setup
+  (load-library "my-dart")
   (load-library "my-python")
   (load-library "my-javascript"))
 
