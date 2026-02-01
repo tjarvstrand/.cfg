@@ -12,8 +12,7 @@
 (global-set-key (kbd "C-c M-p") 'erl-print-res)
 
 (global-set-key (kbd "C-S-Y") 'yank-and-inc)
-(global-set-key (kbd "C-c C-c") 'comment-region)
-(global-set-key (kbd "C-c C-u") 'uncomment-region)
+(global-set-key (kbd "C-c C-c") 'comment-line)
 
 (global-set-key (kbd "C-c i") 'insert-filename)
 (global-set-key (kbd "C-x C-b") 'ibuffer)

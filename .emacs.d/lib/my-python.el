@@ -31,8 +31,6 @@ See URL `http://pypi.python.org/pypi/ruff'."
   :modes (python-mode python-ts-mode))
 
 (defun my-python-mode-hook ()
-  (local-set-key (kbd "C-c C-c") 'comment-region)
-  (local-set-key (kbd "C-c C-u") 'uncomment-region)
   (python-ts-mode)
   (company-mode)
   ;; Avoid custom python sexp navigation behaviour from python-nav-forward-sexp
