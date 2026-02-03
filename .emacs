@@ -61,15 +61,27 @@
 (use-package
   consult
   :demand t)
-;;(require 'consult)
 (global-set-key (kbd "C-x b") 'consult-buffer)
 (setq consult-preview-key nil)
 
 (use-package
   vertico
   :demand t
+  :config
+    (require 'vertico-directory)
+
+    (define-key vertico-directory-map (kbd "<backspace>") #'vertico-directory-delete-char)
+    (define-key vertico-directory-map (kbd "M-<backspace>") #'vertico-directory-delete-word)
+    (define-key vertico-directory-map (kbd "RET") #'vertico-directory-enter)
+
+    (setq vertico-preselect 'first)
+
+    (setq vertico-multiform-categories
+          '((file (:keymap . vertico-directory-map))))
+
+    (vertico-mode)
+    (vertico-multiform-mode)
 )
-(vertico-mode)
 
 (use-package mise)
 (use-package python-mode)
@@ -93,6 +105,8 @@
 
 (load-library "my-misc")
 (load-library "misc-cmds")
+
+;; for debugging, sometimes
 (load-library "show-point-mode")
 
 (toggle-buffer-tail "*Messages*" "on")
