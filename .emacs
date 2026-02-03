@@ -191,12 +191,14 @@
 (setq switch-to-buffer-obey-display-actions t)
 (setq switch-to-buffer-in-dedicated-window 'pop)
 
-(setq display-buffer-alist nil)
-
 (setq display-buffer-alist
       (list
        '("\\*Help\\*"
-         (display-buffer-below-selected display-buffer-pop-up-window))
+         (display-buffer-in-side-window )
+         (side . right)
+         (slot . 0)
+         (dedicated . t)
+         )
        '("\\*Messages\\*"
          (display-buffer-in-side-window display-buffer-pop-up-window)
          (slot . 0)
@@ -205,7 +207,7 @@
          (display-buffer-in-side-window display-buffer-pop-up-window)
          (slot . 1)
          (dedicated . t))
-      '("Treemacs:.*"
+      '("\\*Treemacs"
         (display-buffer-in-side-window)
         (side . left)
         (slot . 0)
@@ -217,18 +219,10 @@
         )
       ))
 
-
-
-
-
-
-
-
 ;; Treemacs
 (save-selected-window (treemacs))
 (treemacs-filewatch-mode)
 (treemacs-project-follow-mode)
-;;(setq treemacs-is-never-other-window t)
 (setq treemacs--project-follow-delay 0.5)
 (define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action)
 
