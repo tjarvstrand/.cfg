@@ -44,8 +44,8 @@
 
 (use-package color-theme)
 (use-package darcula-theme)
-(use-package dash)
-(use-package f)
+(use-package dash :demand t)
+(use-package f :demand t)
 
 (use-package orderless
   :custom
@@ -144,11 +144,11 @@
  '(message-log-max 10000)
  '(package-selected-packages
    '(color-theme company consult dape darcula-theme dart dart-mode
-                 diff-hl edts eglot find-file-in-project flycheck
-                 flymd go-mode graphviz-dot-mode groovy-mode
+                 diff-hl edts "eglot" eglot f find-file-in-project
+                 flycheck flymd go-mode graphviz-dot-mode groovy-mode
                  haskell-mode helm idle-highlight-mode js2-mode
-                 js3-mode markdown-mode mermaid-mode mise orderless
-                 project-treemacs python-mode python-pytest
+                 js3-mode lsp-mode markdown-mode mermaid-mode mise
+                 orderless project-treemacs python-mode python-pytest
                  run-command rust-mode scad-mode terraform-mode
                  treemacs vertico web-mode yaml-mode))
  '(safe-local-variable-values
@@ -245,7 +245,18 @@
 
 (use-package run-command)
 
-(use-package dape :demand t)
+(use-package
+  dape
+  :demand t
+  :bind
+  (("C-c d d" . dape)
+   ("C-c d b" . dape-breakpoint-toggle)
+   ("C-c d n" . dape-next)
+   ("C-c d s" . dape-step-in)
+   ("C-c d c" . dape-continue)))
+
+(defun my-dape (config-name overrides)
+  (dape (dape--config-eval config-name overrides)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
