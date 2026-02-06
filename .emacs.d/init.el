@@ -1,11 +1,8 @@
 (setq inhibit-x-resources t)
 
 (defconst user-home (getenv "HOME"))
-;; (add-to-list 'exec-path (format "%s/.cache/asdf/shims" user-home))
-;; (add-to-list 'exec-path (format "%s/.local/lib/asdf/bin" user-home))
 (add-to-list 'exec-path (format "%s/.local/share/mise/shims" user-home))
 (add-to-list 'exec-path "/opt/homebrew/bin")
-;; (setenv "ASDF_DATA_DIR" (format "%s/.cache/asdf" user-home))
 
 (let ((lib-dir (concat user-emacs-directory "/lib")))
   (add-to-list 'load-path lib-dir)
@@ -13,8 +10,9 @@
     (when (file-directory-p dir)
       (add-to-list 'load-path dir))))
 
-(defvar basic-setup nil)
-(setq default-frame-alist '((left . 0) (width . 0) (fullscreen . maximized)))
+;; GUI-specific frame settings
+(when (display-graphic-p)
+  (setq default-frame-alist '((left . 0) (width . 0) (fullscreen . maximized))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ELPA
@@ -27,8 +25,8 @@
                          ))
 (unless (file-directory-p "~/.emacs.d/elpa")
     (make-directory "~/.emacs.d/elpa"))
+
 (require 'package)
-(setq package-enable-at-startup nil)
 
 (package-initialize)
 (unless (package-installed-p 'use-package)
@@ -83,13 +81,6 @@
     (vertico-multiform-mode)
 )
 
-(use-package mise)
-(use-package python-mode)
-(use-package s)
-(use-package web-mode)
-(use-package yaml-mode)
-(use-package diff-hl)
-
 ;;;;;;;;;;;;;;;;;;;;;
 ;; Misc
 (setq initial-major-mode 'fundamental-mode)
@@ -105,9 +96,6 @@
 
 (load-library "my-misc")
 (load-library "misc-cmds")
-
-;; for debugging, sometimes
-(load-library "show-point-mode")
 
 (toggle-buffer-tail "*Messages*" "on")
 
@@ -169,8 +157,6 @@
 ;; Appearance
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (load-library "my-appearance")
-(require 'eglot)
-(set-face-attribute 'eglot-highlight-symbol-face nil :background "#3d3e74")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Autosaves, backups etc.
@@ -207,24 +193,7 @@
          (display-buffer-in-side-window display-buffer-pop-up-window)
          (slot . 1)
          (dedicated . t))
-      '("\\*Treemacs"
-        (display-buffer-in-side-window)
-        (side . left)
-        (slot . 0)
-        (dedicated . t)
-        (window-parameters
-         (no-other-window . t)
-         (no-delete-other-windows . t)
-         )
-        )
       ))
-
-;; Treemacs
-(save-selected-window (treemacs))
-(treemacs-filewatch-mode)
-(treemacs-project-follow-mode)
-(setq treemacs--project-follow-delay 0.5)
-(define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action)
 
 ;; Minibuffer
 (setq max-mini-window-height 10)
@@ -243,39 +212,19 @@
 (require 'uniquify)
 (setq uniquify-buffer-name-style 'post-forward-angle-brackets)
 
-(use-package run-command)
-
-(use-package
-  dape
-  :demand t
-  :bind
-  (("C-c d d" . dape)
-   ("C-c d b" . dape-breakpoint-toggle)
-   ("C-c d n" . dape-next)
-   ("C-c d s" . dape-step-in)
-   ("C-c d c" . dape-continue)))
-
-(defun my-dape (config-name overrides)
-  (dape (dape--config-eval config-name overrides)))
-
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Language specifics
 
 (setq-default c-basic-offset 2)
 (load-library "my-sh")
-(unless basic-setup
-  (load-library "my-dart")
-  (load-library "my-python")
-  (load-library "my-javascript"))
 
-(add-to-list 'auto-mode-alist
-             '("\\.yml$" . yaml-mode))
+;; Bazel files
 (add-to-list 'auto-mode-alist
              '("\\(/BUILD\\|/WORKSPACE\\|\\.bzl\\)$" . python-mode))
-(add-hook 'yaml-mode-hook
-          (lambda ()
-            (define-key yaml-mode-map "\C-m" 'newline-and-indent)))
+
+;; Load full configuration in GUI mode
+(when (display-graphic-p)
+  (load (expand-file-name "full-config" user-emacs-directory)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; VC Git
