@@ -4,7 +4,7 @@
 (add-to-list 'exec-path (format "%s/.local/share/mise/shims" user-home))
 (add-to-list 'exec-path "/opt/homebrew/bin")
 
-(let ((lib-dir (concat user-emacs-directory "/lib")))
+(let ((lib-dir (concat user-emacs-directory "/lisp")))
   (add-to-list 'load-path lib-dir)
   (dolist  (dir (directory-files lib-dir t "^[^.]"))
     (when (file-directory-p dir)
@@ -23,8 +23,9 @@
                          ("melpa" . "https://melpa.org/packages/")
                          ("melpa-stable" . "https://stable.melpa.org/packages/")
                          ))
-(unless (file-directory-p "~/.emacs.d/elpa")
-    (make-directory "~/.emacs.d/elpa"))
+(setq package-user-dir (expand-file-name "~/.emacs.d/packages"))
+(unless (file-directory-p package-user-dir)
+    (make-directory package-user-dir))
 
 (require 'package)
 
