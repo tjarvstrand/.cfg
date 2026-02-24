@@ -2,6 +2,14 @@
 ;; Keybindings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+
+(define-key key-translation-map (kbd "C-x M-a") (kbd "å"))
+(define-key key-translation-map (kbd "C-x M-A") (kbd "Å"))
+(define-key key-translation-map (kbd "C-x M-o") (kbd "ä"))
+(define-key key-translation-map (kbd "C-x M-O") (kbd "Ä"))
+(define-key key-translation-map (kbd "C-x M-u") (kbd "ö"))
+(define-key key-translation-map (kbd "C-x M-U") (kbd "Ö"))
+
 ;; C-k at beginning of line kills the entire line including newline
 (setq kill-whole-line 1)
 
