@@ -132,8 +132,8 @@
  '(js-indent-level 2)
  '(message-log-max 10000)
  '(package-selected-packages
-   '(color-theme company consult dape darcula-theme dart dart-mode
-                 diff-hl edts "eglot" eglot f find-file-in-project
+   '(color-theme company consult dape darcula-theme dart dash dart-mode
+                 diff-hl eglot f find-file-in-project
                  flycheck flymd go-mode graphviz-dot-mode groovy-mode
                  haskell-mode helm idle-highlight-mode js2-mode
                  js3-mode lsp-mode markdown-mode mermaid-mode mise
