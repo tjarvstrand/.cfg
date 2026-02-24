@@ -97,10 +97,6 @@ With numeric prefix arg DEC, decrement the integer by DEC amount."
       (re-search-forward "[[:digit:]]+" nil t)
       (increment-integer-at-point))))
 
-;; (defun 1+-at-point ()
-;;   (let ((new (1+ (number-at-point))))
-;;     (back
-
 (defun kill-trailing-whitespace ()
   (interacive)
   (save-excursion
