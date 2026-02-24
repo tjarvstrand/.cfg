@@ -17,7 +17,7 @@ log = "builtin_log_compact_full_description"
 branches = '''
   separate(" ",
     if(current_working_copy, "*", " "),
-    format_short_change_id_with_hidden_and_divergent_info(self),
+    format_short_change_id_with_change_offset(self),
     commit_timestamp(self).format("%h %d"),
     self.local_bookmarks(),
     if(description,
