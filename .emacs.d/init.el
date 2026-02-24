@@ -217,6 +217,7 @@
 
 (setq-default c-basic-offset 2)
 (load-library "my-sh")
+(load-library "my-dart")
 
 ;; Bazel files
 (add-to-list 'auto-mode-alist

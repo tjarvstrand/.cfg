@@ -1,6 +1,7 @@
-(add-to-list 'project-vc-extra-root-markers "pubspec.yaml")
-(use-package dart-mode)
-(require 'dape)
+(require 'project)
+
+(use-package dart-mode :demand t)
+(use-package dape :demand t)
 
 (add-to-list 'dape-configs
              '(dart
