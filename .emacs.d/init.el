@@ -41,7 +41,6 @@
 (setq use-package-always-defer t
       use-package-always-ensure t)
 
-(use-package color-theme)
 (use-package darcula-theme)
 (use-package dash :demand t)
 (use-package f :demand t)
@@ -132,14 +131,14 @@
  '(js-indent-level 2)
  '(message-log-max 10000)
  '(package-selected-packages
-   '(color-theme company consult dape darcula-theme dart dash dart-mode
-                 diff-hl eglot f find-file-in-project
-                 flycheck flymd go-mode graphviz-dot-mode groovy-mode
-                 haskell-mode helm idle-highlight-mode js2-mode
-                 js3-mode lsp-mode markdown-mode mermaid-mode mise
-                 orderless project-treemacs python-mode python-pytest
-                 run-command rust-mode scad-mode terraform-mode
-                 treemacs vertico web-mode yaml-mode))
+   '(company consult dape darcula-theme dart dash dart-mode
+             diff-hl eglot f find-file-in-project
+             flycheck flymd go-mode graphviz-dot-mode groovy-mode
+             haskell-mode helm idle-highlight-mode js2-mode
+             js3-mode lsp-mode markdown-mode mermaid-mode mise
+             orderless project-treemacs python-mode python-pytest
+             run-command rust-mode scad-mode terraform-mode
+             treemacs vertico web-mode yaml-mode))
  '(safe-local-variable-values
    '((py-smart-indentation) (python-indent . 2) (py-indent-offset . 2)
      (allout-layout . t)))
