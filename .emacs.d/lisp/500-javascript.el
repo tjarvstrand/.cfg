@@ -1,4 +1,6 @@
-(require 'web-mode)
+(use-package js2-mode)
+(use-package web-mode)
+
 (add-to-list 'auto-mode-alist '("\\.gs\\'" . javascript-mode))
 (add-to-list 'auto-mode-alist '("\\.phtml\\'" . javascript-mode))
 (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . javascript-mode))
@@ -13,6 +15,11 @@
 (add-to-list 'auto-mode-alist '("\\.css\\'" . javascript-mode))
 (add-to-list 'auto-mode-alist '("\\.scss\\'" . javascript-mode))
 (add-to-list 'auto-mode-alist '("\\.xml\\'" . javascript-mode))
+
+(setq web-mode-attr-value-indent-offset 1)
+(setq web-mode-code-indent-offset 2)
+(setq web-mode-css-indent-offset 2)
+(setq web-mode-markup-indent-offset 2)
 
 (add-hook 'web-mode-hook
   (lambda ()

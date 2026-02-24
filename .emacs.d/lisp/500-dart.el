@@ -68,7 +68,6 @@ Returns the full test path string or nil if no test found."
              (list :args (vector "--concurrency=1" "--plain-name" test-name)))))
 
 (defun my-dart-mode-hook ()
-  (company-mode)
   (eglot-ensure))
 
 (add-hook 'dart-mode-hook 'my-dart-mode-hook)

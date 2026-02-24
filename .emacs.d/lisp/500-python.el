@@ -1,10 +1,14 @@
 ;; Python mode
+(use-package python-mode)
 (require 'python-mode)
 (use-package python-pytest)
-(require 'company)
+
 
 (add-to-list 'project-vc-extra-root-markers ".venv")
 (add-to-list 'project-vc-extra-root-markers "pyproject.toml")
+
+(add-to-list 'auto-mode-alist
+             '("\\(/BUILD\\|/WORKSPACE\\|\\.bzl\\)$" . python-mode))
 
 ;; From https://github.com/flycheck/flycheck/issues/1974#issuecomment-1343495202
 (flycheck-define-checker python-ruff
@@ -32,7 +36,6 @@ See URL `http://pypi.python.org/pypi/ruff'."
 
 (defun my-python-mode-hook ()
   (python-ts-mode)
-  (company-mode)
   ;; Avoid custom python sexp navigation behaviour from python-nav-forward-sexp
   (setq forward-sexp-function nil)
   (setq-local

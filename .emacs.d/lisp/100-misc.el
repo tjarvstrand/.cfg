@@ -104,11 +104,6 @@ With numeric prefix arg DEC, decrement the integer by DEC amount."
     (while (re-search-forward "\s+$" nil t)
       (replace-match "" nil nil))))
 
-(defun split-windows-to-size (size)
-  (while (> (window-width) (* 2 size))
-    (split-window-horizontally (- (window-width) size)))
-  (balance-windows))
-
 (defun insert-filename (filename)
   (interactive "*FInsert filename: ")
   (insert filename))
@@ -191,39 +186,3 @@ With numeric prefix arg DEC, decrement the integer by DEC amount."
                  (save-match-data (string= (thing-at-point 'symbol) symbol)))
         (setq res (match-end 0))))
     res))
-
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Tailing a buffer (even one not visiting a file)
-;alist of 'buffer-name / timer' items
-(defvar buffer-tail-alist nil)
-(defun buffer-tail (name)
-  "follow buffer tails"
-  (cond ((or (equal (buffer-name (current-buffer)) name)
-         (string-match "^ \\*Minibuf.*?\\*$" (buffer-name (current-buffer)))))
-        ((get-buffer name)
-      (with-current-buffer (get-buffer name)
-        (goto-char (point-max))
-        (let ((windows (get-buffer-window-list (current-buffer) nil t)))
-          (while windows (set-window-point (car windows) (point-max))
-         (with-selected-window (car windows) (recenter -3)) (setq windows (cdr windows))))))))
-
-(defun toggle-buffer-tail (name &optional force)
-  "toggle tailing of buffer NAME. when called non-interactively, a FORCE arg of 'on' or 'off' can be used to to ensure a given state for buffer NAME"
-  (interactive (list (cond ((if name name) (read-from-minibuffer 
-      (concat "buffer name to tail" 
-        (if buffer-tail-alist (concat " (" (caar buffer-tail-alist) ")") "") ": ")
-    (if buffer-tail-alist (caar buffer-tail-alist)) nil nil
-           (mapcar #'(lambda (x) (car x)) buffer-tail-alist)
-        (if buffer-tail-alist (caar buffer-tail-alist)))) nil)))
-  (let ((toggle (cond (force force) ((assoc name buffer-tail-alist) "off") (t "on")) ))
-    (if (not (or (equal toggle "on") (equal toggle "off"))) 
-      (error "invalid 'force' arg. required 'on'/'off'") 
-      (progn 
-        (while (assoc name buffer-tail-alist) 
-           (cancel-timer (cdr (assoc name buffer-tail-alist)))
-           (setq buffer-tail-alist (remove* name buffer-tail-alist :key 'car :test 'equal)))
-        (if (equal toggle "on")
-            (add-to-list 'buffer-tail-alist (cons name (run-at-time t 1 'buffer-tail name))))
-        (message "toggled 'tail buffer' for '%s' %s" name toggle)))))
