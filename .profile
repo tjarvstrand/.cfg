@@ -65,18 +65,6 @@ if [[ -z $ORIG_PYTHONPATH ]]; then
 fi
 export PYTHONPATH=${ORIG_PYTHONPATH}
 
-export OTP_PATH="${HOME}/.erlang.d/current"
-export PATH="${OTP_PATH}/bin:${PATH}"
-export DIALYZER_PLT="${OTP_PATH}/dialyzer.plt"
-
-# Misc paths
-export PATH="${PATH}:${HOME}/.erlang.d/current/bin"
-
-# Go
-export GOROOT="/usr/local/lib/go"
-export GOPATH="${HOME}/src/golang"
-export PATH="${GOROOT}/bin:${GOPATH}/bin:${PATH}"
-
 # Ansible ----------------------------------------------------------------------
 export ANSIBLE_HOME=${HOME}/src/ansible
 export PATH=${ANSIBLE_HOME}/bin:${PATH}
@@ -84,13 +72,16 @@ export MANPATH=${MANPATH}:${ANSIBLE_HOME}/docs/man
 export PYTHONPATH=${ANSIBLE_HOME}/lib:${PYTHONPATH}
 
 # Java -------------------------------------------------------------------------
+
 JAVA_HOME_SCRIPT="$HOME/.cache/asdf/plugins/java/set-java-home.bash"
 if [ -f "$JAVA_HOME_SCRIPT" ]; then
     bash "$JAVA_HOME_SCRIPT"
     export PATH=${PATH}:${JAVA_HOME}/bin
 elif [ -f /usr/bin/javac ]; then
     export JAVA_HOME=$(readlink -f /usr/bin/javac | sed "s:/bin/javac::")
-    export PATH=${PATH}:${JAVA_HOME}/bin
+    if ! echo $PATH | grep -q ":$JAVA_HOME/bin"; then
+        export PATH=${PATH}:${JAVA_HOME}/bin
+    fi
 fi
 
 # Scala ------------------------------------------------------------------------
@@ -105,9 +96,10 @@ elif [ -d "$HOME/Library/Android/sdk/" ]; then
     export ANDROID_HOME="$HOME/Library/Android/sdk"
 fi
 if [ -n "$ANDROID_HOME" ]; then
-    export PATH=$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools
+    export PATH="${PATH}:$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools"
 fi
 export JAVA_OPTS="-Xmx2G -XX:+CMSClassUnloadingEnabled -Xss2M -Duser.timezone=GMT"
+
 
 # npm --------------------------------------------------------------------------
 export PATH=$PATH:${HOME}/.npm/bin
