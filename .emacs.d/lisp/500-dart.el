@@ -2,6 +2,27 @@
 
 (use-package dart-mode :demand t)
 (use-package dape :demand t)
+(use-package f :demand t)
+(use-package yaml :demand t)
+
+(defun my-dart--nearest-analysis-options (&optional from-file)
+  (let* ((start (f-dirname (expand-file-name (or from-file buffer-file-name))))
+         (nearest (f--traverse-upwards (f-exists? (f-join it "analysis_options.yaml")) start)))
+    (when nearest (f-join nearest "analysis_options.yaml"))))
+
+
+(defun my-dart--analysis-options-page-width (analysis-options-file)
+  (let* ((yaml (yaml-parse-string (f-read analysis-options-file)))
+         (formatter (gethash 'formatter yaml)))
+    (and formatter (gethash 'page_width formatter))))
+
+(defun my-dart-effective-page-width (&optional file)
+  (let* ((target (or file (buffer-file-name)))
+         (analysis-options-file (my-dart--nearest-analysis-options target)))
+    (or
+     (when analysis-options-file (my-dart--analysis-options-page-width analysis-options-file))
+     120)))
+
 
 (add-to-list 'dape-configs
              '(dart
@@ -68,6 +89,9 @@ Returns the full test path string or nil if no test found."
              (list :args (vector "--concurrency=1" "--plain-name" test-name)))))
 
 (defun my-dart-mode-hook ()
-  (eglot-ensure))
+  (company-mode)
+  (eglot-ensure)
+  (let ((page-width (my-dart-effective-page-width)))
+    (setq fill-column page-width)))
 
 (add-hook 'dart-mode-hook 'my-dart-mode-hook)

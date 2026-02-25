@@ -18,6 +18,10 @@ If point was already at that position, move point to beginning of line."
 ;; Keybindings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(add-hook 'prog-mode-hook
+          (lambda ()
+            (local-set-key [C-down-mouse-1] #'xref-find-definitions)))
+
 (define-key key-translation-map (kbd "C-x M-a") (kbd "å"))
 (define-key key-translation-map (kbd "C-x M-A") (kbd "Å"))
 (define-key key-translation-map (kbd "C-x M-o") (kbd "ä"))
@@ -151,7 +155,8 @@ If point was already at that position, move point to beginning of line."
 
 ;; Column marker to show when text crosses column 80
 (require 'column-marker)
-(add-hook 'find-file-hook (lambda () (interactive) (column-marker-3 80)))
+
+(add-hook 'find-file-hook (lambda () (interactive) (column-marker-3 fill-column)))
 
 (set-frame-parameter nil 'right-fringe 1)
 
@@ -209,6 +214,8 @@ If point was already at that position, move point to beginning of line."
          (dedicated . t))
       ))
 
+(setq help-window-select t)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Frames
 
@@ -221,6 +228,12 @@ If point was already at that position, move point to beginning of line."
 (setq comint-buffer-maximum-size 15000)
 (add-hook 'comint-output-filter-functions 'comint-truncate-buffer)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Elisp debugging
+
+;(setq debug-on-error t)
+(setq debugger-bury-or-kill 'append)
+(load-library "show-point-mode")
 
 ;;;;;;;;;;;;;;;;;;;;;
 ;; Misc
@@ -232,7 +245,6 @@ If point was already at that position, move point to beginning of line."
 (setq inhibit-startup-screen t)
 (setq comment-multi-line t)
 (setq create-lockfiles nil)
-(setq debug-on-error nil)
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
 (setq electric-indent-mode nil)
 (setq graphviz-dot-dot-program "/opt/homebrew/bin/dot")
@@ -243,4 +255,4 @@ If point was already at that position, move point to beginning of line."
 
 (global-auto-revert-mode)
 
-(load-library "show-point-mode")
+

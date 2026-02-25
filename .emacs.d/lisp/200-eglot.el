@@ -5,6 +5,14 @@
 (setq eglot-events-buffer-config '(:size 200000 :format full))
 (setq eglot-report-progress nil)
 
+(defun my-eglot-managed-mode-hook ()
+  (eglot-inlay-hints-mode -1))
+
+(add-hook 'eglot-managed-mode-hook 'my-eglot-managed-mode-hook)
+
+
+(define-key eglot-mode-map (kbd "C-c e h") #'eglot-inlay-hints-mode)
+
 (defun my-eglot-code-lens-at-point (&optional filter-fn)
   "Get code lens at point, optionally filtered by FILTER-FN.
   FILTER-FN should take a code lens and return non-nil if it matches.
