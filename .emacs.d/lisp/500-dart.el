@@ -10,7 +10,6 @@
          (nearest (f--traverse-upwards (f-exists? (f-join it "analysis_options.yaml")) start)))
     (when nearest (f-join nearest "analysis_options.yaml"))))
 
-
 (defun my-dart--analysis-options-page-width (analysis-options-file)
   (let* ((yaml (yaml-parse-string (f-read analysis-options-file)))
          (formatter (gethash 'formatter yaml)))
@@ -88,10 +87,26 @@ Returns the full test path string or nil if no test found."
            (when-let ((test-name (my-dart-test-at-point)))
              (list :args (vector "--concurrency=1" "--plain-name" test-name)))))
 
+(defun my-dart-before-save-hook ()
+  (eglot-code-action-organize-imports 1)
+  (eglot-format-buffer))
+
+(defun my-dart-compile (&optional prefix)
+  (interactive "P")
+  (let* ((program (if (executable-find "flutter") "flutter" "dart"))
+         (test (when (not prefix) (or (my-dart-test-at-point) (error "No test at point!"))))
+         (args (if test (format " --name \"%s\"" test) "")))
+    (compile (format "%s test %s%s" program buffer-file-name args)
+    )
+  ))
+
 (defun my-dart-mode-hook ()
   (company-mode)
   (eglot-ensure)
-  (let ((page-width (my-dart-effective-page-width)))
-    (setq fill-column page-width)))
+  (setq fill-column (my-dart-effective-page-width))
+  (add-hook 'before-save-hook 'my-dart-before-save-hook nil t)
+  (let ((compile-program (if (executable-find "flutter") "flutter" "dart")))
+  (setq-local compile-command (format "%s test"))
+  )
 
 (add-hook 'dart-mode-hook 'my-dart-mode-hook)

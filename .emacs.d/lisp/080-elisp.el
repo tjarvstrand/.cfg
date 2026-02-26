@@ -27,4 +27,6 @@
    #'(lambda (buf) (when (buffer-live-p buf) (trace-current-buffer-stop buf)))
    (buffer-list)))
 
-(provide 'my-trace)
+(setq debug-on-error t)
+(setq debugger-bury-or-kill 'append)
+(load-library "show-point-mode")

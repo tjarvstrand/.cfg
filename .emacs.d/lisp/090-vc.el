@@ -1,5 +1,11 @@
 (setq vc-follow-symlinks t)
 
+(setq ediff-window-setup-function 'ediff-setup-windows-plain)
+
+(use-package diff-hl :demand t)
+(global-diff-hl-mode)
+(diff-hl-flydiff-mode)
+
 (defadvice vc-git-working-revision (around vc-git-working-revision-detached activate)
   "Get the git working revision when detached"
   ad-do-it
