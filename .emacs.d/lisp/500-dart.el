@@ -35,34 +35,56 @@
                :program "lib/main.dart"
                ))
 
-(defun my-dart-test-at-point ()
-  "Find the full test name at point using regex (fallback).
-Returns the full test path string or nil if no test found."
+(defun my-dart--call-encloses-pos-p (call-start pos)
   (save-excursion
-    (when (re-search-backward
-           "\\(test\\|testWidgets\\)\\s-*(\\s-*['\"]\\([^'\"]+\\)['\"]"
-           nil t)
-      (let ((test-name (match-string-no-properties 2))
-            (test-pos (point))
-            (groups '()))
-        ;; Find all enclosing groups
-        (goto-char test-pos)
-        (while (re-search-backward
-                "group\\s-*(\\s-*['\"]\\([^'\"]+\\)['\"]"
-                nil t)
-          (let ((group-name (match-string-no-properties 1))
-                (group-start (match-beginning 0)))
-            ;; Check if this group encloses our test
-            (save-excursion
-              (goto-char group-start)
-              (when (ignore-errors
-                      (forward-sexp 2) ;; Skip past group declaration
-                      (> (point) test-pos))
-                (push group-name groups)))))
-        ;; Build full test name
-        (if groups
-            (mapconcat 'identity (append groups (list test-name)) " ")
-          test-name)))))
+    (goto-char call-start)
+    (ignore-errors
+      (forward-sexp 2)
+      (> (point) pos))))
+
+(defconst my-dart--test-call-re
+  "\\(group\\|test\\|testWidgets\\)\\s-*(\\s-*['\"]\\([^'\"]+\\)['\"]")
+
+(defun my-dart--enclosing-calls-at-point ()
+  "Return enclosing group/test/testWidgets calls from outer to inner."
+  (save-excursion
+    (let ((origin (point))
+          calls)
+      (while (re-search-backward my-dart--test-call-re nil t)
+        (let ((start (match-beginning 0)))
+          (when (my-dart--call-encloses-pos-p start origin)
+            (push (list :kind (match-string-no-properties 1)
+                        :name (match-string-no-properties 2)
+                        :start start)
+                  calls))))
+      calls)))
+
+(defun my-dart-group-at-point ()
+  "Return the full enclosing group path at point, or nil."
+  (let (groups)
+    (dolist (call (my-dart--enclosing-calls-at-point))
+      (when (string= (plist-get call :kind) "group")
+        (push (plist-get call :name) groups)))
+    (setq groups (nreverse groups))
+    (when groups
+      (mapconcat #'identity groups " "))))
+
+(defun my-dart-test-name-at-point ()
+  "Return the enclosing test name at point, or nil."
+  (let ((nearest (car (last (my-dart--enclosing-calls-at-point)))))
+    (when nearest
+      (let ((kind (plist-get nearest :kind)))
+        (when (or (string= kind "test") (string= kind "testWidgets"))
+          (plist-get nearest :name))))))
+
+(defun my-dart-test-at-point ()
+  "Return full test path at point, or full group path if not in a test."
+  (let ((group-name (my-dart-group-at-point))
+        (test-name (my-dart-test-name-at-point)))
+    (cond
+     ((and group-name test-name) (format "%s %s" group-name test-name))
+     (test-name test-name)
+     (group-name group-name))))
 
 (add-to-list 'dape-configs
              `(dart-test
@@ -91,22 +113,31 @@ Returns the full test path string or nil if no test found."
   (eglot-code-action-organize-imports 1)
   (eglot-format-buffer))
 
-(defun my-dart-compile (&optional prefix)
+(defun my-dart-test-program ()
+  (or (executable-find "flutter") (executable-find "dart")))
+
+(defun my-dart-run-test-at-point (&optional prefix)
   (interactive "P")
-  (let* ((program (if (executable-find "flutter") "flutter" "dart"))
-         (test (when (not prefix) (or (my-dart-test-at-point) (error "No test at point!"))))
-         (args (if test (format " --name \"%s\"" test) "")))
-    (compile (format "%s test %s%s" program buffer-file-name args)
+  (let* ((test (or (my-dart-test-at-point) (error "No test at point!")))
+         (reporter (if prefix "expanded" "compact"))
+         (name-arg (if test (format " --name \"%s\"" test) "")))
+    (compile (format "%s test%s -r %s %s" (my-dart-test-program) name-arg reporter buffer-file-name)
     )
   ))
+
+(defun my-dart-run-tests-in-file (&optional prefix)
+  (interactive "P")
+  (compile (format "%s test -r %s %s" (my-dart-test-program) (if prefix "expanded" "compact") buffer-file-name)))
+
+(define-key dart-mode-map (kbd "C-c t") #'my-dart-run-test-at-point)
+(define-key dart-mode-map (kbd "C-c T") #'my-dart-run-tests-in-file)
+
 
 (defun my-dart-mode-hook ()
   (company-mode)
   (eglot-ensure)
   (setq fill-column (my-dart-effective-page-width))
   (add-hook 'before-save-hook 'my-dart-before-save-hook nil t)
-  (let ((compile-program (if (executable-find "flutter") "flutter" "dart")))
-  (setq-local compile-command (format "%s test"))
   )
 
 (add-hook 'dart-mode-hook 'my-dart-mode-hook)
