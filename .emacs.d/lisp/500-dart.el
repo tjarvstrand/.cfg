@@ -5,10 +5,15 @@
 (use-package f :demand t)
 (use-package yaml :demand t)
 
+(add-to-list
+ 'treesit-language-source-alist
+ '(dart "https://github.com/UserNobody14/tree-sitter-dart")
+
 (defun my-dart--nearest-analysis-options (&optional from-file)
-  (let* ((start (f-dirname (expand-file-name (or from-file buffer-file-name))))
-         (nearest (f--traverse-upwards (f-exists? (f-join it "analysis_options.yaml")) start)))
-    (when nearest (f-join nearest "analysis_options.yaml"))))
+  (when-let* ((file (or from-file buffer-file-name))
+              (start (f-dirname (expand-file-name file)))
+              (nearest (f--traverse-upwards (f-exists? (f-join it "analysis_options.yaml")) start)))
+    (f-join nearest "analysis_options.yaml")))
 
 (defun my-dart--analysis-options-page-width (analysis-options-file)
   (let* ((yaml (yaml-parse-string (f-read analysis-options-file)))
@@ -109,9 +114,32 @@
            (when-let ((test-name (my-dart-test-at-point)))
              (list :args (vector "--concurrency=1" "--plain-name" test-name)))))
 
+
+(defun my-dart-organize-imports ()
+  (save-restriction
+    (widen)
+    (eglot-code-action-organize-imports (point-min) (point-max))))
+
 (defun my-dart-before-save-hook ()
-  (eglot-code-action-organize-imports 1)
-  (eglot-format-buffer))
+  (let ((deadline (+ (float-time) 1.0))
+        done
+        last-no-action-error)
+    (while (and (not done)
+                (< (float-time) deadline))
+      (condition-case err
+          (progn
+            (my-dart-organize-imports)
+            (setq done t))
+        (error
+         (if (string-match-p "No \"source.organizeImports\" code actions here"
+                             (error-message-string err))
+             (progn
+               (setq last-no-action-error err)
+               (accept-process-output nil 0.1))
+           (signal (car err) (cdr err))))))
+    (unless done
+      (signal (car last-no-action-error) (cdr last-no-action-error)))
+    (eglot-format-buffer)))
 
 (defun my-dart-test-program ()
   (or (executable-find "flutter") (executable-find "dart")))

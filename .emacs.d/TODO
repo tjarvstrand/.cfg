@@ -1,10 +1,4 @@
  - Vertico: Unselect preselected first item when starting to type. I.e., allow
    opening a new buffer with a file name that is part of an already existing
    file name in the same directory.
- - Working git/vc change markers
- - Change to init.el
- - Minimal config in early-init.el
- - Change lib to lisp
- - Change elpa to packages
- - Use straight.el?
- - Load all files in lib/lisp in alphanumerical order
+- Use apheleia?

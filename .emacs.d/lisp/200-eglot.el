@@ -38,3 +38,16 @@
                   (car lenses-at-line))))
       (cons matching-lens (plist-get matching-lens :command)))))
 
+(defvar my-eglot-event-listener-alist nil)
+
+(cl-defun my-eglot-event-listener (conn origin &key kind message json &allow-other-keys)
+  ;; Only Eglot server->client traffic
+  (when (and (object-of-class-p conn 'eglot-lsp-server) (eq origin 'server))
+    (let ((method (plist-get message :method)))
+      ;(message "Eglot event: kind=%s method=%s" kind method)
+      (dolist
+          (listener my-eglot-event-listener-alist)
+        (when (string= (car listener) method)
+          (funcall (cdr listener) (plist-get message :params)))))))
+
+(add-hook 'jsonrpc-event-hook #'my-eglot-event-listener)

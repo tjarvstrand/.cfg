@@ -60,7 +60,7 @@
 (setq switch-to-buffer-in-dedicated-window 'pop)
 
 (defun is-file-buffer-p (buffer _action)
-  (buffer-local-value 'buffer-file-name buffer))
+  (buffer-local-value 'buffer-file-name (get-buffer buffer)))
 
 (setq display-buffer-alist
       (list
@@ -95,6 +95,15 @@
 
 (setq help-window-select t)
 
+(defun my/xref-goto-obey-display-buffer-alist (orig &optional quit)
+  (let ((xref--original-window nil)
+        (xref--original-window-intent nil))
+    (funcall orig quit)))
+
+(advice-add 'xref-goto-xref :around #'my/xref-goto-obey-display-buffer-alist)
+
+(setq split-window-height nil)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Frames
 
@@ -121,3 +130,4 @@
 (global-auto-revert-mode)
 
 
+(add-hook 'prog-mode-hook #'subword-mode)
