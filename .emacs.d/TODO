@@ -1,4 +1,5 @@
- - Vertico: Unselect preselected first item when starting to type. I.e., allow
-   opening a new buffer with a file name that is part of an already existing
-   file name in the same directory.
-- Use apheleia?
+ - Use apheleia?
+ - Window management
+ - dart ts mode
+ - dap on the web
+ - test reporter

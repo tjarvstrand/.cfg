@@ -24,3 +24,5 @@
                 (and (string-match "\\`\\([0-9]+\\)-" name)
                      (< (string-to-number (match-string 1 name)) 100)))
         (load file nil 'nomessage)))))
+
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
