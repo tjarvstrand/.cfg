@@ -129,5 +129,9 @@
 
 (global-auto-revert-mode)
 
+(defun my-prog-mode-hook ()
+  (subword-mode)
+  (setq truncate-lines t)
+)
 
-(add-hook 'prog-mode-hook #'subword-mode)
+(add-hook 'prog-mode-hook #'my-prog-mode-hook)
