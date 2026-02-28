@@ -1,3 +1,5 @@
+(require 'ansi-color)
+
 (use-package
   dape
   :demand t
@@ -10,3 +12,9 @@
 
 (defun my-dape (config-name overrides)
   (dape (dape--config-eval config-name overrides)))
+
+;; Ansi colors
+(defun my/dape-repl-insert-ansi-around (orig string)
+  (funcall orig (if (stringp string) (ansi-color-apply string) string)))
+
+(advice-add 'dape--repl-insert :around #'my/dape-repl-insert-ansi-around)
