@@ -16,6 +16,7 @@
 (use-package consult :demand t)
 (global-set-key (kbd "C-x b") 'consult-buffer)
 (setq consult-preview-key nil)
+(setq consult-narrow-key ",")
 
 (use-package
   vertico
