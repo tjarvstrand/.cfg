@@ -1,3 +1,4 @@
+(use-package hydra)
 
 (defun smart-beginning-of-line ()
   "Move point to first non-whitespace character or beginning-of-line.
@@ -32,8 +33,8 @@ If point was already at that position, move point to beginning of line."
 ;; C-k at beginning of line kills the entire line including newline
 (setq kill-whole-line 1)
 
-(global-set-key (kbd "C-c p") 'symbol-next)
-(global-set-key (kbd "C-c n") 'symbol-previous)
+(global-set-key (kbd "M-g p") 'symbol-previous)
+(global-set-key (kbd "M-g n") 'symbol-next)
 
 (global-set-key (kbd "C-c P") 'erl-print)
 (global-set-key (kbd "C-c M-p") 'erl-print-res)
@@ -61,20 +62,6 @@ If point was already at that position, move point to beginning of line."
 (global-set-key (kbd "M-p") 'backward-paragraph)
 (global-set-key (kbd "M-n") 'forward-paragraph)
 
-(global-set-key [s-left] 'windmove-left)     ; move to windnow to the left
-(global-set-key [s-right] 'windmove-right)   ; move to window to the right
-(global-set-key [s-up] 'windmove-up)         ; move window above
-(global-set-key [s-down] 'windmove-down)     ; move window below
-(global-set-key (kbd "s-f") 'windmove-right)
-(global-set-key (kbd "s-b") 'windmove-left)
-(global-set-key (kbd "s-p") 'windmove-up)
-(global-set-key (kbd "s-n") 'windmove-down)
-
-;; (global-set-key [C-tab] 'other-window)
-(global-set-key (kbd "C-x O") #'(lambda () (interactive) (other-window -1)))
-(global-set-key (kbd "<C-tab>") #'(lambda () (interactive) (other-window 1)))
-(global-set-key (kbd "<C-iso-lefttab>") #'(lambda () (interactive) (other-window -1)))
-
 (global-set-key (kbd "C-a") 'smart-beginning-of-line)
 
 (global-set-key (kbd "M-<up>") 'move-line-up)
@@ -83,3 +70,29 @@ If point was already at that position, move point to beginning of line."
 
 (global-set-key [f8] 'neotree-toggle)
 (global-set-key [(shift f8)] 'neotree-show)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Window management
+
+(global-set-key (kbd "C-x O") #'(lambda () (interactive) (other-window -1)))
+(global-set-key (kbd "<C-tab>") #'(lambda () (interactive) (other-window 1)))
+(global-set-key (kbd "<C-iso-lefttab>") #'(lambda () (interactive) (other-window -1)))
+
+(defhydra hydra-window-nav (:hint nil)
+  "
+Window nav: _p_: up  _P_: delete-up  _n_: down  _N_: delete-down  _b_: left  _B_: delete-left  _f_: right  _F_: delete-right _ q_: quit
+"
+  ("p" windmove-up)
+  ("P" windmove-delete-up)
+  ("n" windmove-down)
+  ("N" windmove-delete-down)
+  ("b" windmove-left)
+  ("B" windmove-delete-left)
+  ("f" windmove-right)
+  ("F" windmove-delete-right)
+  ("q" nil :exit t)
+  ("RET" nil :exit t))
+
+(global-set-key (kbd "C-c w") #'hydra-window-nav/body)

@@ -15,3 +15,8 @@
 (add-hook 'compilation-mode-hook #'my/compilation-mode-hook)
 
 
+(defun my-flymake-mode-hook ()
+  (setq-local next-error-function #'flymake-goto-next-error))
+
+(add-hook 'flymake-mode-hook #'my-flymake-mode-hook)
+
