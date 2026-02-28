@@ -1,5 +1,8 @@
-(use-package eglot)
-(require 'eglot)
+(use-package eglot :demand t)
+(use-package dash :demand t)
+
+(require 'xref)
+
 (set-face-attribute 'eglot-highlight-symbol-face nil :background "#3d3e74")
 (setq eglot-code-action-indications '(eldoc-hint))
 (setq eglot-events-buffer-config '(:size 200000 :format full))
@@ -9,9 +12,6 @@
   (eglot-inlay-hints-mode -1))
 
 (add-hook 'eglot-managed-mode-hook 'my-eglot-managed-mode-hook)
-
-
-(define-key eglot-mode-map (kbd "C-c e h") #'eglot-inlay-hints-mode)
 
 (defun my-eglot-code-lens-at-point (&optional filter-fn)
   "Get code lens at point, optionally filtered by FILTER-FN.
@@ -51,3 +51,44 @@
           (funcall (cdr listener) (plist-get message :params)))))))
 
 (add-hook 'jsonrpc-event-hook #'my-eglot-event-listener)
+
+
+(defun my/eglot-next-reference-in-file (&optional prefix)
+  (interactive "P")
+  (let* ((backend (or (xref-find-backend) (user-error "No xref backend here")))
+         (id (or
+              (and backend (xref-backend-identifier-at-point backend))
+             (user-error "No symbol at point")))
+         (file (or
+                (and (buffer-file-name) (file-truename (buffer-file-name)))
+                (user-error "Current buffer is not visiting a file")))
+         (pos (point))
+         (refs (xref-backend-references backend id))
+         (positions
+            (-sort
+             (if prefix #'> #'<)
+             (--map-when
+              #'identity
+              (when-let* ((loc (xref-item-location it))
+                          (group (xref-location-group loc))
+                          (m (xref-location-marker loc)))
+                (when (equal (file-truename group) file)
+                  (marker-position m)))
+              refs)))
+         (next (seq-find (lambda (p) (> p pos)) positions)))
+    (cond
+     (next
+      (goto-char next))
+     ((length< positions 2)
+      (message "No other references in this file"))
+     (t
+      (goto-char (car positions))
+      (message "Wrapped to first reference in file")
+      ))))
+
+
+(define-key eglot-mode-map (kbd "M-g p") 'symbol-next)
+(define-key eglot-mode-map (kbd "M-g n") 'my/eglot-next-reference-in-file)
+(define-key eglot-mode-map (kbd "C-c e h") #'eglot-inlay-hints-mode)
+(define-key eglot-mode-map (kbd "C-c e n") #'eglot-rename)
+(define-key eglot-mode-map (kbd "M-RET") #'eglot-code-actions)
