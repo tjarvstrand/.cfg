@@ -1,5 +1,10 @@
  - Use apheleia?
  - Window management
- - dart ts mode
  - dap on the web
  - test reporter
+ - Modeline
+  - Colors in selected window
+    - mise global/local
+    - dape background colors (and maybe foreground, once background is fixed)
+    - flymake
+  - Figure out what the leftmost "-:---" means and if it should stay

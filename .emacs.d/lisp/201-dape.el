@@ -18,3 +18,4 @@
   (funcall orig (if (stringp string) (ansi-color-apply string) string)))
 
 (advice-add 'dape--repl-insert :around #'my/dape-repl-insert-ansi-around)
+(toggle-buffer-tail "*dape-repl*" "on")

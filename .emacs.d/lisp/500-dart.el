@@ -1,7 +1,6 @@
 (require 'project)
 (require 'treesit)
 
-(use-package dart-mode :demand t)
 (use-package dape :demand t)
 (use-package f :demand t)
 (use-package yaml :demand t)
@@ -9,6 +8,11 @@
 (add-to-list
  'treesit-language-source-alist
  '(dart "https://github.com/UserNobody14/tree-sitter-dart"))
+
+(use-package
+  dart-ts-mode
+  :demand t
+  :vc (:url "https://github.com/50ways2sayhard/dart-ts-mode.git" :branch main))
 
 (unless (treesit-language-available-p 'dart)
   (treesit-install-language-grammar 'dart))
@@ -35,7 +39,7 @@
 (add-to-list 'dape-configs
              '(dart
                ensure dape-ensure-command
-               modes (dart-mode)
+               modes (dart-ts-mode)
                command "dart"
                command-args ("debug_adapter")
                command-cwd dape-command-cwd
@@ -147,7 +151,7 @@
 
 (add-to-list 'dape-configs
              `(dart-test
-               modes (dart-mode)
+               modes (dart-ts-mode)
                ensure dape-ensure-command
                command "dart"
                command-args ("debug_adapter" "--test")
@@ -235,13 +239,13 @@
     (let ((last-command-event ?\;))
       (call-interactively #'self-insert-command))))
 
-(define-key dart-mode-map (kbd "C-c t t") #'my-dart-run-test-at-point)
-(define-key dart-mode-map (kbd "C-c t T") #'my-dart-run-tests-in-file)
-(define-key dart-mode-map (kbd "C-c t d") #'my-dart-debug-test-at-point)
-;;(define-key dart-mode-map (kbd "C-c t D") #'my-dart-debug-tests-in-file) fixme
-(define-key dart-mode-map (kbd "C-c t r") #'my-dart-run-last-test)
+(define-key dart-ts-mode-map (kbd "C-c t t") #'my-dart-run-test-at-point)
+(define-key dart-ts-mode-map (kbd "C-c t T") #'my-dart-run-tests-in-file)
+(define-key dart-ts-mode-map (kbd "C-c t d") #'my-dart-debug-test-at-point)
+;;(define-key dart-ts-mode-map (kbd "C-c t D") #'my-dart-debug-tests-in-file) fixme
+(define-key dart-ts-mode-map (kbd "C-c t r") #'my-dart-run-last-test)
 
-(define-key dart-mode-map (kbd "C-x ;") #'my-dart--terminate-statement)
+(define-key dart-ts-mode-map (kbd "C-x ;") #'my-dart--terminate-statement)
 
 
 (defun my-dart-mode-hook ()
@@ -251,4 +255,4 @@
   (add-hook 'before-save-hook 'my-dart-before-save-hook nil t)
   )
 
-(add-hook 'dart-mode-hook 'my-dart-mode-hook)
+(add-hook 'dart-ts-mode-hook 'my-dart-mode-hook)
