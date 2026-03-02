@@ -11,11 +11,7 @@
     (make-directory package-user-dir))
 
 (require 'package)
-
 (package-initialize)
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
 
 ;;;;;;;;;;;;;;;;;;;;;
 ;; use-package
