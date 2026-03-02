@@ -1,0 +1,29 @@
+System:
+ - [MacOS] Virtual keyboard for pedals
+ - Install nerd font
+
+Tools:
+  - eza
+  - fzf
+  - zoxide
+  - carapace
+  - zmv
+  - ripgrep
+
+Zsh:
+ - Edit command buffer
+ - JJ prompt
+
+- Emacs:
+  - copilot.el
+  - Use apheleia?
+  - Window management
+  - dap on the web
+  - test reporter
+  - Modeline
+   - Colors in selected window
+     - mise global/local
+     - dape background colors (and maybe foreground, once background is fixed)
+     - flymake
+   - Remove unnecessary clutter
+   - Figure out what the leftmost "-:---" means and if it should stay

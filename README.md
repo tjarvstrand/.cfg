@@ -7,8 +7,9 @@
   1. Install
     - brew
     - Ukulele
-  1. `brew install coreutils direnv findutils gnu-sed grep jq oh-my-posh wezterm`emacs
   1. Add /opt/homebrew/bin to the top of /etc/paths
+  1. `brew install coreutils findutils gnu-sed grep jq oh-my-posh wezterm`emacs node
+  1 Tentative `brew install eza`
   1. Install ~/.config/ukulele/Dvorak Custom (should be automatic now?)
 
 ### Linux
