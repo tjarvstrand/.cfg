@@ -1,4 +1,4 @@
-(use-package hydra)
+(use-package hydra :demand t)
 
 (defun smart-beginning-of-line ()
   "Move point to first non-whitespace character or beginning-of-line.

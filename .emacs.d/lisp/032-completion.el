@@ -28,6 +28,9 @@
     (define-key vertico-directory-map (kbd "M-<backspace>") #'vertico-directory-delete-word)
     (define-key vertico-directory-map (kbd "RET") #'vertico-directory-enter)
 
+    (keymap-set vertico-map "C-M-n" #'vertico-next-group)
+    (keymap-set vertico-map "C-M-p" #'vertico-previous-group)
+
     (setq vertico-preselect 'first)
 
     (setq vertico-multiform-categories
