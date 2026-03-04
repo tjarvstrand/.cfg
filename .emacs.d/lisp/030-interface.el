@@ -15,7 +15,7 @@
 (column-number-mode 1)
 
 (setq-default whitespace-mode 1)
-(setq whitespace-style       (quote (face tabs tab-mark lines-tail)))
+(setq whitespace-style (quote (face tabs tab-mark lines-tail)))
 (setq whitespace-display-mappings '((tab-mark 9 [9655 9] [92 9])))
 
 ;; Column marker to show when text crosses column 80
@@ -54,8 +54,64 @@
 
 (add-hook 'window-selection-change-functions 'close-minibuffer)
 
+(defun copy-buffer-filename ()
+  "Copy the filename of the node at point."
+  (interactive)
+  (kill-new buffer-file-name))
+
 ;;;;;;;;;;;;;;;;;;;;;
 ;; Windows
+
+(defun my-consult-window ()
+  "Select a window using Consult/Vertico."
+  (interactive)
+  (let* ((wins (seq-filter
+                (lambda (w) (and (not (window-minibuffer-p w)) (not (eq w (selected-window)))))
+                (window-list))
+         )
+         (cands
+          (cl-loop for w in wins
+                   for i from 1
+                   for b = (window-buffer w)
+                   collect (cons (format "%d: %s" i (buffer-name b)) w)))
+         (choice (consult--read (mapcar #'car cands)
+                                :prompt "Window: "
+                                :require-match t
+                                :sort nil
+                                :category 'window)))
+    (when-let ((win (cdr (assoc choice cands))))
+      (select-window win))))
+
+(defvar my-current-window nil)
+(defvar my-previous-window nil)
+
+(defun my-track-selected-window (_frame)
+  "Track selected windows globally."
+  (let ((now (selected-window)))
+    (when (and (window-live-p now)
+               (not (window-minibuffer-p now))
+               (not (eq now my-current-window)))
+      (setq my-previous-window my-current-window)
+      (setq my-current-window now))))
+
+(add-hook 'window-selection-change-functions #'my-track-selected-window)
+
+(defun my-switch-to-previous-window ()
+  "Switch to previously selected window."
+  (interactive)
+  (if (window-live-p my-previous-window)
+      (let ((w my-previous-window))
+        (select-window w))
+    (user-error "No previous window")))
+
+
+(defun my-select-window (&optional prefix)
+  (interactive "P")
+  (if prefix
+      (my-switch-to-previous-window)
+    (my-consult-window)))
+
+(global-set-key (kbd "C-x C-o") 'my-select-window)
 
 (winner-mode 1)
 ;; https://www.masteringemacs.org/article/demystifying-emacs-window-manager

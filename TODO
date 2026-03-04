@@ -13,12 +13,11 @@ Zsh:
  - JJ prompt
 
 - Emacs:
-  - copilot.el
   - Use apheleia?
+  - gptel?
   - Window management
   - dap on the web
   - test reporter
   - ripgrep - rg.el
-  - fix flymake error navigation
   - Modeline
    - Simplify buffer status indicator
