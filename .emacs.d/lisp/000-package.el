@@ -26,14 +26,11 @@
 ;; Universal packages
 
 (use-package dash :demand t)
-(use-package f :demand t)
-
+(use-package delight :demand t)
 (use-package diff-hl :demand t)
+(use-package f :demand t)
 (use-package find-file-in-project :demand t)
-(use-package mise :demand t)
-
 (use-package s :demand t)
 
-(use-package flycheck)
 (use-package flymd)
 (use-package idle-highlight-mode)

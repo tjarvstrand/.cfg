@@ -33,8 +33,8 @@ If point was already at that position, move point to beginning of line."
 ;; C-k at beginning of line kills the entire line including newline
 (setq kill-whole-line 1)
 
-(global-set-key (kbd "M-g p") 'symbol-previous)
-(global-set-key (kbd "M-g n") 'symbol-next)
+(global-set-key (kbd "M-g s") 'symbol-previous)
+(global-set-key (kbd "M-g S") 'symbol-next)
 
 (global-set-key (kbd "C-c P") 'erl-print)
 (global-set-key (kbd "C-c M-p") 'erl-print-res)
@@ -53,9 +53,6 @@ If point was already at that position, move point to beginning of line."
 (global-set-key (kbd "C-x r C-x") 'rm-exchange-point-and-mark)
 (global-set-key (kbd "C-x r C-w") 'rm-kill-region)
 (global-set-key (kbd "C-x r M-w") 'rm-kill-ring-save)
-
-
-(global-set-key (kbd "C-x M-g") (lambda () (interactive) (goto-long-line 81)))
 
 (global-set-key (kbd "M-F") 'fullscreen-toggle)
 (global-set-key (kbd "M-R") 'revert-buffer)
@@ -82,8 +79,7 @@ If point was already at that position, move point to beginning of line."
 
 (defhydra hydra-window-nav (:hint nil)
   "
-Window nav: _p_: up  _P_: delete-up  _n_: down  _N_: delete-down  _b_: left  _B_: delete-left  _f_: right  _F_: delete-right _ q_: quit
-"
+Window nav: _p_: up  _P_: delete-up  _n_: down  _N_: delete-down  _b_: left  _B_: delete-left  _f_: right  _F_: delete-right _q_: quit"
   ("p" windmove-up)
   ("P" windmove-delete-up)
   ("n" windmove-down)

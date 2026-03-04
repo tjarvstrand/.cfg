@@ -1,6 +1,8 @@
 (require 'trace)
 (require 'edebug)
 
+(delight 'eldoc-mode nil 'eldoc)
+
 (defun trace-current-buffer (buffer)
   (interactive (list (current-buffer)))
   (setq edebug-trace t)

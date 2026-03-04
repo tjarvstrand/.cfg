@@ -1,6 +1,37 @@
-(use-package company :demand t)
+(use-package company :delight :demand t)
 (company-mode)
 (setq company-minimum-prefix-length 1)
+(setq company-idle-delay 0.2)
+;; Darcula's company selection inherits `highlight`; force readable contrast.
+(set-face-attribute 'company-tooltip-selection nil :foreground "#f8f8f2" :background "#4a4a4a")
+(set-face-attribute 'company-tooltip-common-selection nil :foreground "#f8f8f2" :background "#4a4a4a" :weight 'bold)
+
+(defvar-local my-company-idle-suspended nil)
+
+(defun my-company-restore-idle-delay-after-change (&rest _)
+  (when my-company-idle-suspended
+    (kill-local-variable 'company-idle-delay)
+    (setq my-company-idle-suspended nil)))
+
+(defun my-company-mode-hook ()
+  (add-hook 'after-change-functions 'my-company-restore-idle-delay-after-change nil t))
+
+(add-hook 'company-mode-hook 'my-company-mode-hook)
+
+(defun my-company-abort-and-suppress ()
+  (interactive)
+  ;; Suspend auto popup until this buffer text is edited again.
+  (setq my-company-idle-suspended t)
+  (setq-local company-idle-delay nil)
+  (add-hook 'after-change-functions #'my-company-restore-idle-delay-after-change nil t)
+  (company-abort)
+  ;; Keep Company from immediately re-beginning in this command cycle.
+  (setq this-command 'company-abort))
+
+(keymap-set company-active-map "C-g" #'my-company-abort-and-suppress)
+(keymap-set company-search-map "C-g" #'my-company-abort-and-suppress)
+(keymap-set company-active-map "<escape>" #'my-company-abort-and-suppress)
+(keymap-set company-search-map "<escape>" #'my-company-abort-and-suppress)
 
 (use-package orderless
   :demand t

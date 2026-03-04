@@ -212,7 +212,7 @@
 
 (defun my-dart-run-last-test (&optional prefix)
   (interactive "P")
-  (unless my-dart-last-test-name
+  (unless my-dart-last-test
     (error "No last test to run"))
   (my-dart--run-tests prefix (car my-dart-last-test) (cdr my-dart-last-test)))
 

@@ -2,12 +2,14 @@
 
 (load-theme 'darcula t)
 (set-face-attribute 'highlight nil :background "#3a3a3a")
-;; Darcula's company selection inherits `highlight`; force readable contrast.
-(set-face-attribute 'company-tooltip-selection nil :foreground "#f8f8f2" :background "#4a4a4a")
-(set-face-attribute 'company-tooltip-common-selection nil :foreground "#f8f8f2" :background "#4a4a4a" :weight 'bold)
 (set-face-inverse-video 'mode-line nil)
 (set-face-inverse-video 'mode-line-inactive nil)
 (set-face-attribute 'mode-line-inactive nil :foreground "grey80")
+
+(set-face-attribute 'error   nil :foreground "#942020" :background 'unspecified)
+(set-face-attribute 'warning nil :foreground "#a85c00" :background 'unspecified)
+(set-face-attribute 'success nil :foreground "#1f6a35" :background 'unspecified)
+
 
 ;; Set font
 (defun set-font-size (size)

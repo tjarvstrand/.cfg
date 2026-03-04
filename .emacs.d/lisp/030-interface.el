@@ -1,3 +1,5 @@
+(require 'dash)
+
 (setq-default indent-tabs-mode nil)
 (setq tab-width 2)
 (setq-default fill-column 120)
@@ -26,12 +28,13 @@
 (require 'uniquify)
 (setq uniquify-buffer-name-style 'post-forward-angle-brackets)
 
+(use-package mise :delight mise-mode :demand t)
+(add-hook 'after-init-hook 'global-mise-mode)
+
 ;; Scratch buffer
 (setq initial-major-mode 'fundamental-mode)
 (setq initial-scratch-message
       "# This buffer is for notes you don't want to save.\n\n")
-(add-hook 'after-init-hook 'global-mise-mode)
-
 
 ;; Messages buffer
 (load-library "buffer-tail")
@@ -62,36 +65,42 @@
 (defun is-file-buffer-p (buffer _action)
   (buffer-local-value 'buffer-file-name (get-buffer buffer)))
 
+(defun my-display-buffer-window-picker (buffer alist)
+  "Picks the most recently used window if it is not a dedicated or side window, otherwise picks the first "
+  (let ((mru (get-mru-window nil nil nil 'current-frame)))
+    (-first
+     (lambda (w)
+       (and
+        (not (window-dedicated-p w))
+        (not (window-parameter w 'window-side))))
+    (if mru
+        (cons mru (window-list))
+      (window-list)))))
+
 (setq display-buffer-alist
-      (list
-       '("\\*Help\\*"
+      `(
+        ("\\*Help\\*"
          (display-buffer-in-side-window )
          (side . right)
          (slot . 0)
          (dedicated . t)
          )
-       '("\\*Messages\\*"
+        ("\\*Messages\\*"
          (display-buffer-in-side-window display-buffer-pop-up-window)
          (slot . 0)
          (dedicated . t))
-       '("\\*Backtrace\\*"
+        ("\\*Backtrace\\*"
          (display-buffer-in-side-window display-buffer-pop-up-window)
          (slot . 1)
          (dedicated . t))
-       '("\\*compilation\\*"
-         (display-buffer-at-bottom)
-         (slot . 0)
-         (window-height . 0.3))
-       `(is-file-buffer-p
+        ("\\*compilation\\*"
+         (display-buffer-in-side-window)
+         (slot . 0))
+        (nil
          (display-buffer-reuse-window
           display-buffer-in-previous-window
-          display-buffer-use-some-window
-          display-buffer-no-window) ; never create a new window
-         (inhibit-same-window . t)
-         (reusable-frames . visible)
-         (window-predicate . ,(lambda (w)
-                                (not (window-parameter w 'window-side)))))
-      ))
+          my-display-buffer-window-picker)
+         (reusable-frames . visible))))
 
 (setq help-window-select t)
 
@@ -101,6 +110,19 @@
     (funcall orig quit)))
 
 (advice-add 'xref-goto-xref :around #'my/xref-goto-obey-display-buffer-alist)
+
+;; Fixme: not working
+;; (defun my/help-xref-obey-display-buffer-alist (orig pos function args)
+;;   "Ensure help xrefs follow `display-buffer-alist' placement rules."
+;;   (let ((help-window-keep-selected nil)
+;;         (display-buffer-overriding-action
+;;          '((display-buffer-reuse-window
+;;             my-display-buffer-window-picker)
+;;            (inhibit-same-window . t)
+;;            (reusable-frames . visible))))
+;;     (funcall orig pos function args)))
+
+;; (advice-add 'help-do-xref :around #'my/help-xref-obey-display-buffer-alist)
 
 (setq split-window-height nil)
 
@@ -117,6 +139,7 @@
 (put 'erase-buffer 'disabled nil)
 
 (recentf-mode 1)
+(setq recentf-max-saved-items 100)
 (setq inhibit-startup-screen t)
 (setq comment-multi-line t)
 (setq create-lockfiles nil)
@@ -129,8 +152,10 @@
 
 (global-auto-revert-mode)
 
+(use-package syntax-subword)
+
 (defun my-prog-mode-hook ()
-  (subword-mode)
+  (syntax-subword-mode)
   (setq truncate-lines t)
 )
 

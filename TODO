@@ -1,11 +1,9 @@
 System:
- - [MacOS] Virtual keyboard for pedals
  - Install nerd font
 
 Tools:
   - eza
   - fzf
-  - zoxide
   - carapace
   - zmv
   - ripgrep
@@ -20,10 +18,7 @@ Zsh:
   - Window management
   - dap on the web
   - test reporter
+  - ripgrep - rg.el
+  - fix flymake error navigation
   - Modeline
-   - Colors in selected window
-     - mise global/local
-     - dape background colors (and maybe foreground, once background is fixed)
-     - flymake
-   - Remove unnecessary clutter
-   - Figure out what the leftmost "-:---" means and if it should stay
+   - Simplify buffer status indicator

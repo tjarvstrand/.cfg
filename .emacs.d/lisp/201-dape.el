@@ -1,7 +1,7 @@
 (use-package hydra :demand t)
 (require 'ansi-color)
 
-(use-package dape :demand t)
+(use-package dape :delight :demand t)
 
 (defhydra hydra-dape (:hint nil)
   "
