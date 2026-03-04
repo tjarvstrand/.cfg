@@ -1,6 +1,8 @@
 (use-package js2-mode)
 (use-package web-mode)
 
+(setq js-indent-level 2)
+
 (add-to-list 'auto-mode-alist '("\\.gs\\'" . javascript-mode))
 (add-to-list 'auto-mode-alist '("\\.phtml\\'" . javascript-mode))
 (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . javascript-mode))

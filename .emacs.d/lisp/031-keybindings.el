@@ -33,8 +33,8 @@ If point was already at that position, move point to beginning of line."
 ;; C-k at beginning of line kills the entire line including newline
 (setq kill-whole-line 1)
 
-(global-set-key (kbd "M-g s") 'symbol-previous)
-(global-set-key (kbd "M-g S") 'symbol-next)
+(global-set-key (kbd "M-g s") 'symbol-next)
+(global-set-key (kbd "M-g S") 'symbol-previous)
 
 (global-set-key (kbd "C-c P") 'erl-print)
 (global-set-key (kbd "C-c M-p") 'erl-print-res)

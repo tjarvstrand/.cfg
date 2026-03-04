@@ -1,6 +1,6 @@
 (setq compilation-ask-about-save nil)
 (setq compilation-scroll-output t)
-
+(setq compilation-max-output-line-length nil)
 (require 'ansi-color)
 
 (defun my/colorize-compilation-buffer ()

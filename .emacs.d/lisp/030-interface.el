@@ -200,8 +200,6 @@
 (setq comment-multi-line t)
 (setq create-lockfiles nil)
 (setq electric-indent-mode nil)
-(setq graphviz-dot-dot-program "/opt/homebrew/bin/dot")
-(setq js-indent-level 2)
 
 (delete-selection-mode  1)
 (transient-mark-mode    1)
