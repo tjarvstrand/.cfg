@@ -10,7 +10,7 @@
   1. Add /opt/homebrew/bin to the top of /etc/paths
   1. `brew install coreutils findutils gnu-sed grep jq oh-my-posh wezterm`emacs node fontconfig
   1. `brew install --cask font-jetbrains-mono-nerd-font`
-  1 Tentative: `brew install eza`bat zoxide fzf carapace
+  1 Tentative: `brew install eza`bat zoxide fzf carapace fd
   1. Install ~/.config/ukulele/Dvorak Custom (should be automatic now?)
 
 ### Linux

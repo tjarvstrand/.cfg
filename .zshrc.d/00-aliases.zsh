@@ -7,6 +7,7 @@ alias dc='docker compose'
 alias a='asdf'
 alias curl='curl -sS'
 alias tf='terraform'
+alias eza='eza --git'
 
 # https://til.hashrocket.com/posts/xsavbhlrz4-shortcuts-with-hash-d-in-zsh
 hash -d dl="$HOME/Downloads"
