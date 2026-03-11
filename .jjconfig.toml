@@ -2,13 +2,10 @@
 name = "Thomas Järvstrand"
 email = "tjarvstrand@gmail.com"
 
-[[--scope]]
---when.repositories = ["~/src/dagg"]
-[--scope.user]
-email = "thomas@dagg.ai"
-
 [ui]
 pager = ":builtin"
+merge-editor = "meld"
+movement.edit = true
 
 [templates]
 log = "builtin_log_compact_full_description"
@@ -27,9 +24,6 @@ branches = '''
     "\n",
   )
 '''
-
-[ui.movement]
-edit = true
 
 [aliases]
 a = ["abandon"]
