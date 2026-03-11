@@ -11,6 +11,10 @@ export LC_ALL=en_US.UTF-8
 autoload -U select-word-style
 select-word-style bash
 
+autoload -Uz edit-command-line
+zle -N edit-command-line
+bindkey '^X^E' _edit_command_line_end
+
 for f in "$HOME"/.zshrc.d/*.zsh; do
     source $f
 done

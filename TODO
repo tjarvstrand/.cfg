@@ -13,6 +13,7 @@ Zsh:
  - JJ prompt
 
 - Emacs:
+  - Stop dart/eglot code formatting from preventing save when it fails
   - Use apheleia?
   - gptel?
   - Window management
