@@ -17,23 +17,36 @@
 (unless (treesit-language-available-p 'dart)
   (treesit-install-language-grammar 'dart))
 
-(defun my-dart--nearest-analysis-options (&optional from-file)
-  (when-let* ((file (or from-file buffer-file-name))
-              (start (f-dirname (expand-file-name file)))
-              (nearest (f--traverse-upwards (f-exists? (f-join it "analysis_options.yaml")) start)))
-    (f-join nearest "analysis_options.yaml")))
+(defun my-dart--nearest-file (file &optional from-file)
+  (when-let* ((file (or file buffer-file-name))
+              (start (f-dirname (expand-file-name from-file)))
+              (nearest (f-traverse-upwards (lambda (it) (f-exists? (f-join it file)))
+                                           start)))
+    (f-join nearest file)))
 
 (defun my-dart--analysis-options-page-width (analysis-options-file)
   (let* ((yaml (yaml-parse-string (f-read analysis-options-file)))
          (formatter (gethash 'formatter yaml)))
     (and formatter (gethash 'page_width formatter))))
 
+;; (defun my-dart-effective-page-width-or-nil (&optional file)
+;;   (let* ((target (or file (buffer-file-name)))
+;;          (analysis-options-file (my-dart--nearest-file "analysis_options.yaml" target))
+;;          (parent* (f-dirname target)))
+;;     (if analysis-options-file
+;;         (if-let ((page-width (when analysis-options-file
+;;                        (my-dart--analysis-options-page-width analysis-options-file))))
+;;             page-width
+;;           (unless (f-root? target)
+;;             (my-dart-effective-page-width-or-nil parent)))
+;;       (unless (f-root? target)
+;;         (my-dart-effective-page-width-or-nil parent)))))
+
+;; fixme
 (defun my-dart-effective-page-width (&optional file)
-  (let* ((target (or file (buffer-file-name)))
-         (analysis-options-file (my-dart--nearest-analysis-options target)))
-    (or
-     (when analysis-options-file (my-dart--analysis-options-page-width analysis-options-file))
-     120)))
+  150
+  ;;(or (my-dart-effective-page-width-or-nil file) 120)
+  )
 
 
 (add-to-list 'dape-configs
@@ -159,7 +172,7 @@
                :type "dart"
                :request "launch"
                :name "Dart Test"
-               :cwd ,(lambda () (expand-file-name (project-root (project-current))))
+               :cwd ,(lambda () (f-dirname (or (my-dart--nearest-file "pubspec.yaml") (buffer-file-name))))
                :program ,(lambda () (buffer-file-name))
                :args ["--concurrency=1"]
                :console "terminal"

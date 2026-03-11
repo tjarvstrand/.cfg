@@ -86,9 +86,18 @@
       (message "Wrapped to first reference in file")
       ))))
 
+(defun my-eglot-rename-prefill ()
+  "Like `eglot-rename`, but prefill minibuffer with symbol at point."
+  (interactive)
+  (let* ((sym (thing-at-point 'symbol t))
+         (shown (or sym "unknown symbol"))
+         (initial (or sym ""))
+         (newname (read-string (format "Rename `%s' to: " shown)
+                               initial nil initial)))
+    (eglot-rename newname)))
 
-(define-key eglot-mode-map (kbd "M-g p") 'symbol-next)
-(define-key eglot-mode-map (kbd "M-g n") 'my/eglot-next-reference-in-file)
+
+;; (define-key eglot-mode-map (kbd "M-g n") 'my/eglot-next-reference-in-file)
 (define-key eglot-mode-map (kbd "C-c e h") #'eglot-inlay-hints-mode)
-(define-key eglot-mode-map (kbd "C-c e n") #'eglot-rename)
+(define-key eglot-mode-map (kbd "C-c e n") #'my-eglot-rename-prefill)
 (define-key eglot-mode-map (kbd "M-RET") #'eglot-code-actions)

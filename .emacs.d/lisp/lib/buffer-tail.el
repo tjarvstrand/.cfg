@@ -1,4 +1,3 @@
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Tailing a buffer (even one not visiting a file)
 ;alist of 'buffer-name / timer' items
@@ -28,7 +27,7 @@
       (progn 
         (while (assoc name buffer-tail-alist) 
            (cancel-timer (cdr (assoc name buffer-tail-alist)))
-           (setq buffer-tail-alist (remove* name buffer-tail-alist :key 'car :test 'equal)))
+           (setq buffer-tail-alist (cl-remove name buffer-tail-alist :key 'car :test 'equal)))
         (if (equal toggle "on")
             (add-to-list 'buffer-tail-alist (cons name (run-at-time t 1 'buffer-tail name))))
         (message "toggled 'tail buffer' for '%s' %s" name toggle)))))

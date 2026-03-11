@@ -10,5 +10,6 @@
 ;;               ("C-n" . copilot-next-completion)
 ;;               ("C-p" . copilot-previous-completion))
 ;;   :config (progn
+;;             (setq copilot-idle-delay 2)
 ;;             (add-to-list 'copilot-indentation-alist
 ;;                '(dart-ts-mode dart-ts-mode-indent-offset))))
