@@ -4,7 +4,10 @@
 (setq company-idle-delay 0.2)
 ;; Darcula's company selection inherits `highlight`; force readable contrast.
 (set-face-attribute 'company-tooltip-selection nil :foreground "#f8f8f2" :background "#4a4a4a")
+(set-face-attribute 'company-tooltip-common nil :foreground "#f8f8f2" :background "#2f2f2f")
 (set-face-attribute 'company-tooltip-common-selection nil :foreground "#f8f8f2" :background "#4a4a4a" :weight 'bold)
+(set-face-attribute 'company-tooltip-search nil :foreground "#f8f8f2" :background "#4a4a4a")
+(set-face-attribute 'company-tooltip-search-selection nil :foreground "#f8f8f2" :background "#4a4a4a")
 
 (defvar-local my-company-idle-suspended nil)
 
@@ -82,3 +85,7 @@
   (add-hook 'post-self-insert-hook #'my-file-minibuffer-clear-before-home nil t))
 
 (add-hook 'minibuffer-setup-hook #'my-file-minibuffer-setup)
+
+(with-eval-after-load 'xref
+  (setq xref-show-xrefs-function #'consult-xref
+        xref-show-definitions-function #'consult-xref))
