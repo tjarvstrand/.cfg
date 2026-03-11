@@ -219,3 +219,5 @@
 )
 
 (add-hook 'prog-mode-hook #'my-prog-mode-hook)
+
+(add-hook 'minibuffer-setup-hook #'subword-mode)

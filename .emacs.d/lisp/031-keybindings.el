@@ -33,8 +33,19 @@ If point was already at that position, move point to beginning of line."
 ;; C-k at beginning of line kills the entire line including newline
 (setq kill-whole-line 1)
 
-(global-set-key (kbd "M-g s") 'symbol-next)
-(global-set-key (kbd "M-g S") 'symbol-previous)
+;; Cursor movement
+
+(global-set-key (kbd "M-p") 'backward-paragraph)
+(global-set-key (kbd "M-n") 'forward-paragraph)
+
+(global-set-key (kbd "s-f") 'forward-symbol)
+(global-set-key (kbd "s-b") (lambda () (interactive) (forward-symbol -1)))
+(global-set-key (kbd "s-F") 'symbol-next)
+(global-set-key (kbd "s-B") 'symbol-previous)
+
+
+(global-set-key (kbd "C-a") 'smart-beginning-of-line)
+
 
 (global-set-key (kbd "C-c P") 'erl-print)
 (global-set-key (kbd "C-c M-p") 'erl-print-res)
@@ -45,8 +56,28 @@ If point was already at that position, move point to beginning of line."
 (global-set-key (kbd "C-c i") 'insert-filename)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (global-set-key (kbd "C-x M-e") 'eval-buffer)
-(global-set-key (kbd "C-x +") 'inc-font-size)
-(global-set-key (kbd "C-x -") 'dec-font-size)
+
+(defhydra hydra-font-size (:hint nil)
+  "
+Font size: _+_: increase _-_: decrease _q_: quit
+"
+  ("+" inc-font-size)
+  ("-" dec-font-size)
+  ("q" nil :exit t)
+  ("RET" nil :exit t))
+
+(defun inc-font-size-command ()
+  (interactive)
+  (inc-font-size)
+  (hydra-font-size/body))
+
+(defun dec-font-size-command ()
+  (interactive)
+  (dec-font-size)
+  (hydra-font-size/body))
+
+(global-set-key (kbd "C-x +") 'inc-font-size-command)
+(global-set-key (kbd "C-x -") 'dec-font-size-command)
 
 ;; rectangleMark
 (global-set-key (kbd "C-x r C-SPC") 'rm-set-mark)
@@ -56,10 +87,6 @@ If point was already at that position, move point to beginning of line."
 
 (global-set-key (kbd "M-F") 'fullscreen-toggle)
 (global-set-key (kbd "M-R") 'revert-buffer)
-(global-set-key (kbd "M-p") 'backward-paragraph)
-(global-set-key (kbd "M-n") 'forward-paragraph)
-
-(global-set-key (kbd "C-a") 'smart-beginning-of-line)
 
 (global-set-key (kbd "M-<up>") 'move-line-up)
 (global-set-key (kbd "M-<down>") 'move-line-down)
