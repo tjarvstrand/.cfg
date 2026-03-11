@@ -122,16 +122,26 @@
   (buffer-local-value 'buffer-file-name (get-buffer buffer)))
 
 (defun my-display-buffer-window-picker (buffer alist)
-  "Picks the most recently used window if it is not a dedicated or side window, otherwise picks the first "
-  (let ((mru (get-mru-window nil nil nil 'current-frame)))
-    (-first
-     (lambda (w)
-       (and
-        (not (window-dedicated-p w))
-        (not (window-parameter w 'window-side))))
-    (if mru
-        (cons mru (window-list))
-      (window-list)))))
+    (let ((mru (get-mru-window nil nil nil 'current-frame))
+          (inhibit-same (cdr (assq 'inhibit-same-window alist))))
+      (-first
+       (lambda (w)
+         (and
+          (not (window-dedicated-p w))
+          (not (window-parameter w 'window-side))
+          (not (and inhibit-same (eq w (selected-window))))))
+       (if mru
+           (cons mru (window-list nil 'nomini))
+         (window-list)))))
+
+(setq display-buffer-base-action
+      '((display-buffer-reuse-window
+         display-buffer-in-previous-window
+         display-buffer-use-some-window)
+        (reusable-frames . visible)
+        (some-window . my-display-buffer-window-picker)
+        ;;(inhibit-same-window . t)
+))
 
 (setq display-buffer-alist
       `(
@@ -151,12 +161,7 @@
          (dedicated . t))
         ("\\*compilation\\*"
          (display-buffer-in-side-window)
-         (slot . 0))
-        (nil
-         (display-buffer-reuse-window
-          display-buffer-in-previous-window
-          my-display-buffer-window-picker)
-         (reusable-frames . visible))))
+         (slot . 0))))
 
 (setq help-window-select t)
 
@@ -167,18 +172,18 @@
 
 (advice-add 'xref-goto-xref :around #'my/xref-goto-obey-display-buffer-alist)
 
-;; Fixme: not working
-;; (defun my/help-xref-obey-display-buffer-alist (orig pos function args)
-;;   "Ensure help xrefs follow `display-buffer-alist' placement rules."
-;;   (let ((help-window-keep-selected nil)
-;;         (display-buffer-overriding-action
-;;          '((display-buffer-reuse-window
-;;             my-display-buffer-window-picker)
-;;            (inhibit-same-window . t)
-;;            (reusable-frames . visible))))
-;;     (funcall orig pos function args)))
+;; Fixme: not working?
+(defun my/help-xref-obey-display-buffer-alist (orig pos function args)
+  "Ensure help xrefs follow `display-buffer-alist' placement rules."
+  (let ((help-window-keep-selected nil)
+        (display-buffer-overriding-action
+         '((display-buffer-reuse-window
+            my-display-buffer-window-picker)
+           (inhibit-same-window . t)
+           (reusable-frames . visible))))
+    (funcall orig pos function args)))
 
-;; (advice-add 'help-do-xref :around #'my/help-xref-obey-display-buffer-alist)
+ (advice-add 'help-do-xref :around #'my/help-xref-obey-display-buffer-alist)
 
 (setq split-window-height nil)
 
