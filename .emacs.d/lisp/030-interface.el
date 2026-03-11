@@ -200,7 +200,7 @@
 (put 'erase-buffer 'disabled nil)
 
 (recentf-mode 1)
-(setq recentf-max-saved-items 100)
+(setq recentf-max-saved-items 1000)
 (setq inhibit-startup-screen t)
 (setq comment-multi-line t)
 (setq create-lockfiles nil)
