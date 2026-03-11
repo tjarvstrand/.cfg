@@ -11,6 +11,7 @@
     (make-directory package-user-dir))
 
 (require 'package)
+(setq package-install-upgrade-built-in t)
 (package-initialize)
 
 ;;;;;;;;;;;;;;;;;;;;;
