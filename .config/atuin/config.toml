@@ -42,7 +42,7 @@
 
 ## which filter mode to use
 ## possible values: global, host, session, directory
-filter_mode = "session"
+filter_mode = "global"
 
 ## With workspace filtering enabled, Atuin will filter for commands executed
 ## in any directory within a git repository tree (default: false)
@@ -177,4 +177,4 @@ enter_accept = true
 ## The list of enabled filter modes, in order of priority.
 ## The "workspace" mode is skipped when not in a workspace or workspaces = false.
 ## Default filter mode can be overridden with the filter_mode setting.
-filters = [ "session", "workspace", "global"]
+filters = [ "global", "workspace", "session" ]
