@@ -7,6 +7,9 @@ pager = ":builtin"
 merge-editor = "meld"
 movement.edit = true
 
+[remotes.origin]
+auto-track-created-bookmarks = "*"
+
 [templates]
 log = "builtin_log_compact_full_description"
 
