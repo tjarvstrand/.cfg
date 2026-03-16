@@ -1,5 +1,14 @@
 (use-package darcula-theme)
 
+(let ((font "JetBrainsMono Nerd Font 12"))
+  (condition-case
+      err
+      (set-frame-font font nil t)
+      (error
+       (message "Failed to set font \"%s\": %s" font (error-message-string err)))
+    ))
+
+
 (load-theme 'darcula t)
 (set-face-attribute 'highlight nil :background "#3a3a3a")
 (set-face-inverse-video 'mode-line nil)
