@@ -86,15 +86,29 @@
       (message "Wrapped to first reference in file")
       ))))
 
+(defun my-eglot-rename-and-save (newname)
+  "Run `eglot-rename' and auto-save file buffers changed by the rename."
+  (let ((before (make-hash-table :test 'eq)))
+    (dolist (b (buffer-list))
+      (puthash b (buffer-modified-tick b) before))
+    (eglot-rename newname)
+    (save-some-buffers
+     t
+     (lambda ()
+       (and (buffer-file-name)
+            (buffer-modified-p)
+            (> (buffer-modified-tick)
+               (gethash (current-buffer) before 0)))))))
+
 (defun my-eglot-rename-prefill ()
-  "Like `eglot-rename`, but prefill minibuffer with symbol at point."
+  "Like `eglot-rename', but prefill minibuffer with symbol at point."
   (interactive)
   (let* ((sym (thing-at-point 'symbol t))
          (shown (or sym "unknown symbol"))
          (initial (or sym ""))
          (newname (read-string (format "Rename `%s' to: " shown)
                                initial nil initial)))
-    (eglot-rename newname)))
+    (my-eglot-rename-and-save newname)))
 
 
 ;; (define-key eglot-mode-map (kbd "M-g n") 'my/eglot-next-reference-in-file)
