@@ -89,3 +89,23 @@
 (with-eval-after-load 'xref
   (setq xref-show-xrefs-function #'consult-xref
         xref-show-definitions-function #'consult-xref))
+
+(defun my-consult-window ()
+  "Select a window using Consult/Vertico."
+  (interactive)
+  (let* ((wins (seq-filter
+                (lambda (w) (and (not (window-minibuffer-p w)) (not (eq w (selected-window)))))
+                (window-list))
+         )
+         (cands
+          (cl-loop for w in wins
+                   for i from 1
+                   for b = (window-buffer w)
+                   collect (cons (format "%d: %s" i (buffer-name b)) w)))
+         (choice (consult--read (mapcar #'car cands)
+                                :prompt "Window: "
+                                :require-match t
+                                :sort nil
+                                :category 'window)))
+    (when-let ((win (cdr (assoc choice cands))))
+      (select-window win))))
