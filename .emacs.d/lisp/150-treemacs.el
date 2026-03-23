@@ -1,3 +1,8 @@
+;; Make sure fringe indicator is visible in thinner fringes
+(define-fringe-bitmap 'my-treemacs-fringe-4px
+  (make-vector 200 #b1111) nil 2 'center)
+(setq treemacs--fringe-indicator-bitmap 'my-treemacs-fringe-4px)
+
 (use-package treemacs :demand t)
 
 (add-to-list 'display-buffer-alist
