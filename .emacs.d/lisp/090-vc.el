@@ -1,4 +1,4 @@
-(use-package vc-jj)
+(use-package vc-jj :demand t)
 
 (setq vc-follow-symlinks t)
 

@@ -3,7 +3,7 @@
 
 (require 'xref)
 
-(set-face-attribute 'eglot-highlight-symbol-face nil :background "#3d3e74")
+(set-face-attribute 'eglot-highlight-symbol-face nil :inherit 'highlight)
 (setq eglot-code-action-indications '(eldoc-hint))
 (setq eglot-events-buffer-config '(:size 200000 :format full))
 (setq eglot-report-progress nil)
