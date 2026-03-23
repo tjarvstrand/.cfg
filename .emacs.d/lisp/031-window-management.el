@@ -1,5 +1,3 @@
-;;;;;;;;;;;;;;;;;;;;;
-;; Windows
 
 (defvar my-current-window nil)
 (defvar my-previous-window nil)
@@ -45,7 +43,8 @@
          (and
           (not (window-dedicated-p w))
           (not (window-parameter w 'window-side))
-          (not (and inhibit-same (eq w (selected-window))))))
+          (not (and inhibit-same (eq w (selected-window)))))
+         )
        (if mru
            (cons mru (window-list nil 'nomini))
          (window-list)))))
@@ -65,16 +64,13 @@
          (display-buffer-in-side-window )
          (side . right)
          (slot . 0)
-         (dedicated . t)
          )
         ("\\*Messages\\*"
          (display-buffer-in-side-window display-buffer-pop-up-window)
-         (slot . 0)
-         (dedicated . t))
+         (slot . 0))
         ("\\*Backtrace\\*"
          (display-buffer-in-side-window display-buffer-pop-up-window)
-         (slot . 1)
-         (dedicated . t))
+         (slot . 1))
         ("\\*compilation\\*"
          (display-buffer-in-side-window)
          (slot . 0))))
@@ -94,7 +90,8 @@
   (let ((help-window-keep-selected nil)
         (display-buffer-overriding-action
          '((display-buffer-reuse-window
-            my-display-buffer-window-picker)
+            display-buffer-use-some-window)
+           (some-window . my-display-buffer-window-picker)
            (inhibit-same-window . t)
            (reusable-frames . visible))))
     (funcall orig pos function args)))
