@@ -5,25 +5,31 @@
 (setq-default fill-column 120)
 (global-display-fill-column-indicator-mode 1)
 
-(setq-default show-trailing-whitespace t)
 (scroll-bar-mode -1)
 (show-paren-mode t)
 (global-hl-line-mode 1)
-(global-display-line-numbers-mode 1)
 
 (line-number-mode 1)
 (column-number-mode 1)
 
-(setq-default whitespace-mode 1)
-(setq whitespace-style (quote (face tabs tab-mark lines-tail)))
-(setq whitespace-display-mappings '((tab-mark 9 [9655 9] [92 9])))
+(setq whitespace-style
+      '(
+        face ;; Use faces to highlight whitespace
+        tabs ;; Detect/display tabs
+        lines-tail ;; Highlight lines extending beyond whitespace-line-column or fill-column
+        trailing ;; Highlight trailing whitespace
+        tab-mark ;; Use a visible mark (not just face) to show tabs
+        ))
+(setq whitespace-line-column nil) ;; Use fill-column instead
+(add-hook 'after-change-major-mode-hook
+          (lambda ()
+            (when buffer-file-name
+              (whitespace-mode))))
 
 ;; Column marker to show when text crosses column 80
 (require 'column-marker)
 
 (add-hook 'find-file-hook (lambda () (interactive) (column-marker-3 fill-column)))
-
-(set-frame-parameter nil 'right-fringe 1)
 
 (require 'uniquify)
 (setq uniquify-buffer-name-style 'post-forward-angle-brackets)
@@ -87,6 +93,7 @@
 
 (defun my-prog-mode-hook ()
   (syntax-subword-mode)
+  (display-line-numbers-mode 1)
   (setq truncate-lines t)
 )
 
