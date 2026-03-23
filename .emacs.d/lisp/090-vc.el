@@ -22,7 +22,8 @@
           (with-output-to-string
             (with-current-buffer standard-output
               (vc-git--out-ok "rev-parse" "HEAD")))))
-  (setq ad-return-value (replace-regexp-in-string "\n$" "" ad-return-value)))
+  (when (stringp ad-return-value)
+    (setq ad-return-value (replace-regexp-in-string "\n$" "" ad-return-value))))
 (ad-activate 'vc-git-working-revision t)
 
 
