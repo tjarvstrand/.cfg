@@ -1,3 +1,5 @@
+(use-package vc-jj)
+
 (setq vc-follow-symlinks t)
 
 ;; Show no vc info at all in the mode line. vc-display-status only controls the revision part, not the backend
