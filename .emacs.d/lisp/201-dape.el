@@ -13,8 +13,8 @@ dape: _d_: debug _b_: breakpoint toggle _n_/_RET_: next _s_: step in _c_/_SPC_: 
   ("RET" dape-next)
   ("s" dape-step-in)
   ("M-RET" dape-next)
-  ("c" dape-contine)
-  ("SPC" dape-contine)
+  ("c" dape-continue)
+  ("SPC" dape-continue)
   ("q" nil :exit t))
 
 (global-set-key (kbd "C-c d") #'hydra-dape/body)
