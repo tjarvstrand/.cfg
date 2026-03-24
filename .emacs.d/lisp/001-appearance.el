@@ -1,6 +1,9 @@
 (use-package catppuccin-theme)
 
 (setq catppuccin-flavor 'macchiato)
+(setq catppuccin-highlight-matches t)
+(setq catppuccin-dark-line-numbers-background t)
+(setq catppuccin-italic-comments t)
 (load-theme 'catppuccin t)
 (set-face-attribute 'highlight nil :background "#3d3e74")
 

@@ -6,7 +6,6 @@
 (global-display-fill-column-indicator-mode 1)
 
 (scroll-bar-mode -1)
-(show-paren-mode t)
 (global-hl-line-mode 1)
 
 (line-number-mode 1)
@@ -33,6 +32,11 @@
 
 (require 'uniquify)
 (setq uniquify-buffer-name-style 'post-forward-angle-brackets)
+
+;;(show-paren-mode t)
+(use-package highlight-parentheses :demand t)
+(add-hook 'prog-mode-hook #'highlight-parentheses-mode)
+(setq highlight-parentheses-highlight-adjacent t)
 
 (use-package mise :delight mise-mode :demand t)
 (add-hook 'after-init-hook 'global-mise-mode)
