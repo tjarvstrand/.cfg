@@ -72,6 +72,14 @@
 (menu-bar-mode 0)
 
 ;;;;;;;;;;;;;;;;;;;;;
+;; Mode line
+
+(use-package doom-modeline
+  :ensure t
+  :demand t
+  :init (doom-modeline-mode 1))
+
+;;;;;;;;;;;;;;;;;;;;;
 ;; Misc
 
 (fset 'yes-or-no-p ' y-or-n-p)

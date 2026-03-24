@@ -4,6 +4,18 @@
 (load-theme 'catppuccin t)
 (set-face-attribute 'highlight nil :background "#3d3e74")
 
+(use-package nerd-icons
+  :demand t
+  :custom
+  ;; The Nerd Font you want to use in GUI
+  ;; "Symbols Nerd Font Mono" is the default and is recommended
+  ;; but you can use any other Nerd Font if you want
+  (nerd-icons-font-family "Symbols Nerd Font Mono")
+  ;;:config (nerd-icons-install-fonts)
+  )
+
+
+
 (let ((font "JetBrainsMono Nerd Font 12"))
   (condition-case
       err
