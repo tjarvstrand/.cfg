@@ -14,7 +14,7 @@
 (setq delete-old-versions t)
 
 ;; auto-saves
-(setq auto-save-dir "~/.emacs.d/autosaves")
+(setq auto-save-dir "~/.emacs.d/auto-saves/")
 (setq auto-save-file-name-transforms
       `((".*" ,auto-save-dir t)))
 (setq auto-save-default t)
