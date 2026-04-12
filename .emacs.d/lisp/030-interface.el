@@ -1,4 +1,6 @@
 (use-package rainbow-mode :demand t)
+(use-package breadcrumb :demand t)
+(use-package syntax-subword)
 
 (require 'dash)
 
@@ -106,7 +108,7 @@
 
 (global-auto-revert-mode)
 
-(use-package syntax-subword)
+
 
 (defun my-prog-mode-hook ()
   (syntax-subword-mode)
@@ -114,6 +116,8 @@
   (rainbow-mode)
   (electric-pair-mode)
   (setq truncate-lines t)
+  (setq-local header-line-format '("" header-line-indent " " (:eval (breadcrumb-imenu-crumbs))))
+  (header-line-indent-mode)
 )
 
 (add-hook 'prog-mode-hook #'my-prog-mode-hook)
