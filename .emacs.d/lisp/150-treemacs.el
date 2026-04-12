@@ -27,4 +27,9 @@
    ((and git python3) (treemacs-git-mode 'deferred))
    (git (treemacs-git-mode 'simple))))
 (setq treemacs--project-follow-delay 1.0)
-(define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action)
+
+(defun my-treemacs-file-tree-single-click ()
+  (local-set-key [mouse-1] #'treemacs-single-click-expand-action))
+
+;; Only run in filetree buffers
+(add-hook 'treemacs-post-buffer-init-hook #'my-treemacs-file-tree-single-click)
