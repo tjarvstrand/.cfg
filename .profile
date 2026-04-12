@@ -98,8 +98,6 @@ fi
 if [ -n "$ANDROID_HOME" ]; then
     export PATH="${PATH}:$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools"
 fi
-export JAVA_OPTS="-Xmx2G -XX:+CMSClassUnloadingEnabled -Xss2M -Duser.timezone=GMT"
-
 
 # npm --------------------------------------------------------------------------
 export PATH=$PATH:${HOME}/.npm/bin
