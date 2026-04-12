@@ -1,9 +1,10 @@
+(use-package rainbow-mode :demand t)
+
 (require 'dash)
 
 (setq-default indent-tabs-mode nil)
 (setq tab-width 2)
 (setq-default fill-column 120)
-(global-display-fill-column-indicator-mode 1)
 
 (scroll-bar-mode -1)
 (global-hl-line-mode 1)
@@ -33,10 +34,13 @@
 (require 'uniquify)
 (setq uniquify-buffer-name-style 'post-forward-angle-brackets)
 
-;;(show-paren-mode t)
+(show-paren-mode t)
+
 (use-package highlight-parentheses :demand t)
+(setq highlight-parentheses-colors '("#ed8796" "#a6da95" "#8aadf4" "#f5a97f"))
+(setq highlight-parentheses-delay 0.5)
 (add-hook 'prog-mode-hook #'highlight-parentheses-mode)
-(setq highlight-parentheses-highlight-adjacent t)
+
 
 (use-package mise :delight mise-mode :demand t)
 (add-hook 'after-init-hook 'global-mise-mode)
@@ -81,7 +85,9 @@
 (use-package doom-modeline
   :ensure t
   :demand t
-  :init (doom-modeline-mode 1))
+  :init (progn
+          (setq doom-modeline-buffer-file-name-style 'file-name-with-project)
+          (doom-modeline-mode 1)))
 
 ;;;;;;;;;;;;;;;;;;;;;
 ;; Misc

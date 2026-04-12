@@ -1,11 +1,12 @@
 (use-package catppuccin-theme)
 
 (setq catppuccin-flavor 'macchiato)
-(setq catppuccin-highlight-matches t)
+(setq catppuccin-highlight-matches nil)
 (setq catppuccin-dark-line-numbers-background t)
 (setq catppuccin-italic-comments t)
 (load-theme 'catppuccin t)
 (set-face-attribute 'highlight nil :background "#3d3e74")
+(set-face-attribute 'show-paren-match nil :foreground "firebrick1")
 
 (use-package nerd-icons
   :demand t
