@@ -27,7 +27,7 @@ config.keys = {
   { key = '1', mods = 'LEADER', action = act.TogglePaneZoomState },
 
   -- C-x x: send C-x to terminal (for emacs)
-  { key = 'x', mods = 'LEADER', action = act.SendKey { key = 'x', mods = 'CTRL' } },
+  { key = 'x', mods = 'LEADER|CTRL', action = act.SendKey { key = 'x', mods = 'CTRL' } },
 
   -- C-x o: switch to next pane (like other-window)
   { key = 'o', mods = 'LEADER', action = act.ActivatePaneDirection 'Next' },
@@ -44,6 +44,30 @@ config.keys = {
 
   -- C-x r: enter resize mode
   { key = 'r', mods = 'LEADER', action = act.ActivateKeyTable { name = 'resize_pane', one_shot = false } },
+
+  -- C-x ,: rename current tab
+  {
+    key = ',',
+    mods = 'LEADER',
+    action = act.PromptInputLine {
+      description = 'Rename tab:',
+      action = wezterm.action_callback(function(window, pane, line)
+        if line ~= nil then
+          window:active_tab():set_title(line)
+        end
+      end),
+    },
+  },
+
+  -- C-x <: move current tab left
+  { key = '<', mods = 'LEADER', action = act.MoveTabRelative(-1) },
+  -- C-x >: move current tab right
+  { key = '>', mods = 'LEADER', action = act.MoveTabRelative(1) },
+
+  -- Workspace navigation
+  { key = 'Tab', mods = 'ALT', action = act.SwitchWorkspaceRelative(1) },
+  { key = 'Tab', mods = 'ALT|SHIFT', action = act.SwitchWorkspaceRelative(-1) },
+  { key = ' ', mods = 'ALT', action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } },
 }
 
 -- Resize mode: use C-f/C-b/C-n/C-p (emacs movement) or arrow keys, Escape/C-g to exit
