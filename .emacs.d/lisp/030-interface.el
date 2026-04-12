@@ -100,7 +100,6 @@
 (setq inhibit-startup-screen t)
 (setq comment-multi-line t)
 (setq create-lockfiles nil)
-(setq electric-indent-mode nil)
 
 (delete-selection-mode  1)
 (transient-mark-mode    1)
@@ -112,9 +111,10 @@
 (defun my-prog-mode-hook ()
   (syntax-subword-mode)
   (display-line-numbers-mode 1)
+  (rainbow-mode)
+  (electric-pair-mode)
   (setq truncate-lines t)
 )
 
 (add-hook 'prog-mode-hook #'my-prog-mode-hook)
-
 (add-hook 'minibuffer-setup-hook #'subword-mode)

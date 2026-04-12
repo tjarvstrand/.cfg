@@ -1,7 +1,10 @@
 (use-package company :delight :demand t)
 (company-mode)
 (setq company-minimum-prefix-length 1)
-(setq company-idle-delay 0.2)
+(setq company-idle-delay
+      (lambda ()
+        (when (looking-back "[[:alnum:]_./]" (1- (point)))
+          0.2)))
 
 (defvar-local my-company-idle-suspended nil)
 
@@ -44,6 +47,7 @@
 (use-package consult :demand t)
 (global-set-key (kbd "C-x b") 'consult-buffer)
 (setq consult-preview-key nil)
+(consult-customize consult-xref :preview-key 'any)
 (setq consult-narrow-key ",")
 
 (use-package

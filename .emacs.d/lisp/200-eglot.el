@@ -9,7 +9,8 @@
 (setq eglot-report-progress nil)
 
 (defun my-eglot-managed-mode-hook ()
-  (eglot-inlay-hints-mode -1))
+  (eglot-inlay-hints-mode -1)
+  (setq-local xref-backend-functions '(eglot-xref-backend)))
 
 (add-hook 'eglot-managed-mode-hook 'my-eglot-managed-mode-hook)
 
