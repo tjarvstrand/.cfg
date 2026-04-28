@@ -108,14 +108,13 @@
 
 (global-auto-revert-mode)
 
-
-
 (defun my-prog-mode-hook ()
   (syntax-subword-mode)
   (display-line-numbers-mode 1)
   (rainbow-mode)
   (electric-pair-mode)
   (setq truncate-lines t)
+  (setq-local breadcrumb-imenu-max-length 1.0)
   (setq-local header-line-format '("" header-line-indent " " (:eval (breadcrumb-imenu-crumbs))))
   (header-line-indent-mode)
 )
