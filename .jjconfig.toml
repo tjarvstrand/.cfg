@@ -35,3 +35,7 @@ d = ["diff"]
 e = ["edit"]
 l = ["log", "-r::@"]
 r = ["rebase"]
+vine = ["util", "exec", "--", "jj-vine"]
+v = ["util", "exec", "--", "jj-vine"]
+[snapshot]
+auto-update-stale = true

@@ -1,0 +1,7 @@
+[settings]
+experimental = true
+
+[tools]
+"cargo:jj-vine" = "latest"
+rust = "latest"
+
