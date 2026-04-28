@@ -7,6 +7,7 @@
 (setq eglot-code-action-indications '(eldoc-hint))
 (setq eglot-events-buffer-config '(:size 200000 :format full))
 (setq eglot-report-progress nil)
+(setq eglot-send-changes-idle-time 2.0)
 
 (defun my-eglot-managed-mode-hook ()
   (eglot-inlay-hints-mode -1)
@@ -115,4 +116,7 @@
 ;; (define-key eglot-mode-map (kbd "M-g n") 'my/eglot-next-reference-in-file)
 (define-key eglot-mode-map (kbd "C-c e h") #'eglot-inlay-hints-mode)
 (define-key eglot-mode-map (kbd "C-c e n") #'my-eglot-rename-prefill)
+(define-key eglot-mode-map (kbd "M-g d") #'eglot-find-declaration)
+(define-key eglot-mode-map (kbd "M-g t") #'eglot-find-typeDefinition)
+(define-key eglot-mode-map (kbd "M-g I") #'eglot-find-implementation)
 (define-key eglot-mode-map (kbd "M-RET") #'eglot-code-actions)
