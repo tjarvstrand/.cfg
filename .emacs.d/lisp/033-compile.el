@@ -14,53 +14,6 @@
 
 (add-hook 'compilation-mode-hook #'my/compilation-mode-hook)
 
-(defun my-flymake-next-error (&optional n reset)
-  "Move to the Nth next Flymake diagnostic in the current buffer.
-This is compatible with `next-error-function'.  With negative N,
-move backward.  RESET is accepted for compatibility and ignored."
-  (ignore reset)
-  (setq n (or n 1))
-  (when (/= n 0)
-    (let* ((diagnostics (-sort (-on (if (>= n 0) '< '>) 'flymake-diagnostic-beg) (flymake-diagnostics)))
-           (following (-drop-while (lambda (diagnostic)
-                                     (if (>= n 0)
-                                         (<= (flymake-diagnostic-beg diagnostic) (point))
-                                       (>= (flymake-diagnostic-end diagnostic) (point))))
-                                   diagnostics))
-           (next (or (nth (1- (abs n)) following) (car diagnostics))))
-      (if next
-          (progn
-            (goto-char (flymake-diagnostic-beg next))
-            (pulse-momentary-highlight-one-line (point)))
-        (user-error "No diagnostics found in this buffer")))))
-
-(defun my-flymake-next-error-command ()
-  (interactive)
-  (my-flymake-next-error 1))
-
-(defun my-flymake-previous-error-command ()
-  (interactive)
-  (my-flymake-next-error -1))
-
-(defhydra hydra-flymake-nav (:hint nil)
-  "
-Xref errors: _e_: next _E_: previous _q_: quit"
-  ("e" my-flymake-next-error-command)
-  ("E" my-flymake-previous-error-command)
-  ("q" nil :exit t)
-  ("RET" nil :exit t))
-
-(with-eval-after-load 'flymake
-  (define-key flymake-mode-map (kbd "M-g e") (lambda ()
-                                               (interactive)
-                                               (my-flymake-next-error-command)
-                                               (hydra-flymake-nav/body)))
-
-  (define-key flymake-mode-map (kbd "M-g E") (lambda ()
-                                               (interactive)
-                                               (my-flymake-previous-error-command)
-                                               (hydra-flymake-nav/body))))
-
 (add-to-list 'display-buffer-alist
              '("\\*Flymake diagnostics"
                (display-buffer-in-side-window display-buffer-pop-up-window)

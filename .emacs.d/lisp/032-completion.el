@@ -46,8 +46,32 @@
 
 (use-package consult :demand t)
 (global-set-key (kbd "C-x b") 'consult-buffer)
+(global-set-key (kbd "M-g i") 'consult-imenu)
+(global-set-key (kbd "M-g e") 'consult-flymake)
 (setq consult-preview-key nil)
-(consult-customize consult-xref :preview-key 'any)
+
+(defcustom my-consult-xref-test-file-regexp
+  (rx (or "/test/" "/tests/" "/__tests__/" "_test." ".test." ".spec."))
+  "Regexp used to classify xref hits as tests."
+  :type 'regexp)
+
+(defun my-consult-xref-test-narrow-p (cand)
+  (let ((path (or (get-text-property 0 'consult--prefix-group cand) "")))
+    (pcase consult--narrow
+      (?t (string-match-p my-consult-xref-test-file-regexp path))
+      (?n (not (string-match-p my-consult-xref-test-file-regexp path)))
+      (_ t))))
+
+(consult-customize
+ consult-xref
+ :preview-key 'any
+ :initial-narrow ?n
+ :narrow (list
+          :keys '((?n . "Non-test") (?t . "Tests"))
+          :predicate #'my-consult-xref-test-narrow-p)
+ consult-flymake :preview-key 'any
+)
+
 (setq consult-narrow-key ",")
 
 (use-package
